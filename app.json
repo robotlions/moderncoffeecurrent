@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "moderncoffee",
+    "slug": "moderncoffee",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
