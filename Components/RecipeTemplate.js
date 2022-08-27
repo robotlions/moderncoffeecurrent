@@ -7,7 +7,36 @@ import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
 
 
+const NewVariableInput = (props) => {
+  const [thisState, setThisState] = useState("");
+  const [orderCount, setOrderCount] = useState(0)
+  
+  database().ref(props.endpoint).once('value').then((snapshot)=>{setOrderCount(snapshot.numChildren()+1)})
 
+  return (
+    <>
+      <TextInput
+        style={[styles.input, {width: "100%"}]}
+        placeholder="Input new variable"
+        value={thisState}
+        onChangeText={setThisState}
+      >
+      </TextInput>
+      <TouchableOpacity
+        onPress={() => { pushNewVariable({variableName: thisState, order:orderCount}, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
+        <Text style={[styles.modalButtonText, {textAlign: "center"}]}>Save</Text></TouchableOpacity>
+    </>
+  )
+};
+
+function pushNewVariable(dataObject, endpoint, navigation) {
+    
+    
+  database()
+    .ref(endpoint)
+    .push(dataObject),
+    alert("Added!")
+}
 
 
 export function RecipeTemplate({ route, navigation }) {
@@ -81,39 +110,15 @@ export function RecipeTemplate({ route, navigation }) {
   
 
 
-  const NewVariableInput = (props) => {
-    const [thisState, setThisState] = useState("");
-    const [orderCount, setOrderCount] = useState(0)
-    
-    database().ref(props.endpoint).once('value').then((snapshot)=>{setOrderCount(snapshot.numChildren()+1)})
   
-    return (
-      <>
-        <TextInput
-          style={styles.input}
-          placeholder="Input new variable"
-          value={thisState}
-          onChangeText={setThisState}
-        >
-        </TextInput>
-        <TouchableOpacity
-          onPress={() => { pushNewVariable({variableName: thisState, order:orderCount}, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
-          <Text style={styles.modalButtonText}>Save</Text></TouchableOpacity>
-      </>
-    )
-  };
 
-  function pushNewVariable(dataObject, endpoint, navigation) {
-    
-    
-    database()
-      .ref(endpoint)
-      .push(dataObject),
-      alert("Added!")
-  }
+  
 
 
-  const userVariableDisplay = Object.entries(loadedVariables).map((item, index) => 
+  const userVariableDisplay = Object.entries(loadedVariables)
+  .sort((a,b)=> a[1].order-b[1].order)
+  .filter((item) => item[1].variableName != "Recipe Name" && item[1].variableName != "Description")
+  .map((item, index) => 
   <View style={styles.variableEntry} key={index}><Text  style={styles.variableText} >{item[1].variableName}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item[0]}`)}>
   <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity></View>)
 
