@@ -1,0 +1,229 @@
+import { View, Text, TextInput, TouchableOpacity, Keyboard, Alert, ScrollView } from 'react-native';
+import { useState } from 'react';
+import { styles } from "./Styles";
+import database from '@react-native-firebase/database';
+import auth from '@react-native-firebase/auth';
+import * as Functions from "./Functions";
+
+
+export function Settings({ route, navigation }) {
+  const [password, setPassword] = useState("");
+  const [newPassword2, setNewPassword2] = useState("");
+  const [newPassword1, setNewPassword1] = useState("");
+  const [displayName, setDisplayName] = useState("");
+
+  const [email, setEmail] = useState("")
+  const [passModalVisible, setPassModalVisible] = useState(false);
+  const [changeDisplayNameModuleVisible, setChangeDisplayNameModuleVisble] = useState(false);
+  const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] = useState(false);
+
+  const changePasswordModule =
+    <View>
+      <TextInput
+        style={styles.input}
+        placeholder="Current Password"
+        secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TextInput
+        value={newPassword1}
+        onChangeText={setNewPassword1}
+        style={styles.input}
+        secureTextEntry={true}
+        placeholder="New Password" />
+      <TextInput
+        value={newPassword2}
+        onChangeText={setNewPassword2}
+        secureTextEntry={true}
+        style={styles.input}
+        placeholder="Re-enter New Password" />
+
+
+      <TouchableOpacity onPress={() => changePassword()}><Text style={[styles.modalButtonText, { color: "#fd7908" }]}>Submit Change</Text></TouchableOpacity>
+    </View>
+
+  const changeDisplayNameModule =
+    <View>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter new display name"
+        value={displayName}
+        onChangeText={setDisplayName}
+      />
+      <TouchableOpacity onPress={() => changeDisplayName()}><Text style={[styles.modalButtonText, { color: "#fd7908" }]}>Submit Change</Text></TouchableOpacity>
+
+    </View>
+
+
+
+  const deleteAccountModule =
+    <View>
+      <TextInput
+        style={styles.input}
+        placeholder="Verify email to delete"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Current Password"
+        secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TouchableOpacity onPress={() => deleteAlert()}><Text style={[styles.modalButtonText, { color: "#fd7908" }]}>Permanently Delete Account</Text></TouchableOpacity>
+
+    </View>
+
+  const user = auth().currentUser;
+
+  function signOut() {
+    auth()
+      .signOut();
+    navigation.navigate("Home");
+
+
+  };
+
+  function changePassword() {
+    if (password == "") {
+      return alert("Please enter your password")
+    }
+    if (newPassword1 == "" || newPassword2 == "") {
+      return alert("Please enter a new password")
+    }
+    if (password == newPassword1) {
+      return alert("Please use a different password")
+    }
+
+    const credential = auth.EmailAuthProvider.credential(
+      user.email,
+      password
+    )
+    newPassword1 != newPassword2 ? alert("The passwords don't match") :
+
+      auth()
+        .currentUser
+        .reauthenticateWithCredential(credential)
+        .then(() => {
+
+          auth()
+            .currentUser
+            .updatePassword(newPassword1)
+            .then(() => {
+              alert("Password updated!")
+              setNewPassword1("");
+              setNewPassword2("");
+              setPassword("");
+              navigation.navigate("Home");
+            }).catch((error) => {
+              const errorCode = error.code
+              console.log(errorCode)
+            })
+        })
+        .catch((error) => {
+          const errorCode = error.code
+          console.log(errorCode)
+          if (errorCode == 'auth/wrong-password') {
+            alert("Sorry, that's not the right password")
+          }
+        });
+
+  }
+
+  function changeDisplayName() {
+    auth()
+      .currentUser
+      .updateProfile({
+        displayName: displayName
+      }).then(() => {
+        alert("Display name updated!");
+        setDisplayName("");
+        setChangeDisplayNameModuleVisble(false);
+      }).catch((error) => {
+        const errorCode = error.code
+        console.log(errorCode)
+      });
+  }
+
+
+
+  function deleteAlert() {
+
+    if (email != user.email) {
+      return alert("That password doesn't match this account.")
+    }
+    else {
+      Alert.alert(
+        `Are you sure?`,
+        `Your account and all your recipes will be gone forever`,
+        [
+          {
+            text: `Yes, delete account`,
+            onPress: () => deleteAccount(),
+            style: "cancel",
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    }
+  }
+
+
+
+  function deleteAccount() {
+    const credential = auth.EmailAuthProvider.credential(
+      user.email,
+      password
+    )
+
+    database()
+      .ref(`/users/${user.uid}/`)
+      .remove();
+    auth()
+      .currentUser
+      .reauthenticateWithCredential(credential)
+      .then(() => {
+        auth()
+          .currentUser
+          .delete()
+        // .then(() => {
+        //   alert("Sorry to see you go!")
+        //   // navigation.navigate("Home");
+        // })
+      }).catch((error) => {
+        const errorCode = error.code
+        console.log(errorCode)
+      });
+
+  }
+
+  return (
+    <ScrollView style={{ paddingLeft: 10}}>
+      <Text style={styles.modalButtonText}>Signed in as:</Text>
+      {user && user.displayName ? <Text>{user.displayName}</Text> : null}
+      <Text>{user && user.email}</Text>
+      <TouchableOpacity onPress={() => signOut()}><Text style={[styles.modalButtonText, { color: "#fd7908" }]}>Sign out</Text></TouchableOpacity>
+      <Text>{"\n"}</Text>
+      <Text style={{fontFamily: "Raleway-Medium"}}>Customize</Text>
+      <TouchableOpacity style={styles.settingsTouchable} onPress={() => navigation.navigate("Brew Methods")}><Text style={styles.modalButtonText}>Customize Brew Methods</Text></TouchableOpacity>
+      <TouchableOpacity style={styles.settingsTouchable} onPress={() => navigation.navigate("Recipe Template")}><Text style={styles.modalButtonText}>Customize Recipe Template</Text></TouchableOpacity>
+      <Text>{"\n"}</Text>
+      <Text style={{fontFamily: "Raleway-Medium"}}>Account</Text>
+      <TouchableOpacity style={styles.settingsTouchable} onPress={() => setPassModalVisible(!passModalVisible)}><Text style={styles.modalButtonText}>Change Password</Text></TouchableOpacity>
+      {passModalVisible && changePasswordModule}
+      <TouchableOpacity style={styles.settingsTouchable} onPress={() => setChangeDisplayNameModuleVisble(!changeDisplayNameModuleVisible)}><Text style={styles.modalButtonText}>Change Display Name</Text></TouchableOpacity>
+      {changeDisplayNameModuleVisible && changeDisplayNameModule}
+      
+      <TouchableOpacity style={styles.settingsTouchable} onPress={() => setDeleteAccountModuleVisible(!deleteAccountModuleVisible)}><Text style={styles.modalButtonText}>Delete Account</Text></TouchableOpacity>
+      {deleteAccountModuleVisible && deleteAccountModule}
+    </ScrollView>
+  );
+}

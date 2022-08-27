@@ -1,4 +1,4 @@
-package com.moderncoffee.newarchitecture.components;
+package com.robotlions.moderncoffee.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

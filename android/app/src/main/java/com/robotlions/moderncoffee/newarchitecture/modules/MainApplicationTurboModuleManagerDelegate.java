@@ -1,4 +1,4 @@
-package com.moderncoffee.newarchitecture.modules;
+package com.robotlions.moderncoffee.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

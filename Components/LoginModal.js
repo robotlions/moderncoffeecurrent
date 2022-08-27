@@ -1,0 +1,218 @@
+import { View, Text, TextInput, Modal, TouchableOpacity, Keyboard } from 'react-native';
+import { useState, useRef } from 'react';
+import { styles } from './Styles';
+import auth from '@react-native-firebase/auth';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
+//TODO: add ADD USER window in addition to login - also add SIGN IN WITH GOOGLE
+GoogleSignin.configure({
+  webClientId:
+    '14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com',
+});
+
+async function onGoogleButtonPress() {
+  const { idToken } = await GoogleSignin.signIn();
+  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+  return auth().signInWithCredential(googleCredential);
+}
+
+
+export const LoginModal = (props) => {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [createModalVisible, setCreateModalVisible] = useState(false);
+  const [recoverPasswordModalVisible, setRecoverPasswordModalVisible] = useState(false);
+  const passwordRef = useRef();
+  const password2Ref = useRef();
+
+  // const auth = getAuth();
+
+
+
+  function createUser() {
+    if (email === "" || password === "") {
+      return alert("Please provide email and password")
+    }
+    if (password != password2) {
+      return alert("The passwords don't match")
+    }
+    else {
+      auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          alert('User account created & signed in!');
+        })
+        .catch(error => {
+          if (error.code === 'auth/email-already-in-use') {
+            console.log('That email address is already in use!');
+          }
+
+          if (error.code === 'auth/invalid-email') {
+            console.log('That email address is invalid!');
+          }
+
+          // console.error(error);
+        })
+    }
+  };
+
+  function signIn() {
+    if (email == "" || password == "") {
+      return alert("Please enter email and password")
+    }
+    auth()
+      .signInWithEmailAndPassword(email, password)
+
+      .catch((error) => {
+        console.log(error.code);
+        const errorCode = error.code;
+        if (errorCode === 'auth/user-not-found') {
+          alert("No user by that name")
+        };
+        if (errorCode === 'auth/invalid-email') {
+          alert("Please enter a valid email address")
+        };
+        if (errorCode === 'auth/wrong-password') {
+          alert("I'm sorry, that's not the password for this user's secret, illegal account.")
+        };
+
+      });
+  }
+
+  function triggerEmailReset() {
+    auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        alert('Password email sent!');
+        setRecoverPasswordModalVisible(false);
+        setEmail("");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorCode, errorMessage)
+        alert(errorMessage)
+      });
+  }
+
+  if (recoverPasswordModalVisible == true) {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}>
+        <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
+          <View style={[styles.modalView, { alignItems: "center" }]}>
+            <TextInput style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              returnKeyType="next"
+              placeholder="Email"
+              onSubmitEditing={() => triggerEmailReset()}
+              blurOnSubmit={false} />
+
+
+            <TouchableOpacity onPress={() => triggerEmailReset()}><Text style={styles.modalButtonText}>Recover Password</Text></TouchableOpacity>
+            <Text>{"\n"}</Text>
+            <TouchableOpacity onPress={() => { setRecoverPasswordModalVisible(false), setCreateModalVisible(false) }}><Text style={styles.modalButtonText}>Return to Login</Text></TouchableOpacity>
+
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
+  if (createModalVisible == true) {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}>
+        <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
+          <View style={[styles.modalView, { alignItems: "center" }]}>
+            <TextInput style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              returnKeyType="next"
+              placeholder="Email"
+              onSubmitEditing={() => passwordRef.current.focus()}
+              blurOnSubmit={false} />
+
+            <TextInput
+              ref={passwordRef}
+              secureTextEntry={true}
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+              onSubmitEditing={() => password2Ref.current.focus()}
+            />
+            <TextInput
+              ref={password2Ref}
+              secureTextEntry={true}
+              style={styles.input}
+              value={password2}
+              onChangeText={setPassword2}
+              placeholder="Re-enter Password"
+              onSubmitEditing={() => createUser()}
+            />
+
+            <TouchableOpacity onPress={() => createUser()}><Text style={styles.modalButtonText}>Create Account</Text></TouchableOpacity>
+            <Text>{"\n"}</Text>
+            <TouchableOpacity onPress={() => { setCreateModalVisible(false), setRecoverPasswordModalVisible(false) }}><Text style={styles.modalButtonText}>Return to Login</Text></TouchableOpacity>
+
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+  else {
+    return (
+      <Modal
+        animationType="slide"
+        transparent={true}>
+        <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
+          <View style={[styles.modalView, { alignItems: "center" }]}>
+            <TextInput style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              returnKeyType="next"
+              placeholder="Email"
+              onSubmitEditing={() => passwordRef.current.focus()}
+              blurOnSubmit={false} />
+
+            <TextInput
+              ref={passwordRef}
+              secureTextEntry={true}
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+              onSubmitEditing={() => signIn()}
+            />
+            <TouchableOpacity style={{marginTop: 10}}onPress={() => signIn()}><Text style={styles.buttonStandard}>Sign In</Text></TouchableOpacity>
+            <GoogleSigninButton
+              style={{ maxWidth: "100%", maxHeight:70}}
+              size={GoogleSigninButton.Size.Wide}
+              color={GoogleSigninButton.Color.Dark}
+              onPress={() => onGoogleButtonPress()}
+              // disabled={this.state.isSigninInProgress}
+            />
+            <Text>{"\n"}-OR-{"\n"}</Text>
+
+            {/* <TouchableOpacity onPress={()=>onGoogleButtonPress()}><Text>Sign in with google?</Text></TouchableOpacity> */}
+            <TouchableOpacity onPress={() => setCreateModalVisible(true)}><Text style={styles.modalButtonText}>Create Account</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => setRecoverPasswordModalVisible(true)}><Text style={styles.modalButtonText}>Recover Password</Text></TouchableOpacity>
+
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+}

@@ -1,4 +1,4 @@
-package com.moderncoffee.newarchitecture;
+package com.robotlions.moderncoffee.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -18,11 +18,10 @@ import com.facebook.react.fabric.ComponentFactory;
 import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
-import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.moderncoffee.BuildConfig;
-import com.moderncoffee.newarchitecture.components.MainComponentsRegistry;
-import com.moderncoffee.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.robotlions.moderncoffee.BuildConfig;
+import com.robotlions.moderncoffee.newarchitecture.components.MainComponentsRegistry;
+import com.robotlions.moderncoffee.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,7 +105,7 @@ public class MainApplicationReactNativeHost extends ReactNativeHost {
                 return new FabricJSIModuleProvider(
                     reactApplicationContext,
                     componentFactory,
-                    ReactNativeConfig.DEFAULT_CONFIG,
+                    new EmptyReactNativeConfig(),
                     viewManagerRegistry);
               }
             });
