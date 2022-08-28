@@ -75,7 +75,7 @@ export function EditRecipe({ route, navigation }) {
 
   const editDisplay = Object.entries(loadedRecipe)
   .sort(([akey, avalue], [bkey, bvalue])=>avalue.order-bvalue.order)
-  .filter(([key, value]) => key!="order" && key != "method")
+  .filter(([key, value]) => key!="order" && key != "method"&&key!="favorite")
   .map(([key, value], index) => <EditInputWindow key={index} itemKey={key} itemValue={value} />)
 
 
