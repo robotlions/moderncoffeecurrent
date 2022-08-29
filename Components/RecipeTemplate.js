@@ -27,15 +27,16 @@ const NewVariableInput = (props) => {
   return (
     <>
       <TextInput
-        style={[styles.input, { width: "100%" }]}
+        style={[styles.input, { width: "100%", paddingLeft: 10, backgroundColor: "white", borderColor: "white" }]}
         placeholder="Input new variable"
         value={thisState}
         onChangeText={setThisState}
       >
       </TextInput>
-      <TouchableOpacity
+      {thisState != "" && <TouchableOpacity
+      style={{paddingBottom: 10, paddingTop: 10}}
         onPress={() => { pushNewVariable({ variableName: thisState, order: orderCount }, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
-        <Text style={[styles.modalButtonText, { textAlign: "center" }]}>Save</Text></TouchableOpacity>
+        <Text style={[styles.modalButtonText, { textAlign: "center", fontSize: 20 }]}>Save New Variable</Text></TouchableOpacity>}
     </>
   )
 };
@@ -108,8 +109,10 @@ export function RecipeTemplate({ route, navigation }) {
         disabled={isActive}
         style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
       >
-        <View style={styles.variableEntry}><Text style={styles.variableText}>{item.label}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item[0]}`)}>
-        <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity></View>
+        <View style={styles.variableEntry}><Text style={styles.variableText}>{item.label}</Text>
+        {item.label != "Recipe Name" && item.label != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
+        <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
+        </View>
       </TouchableOpacity>
 
     );
@@ -175,6 +178,7 @@ return (
     //   <NewVariableInput endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />
     // </ScrollView>
     <NestableScrollContainer>
+      <Text style={[styles.modalButtonText, {textAlign: "center", marginBottom: 5}]}>Drag to reorder</Text>
       <NestableDraggableFlatList
     data={data}
     onDragEnd={({ data }) => {setData(data), setIndices(data)}}
