@@ -13,26 +13,9 @@ import DraggableFlatList, {
    NestableDraggableFlatList
 } from "react-native-draggable-flatlist";
 
-type Item = {
-  key: string;
-  label: string;
-  height: number;
-  width: number;
-};
-
-
 
 
 export function DisplayRecipe({ route, navigation }) {
-
-  // const initialData: Item[] = [...Object.entries(route.params.loadedRecipe).filter(([key, value]) => key != "favorite" && key != "method")].map(([key, value], index) => {
-  //   return {
-  //     key: `item-${index}`,
-  //     label: key,
-  //     height: 100,
-  //     width: 60 + Math.random() * 40,
-  //   };
-  // });
 
 
 
@@ -40,7 +23,6 @@ export function DisplayRecipe({ route, navigation }) {
   const loadedRecipe = route.params.loadedRecipe;
   const [loading, setLoading] = useState(true);
   const [loadedMethods, setLoadedMethods] = useState("");
-  // const [data, setData] = useState(initialData);
 
 
   useFocusEffect(
@@ -65,22 +47,6 @@ export function DisplayRecipe({ route, navigation }) {
   }, []));
 
 
-
-
-
-  const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => {
-    return (
-     
-        <TouchableOpacity
-          onLongPress={drag}
-          disabled={isActive}
-          style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
-        >
-          <Text style={styles.text}>{item.label}</Text>
-        </TouchableOpacity>
-     
-    );
-  };
 
   function addRemoveStar() {
     loadedRecipe.favorite == true ? loadedRecipe.favorite = false : loadedRecipe.favorite = true
@@ -107,7 +73,6 @@ export function DisplayRecipe({ route, navigation }) {
 
 
   return (
-    // <NestableScrollContainer>
     <>
       <ScrollView>
         <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
@@ -119,12 +84,7 @@ export function DisplayRecipe({ route, navigation }) {
         <TouchableOpacity onPress={() => addRemoveStar()}><Text style={styles.modalButtonText}>{loadedRecipe.favorite == true ? "Remove from Favorites" : "Add to Favorites"}</Text></TouchableOpacity>
         {"\n"}
         </Text>
-       {/* <NestableDraggableFlatList
-    data={data}
-    onDragEnd={({ data }) => setData(data)}
-    keyExtractor={(item) => item.key}
-    renderItem={renderItem}
-    /> */}
+      
      
       </ScrollView>
       
@@ -132,6 +92,5 @@ export function DisplayRecipe({ route, navigation }) {
         <Timer />
       </View>
       </>
-      // </NestableScrollContainer>
   )
 }
