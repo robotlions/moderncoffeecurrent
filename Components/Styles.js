@@ -220,12 +220,10 @@ export const styles = StyleSheet.create({
   variableEntry: {
     flex: 1,
     flexDirection: "row",
-    borderWidth: 1,
-    borderColor: "gray",
     marginBottom: 5,
     justifyContent: "space-between",
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
 
   },
   variableText: {

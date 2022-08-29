@@ -63,11 +63,11 @@ export function RecipeTemplate({ route, navigation }) {
     .sort((a,b)=>a[1].order-b[1].order)
     .map((item, index) => {
       return {
+        id: item[0],
         key: `item-${index}`,
         label: item[1].variableName,
         order: item[1].order,
         height: 100,
-        index: index,
       }
     });
     setData(initialData);
@@ -108,14 +108,21 @@ export function RecipeTemplate({ route, navigation }) {
         disabled={isActive}
         style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
       >
-        <Text style={styles.text}>{item.label} - {item.index}</Text>
+        <View style={styles.variableEntry}><Text style={styles.variableText}>{item.label}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item[0]}`)}>
+        <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity></View>
       </TouchableOpacity>
 
     );
   };
 
 
-
+function setIndices(data){
+data.forEach((item, index)=>{
+  database()
+  .ref(`/users/${user.uid}/variables/${item.id}/`)
+  .update({order: index})
+})
+}
 
 
 
@@ -170,7 +177,7 @@ return (
     <NestableScrollContainer>
       <NestableDraggableFlatList
     data={data}
-    onDragEnd={({ data }) => {setData(data), console.log(data)}}
+    onDragEnd={({ data }) => {setData(data), setIndices(data)}}
     keyExtractor={(item) => item.key}
     renderItem={renderItem}
     />
