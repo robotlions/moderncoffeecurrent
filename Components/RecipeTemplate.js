@@ -34,20 +34,14 @@ const NewVariableInput = (props) => {
       >
       </TextInput>
       {thisState != "" && <TouchableOpacity
-      style={{paddingBottom: 10, paddingTop: 10}}
-        onPress={() => { pushNewVariable({ variableName: thisState, order: orderCount }, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
+        style={{ paddingBottom: 10, paddingTop: 10 }}
+        onPress={() => { props.pushNewVariable({ variableName: thisState, order: orderCount }, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
         <Text style={[styles.modalButtonText, { textAlign: "center", fontSize: 20 }]}>Save New Variable</Text></TouchableOpacity>}
     </>
   )
 };
 
-function pushNewVariable(dataObject, endpoint, navigation) {
 
-  database()
-    .ref(endpoint)
-    .push(dataObject),
-    alert("Added!")
-}
 
 
 export function RecipeTemplate({ route, navigation }) {
@@ -59,20 +53,20 @@ export function RecipeTemplate({ route, navigation }) {
   const [data, setData] = useState([]);
 
 
-  useEffect(()=>{
+  useEffect(() => {
     let initialData = Object.entries(loadedVariables)
-    .sort((a,b)=>a[1].order-b[1].order)
-    .map((item, index) => {
-      return {
-        id: item[0],
-        key: `item-${index}`,
-        label: item[1].variableName,
-        order: item[1].order,
-        height: 100,
-      }
-    });
+      .sort((a, b) => a[1].order - b[1].order)
+      .map((item, index) => {
+        return {
+          id: item[0],
+          key: `item-${index}`,
+          label: item[1].variableName,
+          order: item[1].order,
+          height: 100,
+        }
+      });
     setData(initialData);
-  },[loadedVariables]);
+  }, [loadedVariables]);
 
 
   useFocusEffect(
@@ -110,8 +104,8 @@ export function RecipeTemplate({ route, navigation }) {
         style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
       >
         <View style={styles.variableEntry}><Text style={styles.variableText}>{item.label}</Text>
-        {item.label != "Recipe Name" && item.label != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
-        <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
+          {item.label != "Recipe Name" && item.label != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
+            <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
         </View>
       </TouchableOpacity>
 
@@ -119,13 +113,13 @@ export function RecipeTemplate({ route, navigation }) {
   };
 
 
-function setIndices(data){
-data.forEach((item, index)=>{
-  database()
-  .ref(`/users/${user.uid}/variables/${item.id}/`)
-  .update({order: index})
-})
-}
+  function setIndices(data) {
+    data.forEach((item, index) => {
+      database()
+        .ref(`/users/${user.uid}/variables/${item.id}/`)
+        .update({ order: index })
+    })
+  }
 
 
 
@@ -156,11 +150,32 @@ data.forEach((item, index)=>{
     database()
       .ref(endpoint)
       .remove()
-    // reset();
+    reset();
     // .then(() => props.navigation.goBack());
   }
 
+  function pushNewVariable(dataObject, endpoint, navigation) {
 
+    database()
+      .ref(endpoint)
+      .push(dataObject),
+      alert("Added!")
+      reset();
+  }
+
+  function reset() {
+    database()
+      .ref(`/users/${user.uid}/variables/`)
+      .once('value')
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          setLoadedVariables(snapshot.val());
+        } else {
+          setLoadedVariables({})
+          console.log("No data available");
+        }
+      })
+  }
 
   const userVariableDisplay = Object.entries(loadedVariables)
     .sort((a, b) => a[1].order - b[1].order)
@@ -170,22 +185,22 @@ data.forEach((item, index)=>{
         <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity></View>)
 
 
- 
-return (
+
+  return (
     // <ScrollView style={{ marginLeft: 5, marginRight: 5 }}>
     //   <Text style={[styles.entryHeadline, { paddingLeft: 0, marginBottom: 10 }]}>Manage Recipe Template</Text>
     //   {userVariableDisplay}
     //   <NewVariableInput endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />
     // </ScrollView>
     <NestableScrollContainer>
-      <Text style={[styles.modalButtonText, {textAlign: "center", marginBottom: 5}]}>Drag to reorder</Text>
+      <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
       <NestableDraggableFlatList
-    data={data}
-    onDragEnd={({ data }) => {setData(data), setIndices(data)}}
-    keyExtractor={(item) => item.key}
-    renderItem={renderItem}
-    />
-    <NewVariableInput endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />
+        data={data}
+        onDragEnd={({ data }) => { setData(data), setIndices(data) }}
+        keyExtractor={(item) => item.key}
+        renderItem={renderItem}
+      />
+      <NewVariableInput pushNewVariable={pushNewVariable} endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />
 
     </NestableScrollContainer>
 
