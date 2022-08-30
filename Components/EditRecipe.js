@@ -1,4 +1,4 @@
-import { ScrollView, TouchableOpacity, Text, TextInput } from 'react-native';
+import { ScrollView, TouchableOpacity, Text, View, TextInput } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 import * as Functions from './Functions';
 import { styles } from './Styles';
@@ -7,6 +7,13 @@ import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
 import { methodTemplate } from '../Data/Models';
 import { Picker } from "@react-native-picker/picker";
+import { scale } from './Styles';
+
+import DraggableFlatList, {
+  ScaleDecorator,
+  NestableScrollContainer,
+  NestableDraggableFlatList
+} from "react-native-draggable-flatlist";
 
 
 
@@ -15,7 +22,7 @@ function EditInputWindow(props) {
 
 
   useEffect(() => {
-    props.dataObject[props.itemKey] = {variableValue: varState, order: props.itemValue.order};
+    props.dataObject[props.itemKey] = { variableValue: varState, order: props.itemValue.order };
   });
 
   const [varState, setVarState] = useState(String(props.itemValue.variableValue));
@@ -25,7 +32,7 @@ function EditInputWindow(props) {
       placeholder={props.itemKey}
       value={varState}
       onChangeText={setVarState}
-      onEndEditing={() => props.dataObject[props.itemKey] = {variableValue: varState, order: props.itemValue.order}}
+      onEndEditing={() => props.dataObject[props.itemKey] = { variableValue: varState, order: props.itemValue.order }}
     />
   )
 };
@@ -38,42 +45,42 @@ export function EditRecipe({ route, navigation }) {
 
   const loadedID = route.params.loadedID;
   const loadedRecipe = route.params.loadedRecipe;
-  // const [dataObject, setDataObject] = useState(route.params.loadedRecipe);
   const [method, setMethod] = useState(route.params.loadedRecipe.method);
-  // const [loading, setLoading] = useState(true);
   const [loadedMethods, setLoadedMethods] = useState("");
+  const [data, setData] = useState([]);
+  const [dragWindowVisible, setDragWindowVisible] = useState(false);
 
   useFocusEffect(
-  useCallback(() => {
-    let loading = true;
-    if (loading === true) {
-      dataObject = route.params.loadedRecipe;
-      database()
-        .ref(`/users/${user.uid}/methods/`)
-        .once('value')
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            setLoadedMethods(snapshot.val())
-          } else {
-            console.log("No data available");
-          }
-        })
+    useCallback(() => {
+      let loading = true;
+      if (loading === true) {
+        dataObject = route.params.loadedRecipe;
+        database()
+          .ref(`/users/${user.uid}/methods/`)
+          .once('value')
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              setLoadedMethods(snapshot.val())
+            } else {
+              console.log("No data available");
+            }
+          })
 
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-    return(()=>{loading=false})
-  }, []));
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      return (() => { loading = false })
+    }, []));
 
   const user = auth().currentUser;
 
 
 
   const editDisplay = Object.entries(loadedRecipe)
-  .sort(([akey, avalue], [bkey, bvalue])=>avalue.order-bvalue.order)
-  .filter(([key, value]) => key!="order" && key != "method"&&key!="favorite")
-  .map(([key, value], index) => <EditInputWindow key={index} itemKey={key} itemValue={value} dataObject={dataObject}/>)
+    .sort(([akey, avalue], [bkey, bvalue]) => avalue.order - bvalue.order)
+    .filter(([key, value]) => key != "order" && key != "method" && key != "favorite")
+    .map(([key, value], index) => <EditInputWindow key={index} itemKey={key} itemValue={value} dataObject={dataObject} />)
 
 
   function updateEntry() {
@@ -85,7 +92,7 @@ export function EditRecipe({ route, navigation }) {
   }
 
   const pickerMethodList = Object.values(loadedMethods)
-  .sort((a,b) => a.order-b.order)
+    .sort((a, b) => a.order - b.order)
     .filter((item) => item != "Favorites" && item != "Recent")
     .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
     );
@@ -107,13 +114,83 @@ export function EditRecipe({ route, navigation }) {
       {pickerMethodList}
     </Picker>
 
-  return (
-    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
-      {/* <PickerDisplay loadedMethods={loadedMethods} dataObject={dataObject} method={method} /> */}
-      {pickerDisplay}
-      {editDisplay}
-      <TouchableOpacity onPress={() => updateEntry()}><Text style={styles.modalButtonText}>Save Edits</Text></TouchableOpacity>
-{/* <TouchableOpacity onPress={()=>console.log(`/users/${user.uid}/recipes/${method}/${loadedID}/`)}><Text>Console log</Text></TouchableOpacity> */}
-    </ScrollView>
-  )
+
+  useEffect(() => {
+    let initialData = Object.entries(loadedRecipe)
+      .filter((item) => item[0] != "order" && item[0] != "favorite" && item[0] != "method")
+      .sort((a, b) => a[1].order - b[1].order)
+      .map((item, index) => {
+        return {
+          id: item[0],
+          key: `item-${index}`,
+          label: item[1].variableValue,
+          order: item[1].order,
+        }
+      });
+    setData(initialData);
+  }, [loadedRecipe]);
+
+  const renderItem = ({ item, drag, isActive }) => {
+    return (
+
+      <TouchableOpacity
+        onLongPress={drag}
+        disabled={isActive}
+        style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+      >
+        <View style={styles.variableEntry}><Text style={[styles.variableText, { maxWidth: "80%" }]}>{item.id} - {item.label}</Text>
+          {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
+            <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
+        </View>
+      </TouchableOpacity>
+
+    );
+  };
+
+  function setIndices(data) {
+    data.forEach((item, index) => {
+      database()
+        .ref(`/users/${user.uid}/variables/${item.id}/`)
+        .update({ order: index })
+    })
+  }
+
+  if (!dragWindowVisible) {
+    return (
+      <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+        {pickerDisplay}
+        {editDisplay}
+        <TouchableOpacity style={{ marginTop: 10, marginBottom: 10 }} onPress={() => setDragWindowVisible(true)}><Text style={styles.modalButtonText}>Rearrange Order</Text></TouchableOpacity>
+
+        <TouchableOpacity style={{ marginBottom: 10 }} onPress={() => updateEntry()}><Text style={styles.modalButtonText}>Save Edits</Text></TouchableOpacity>
+      </ScrollView>
+    )
+  }
+
+
+  if (dragWindowVisible) {
+    return (
+      <>
+        <NestableScrollContainer>
+          <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
+
+          <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
+          <NestableDraggableFlatList
+            data={data}
+            onDragEnd={({ data }) => { setData(data), setIndices(data) }}
+            keyExtractor={(item) => item.key}
+            renderItem={renderItem}
+          />
+          <Text style={{ textAlign: "center" }}>
+
+            <TouchableOpacity style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }} onPress={() => setDragWindowVisible(false)}><Text style={styles.modalButtonText}>Edit Recipe</Text></TouchableOpacity>
+          </Text>
+          <Text style={{ textAlign: "center" }}>
+            <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
+          </Text>
+        </NestableScrollContainer>
+
+      </>
+    )
+  }
 }
