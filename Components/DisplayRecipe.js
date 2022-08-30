@@ -23,7 +23,49 @@ export function DisplayRecipe({ route, navigation }) {
   const loadedRecipe = route.params.loadedRecipe;
   const [loading, setLoading] = useState(true);
   const [loadedMethods, setLoadedMethods] = useState("");
+  const [data, setData] = useState([]);
 
+  useEffect(() => {
+    let initialData = Object.entries(loadedRecipe)
+    .filter((item) => item[0] != "order" && item[0] != "favorite" && item[0] != "method")
+      .sort((a, b) => a[1].order - b[1].order)
+      .map((item, index) => {
+        return {
+          id: item[0],
+          key: `item-${index}`,
+          label: item[1].variableValue,
+          order: item[1].order,
+        }
+      });
+    setData(initialData);
+  }, [loadedRecipe]);
+
+  const renderItem = ({ item, drag, isActive }) => {
+    return (
+
+      <TouchableOpacity
+        onLongPress={drag}
+        disabled={isActive}
+        style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+      >
+        <View style={styles.variableEntry}><Text style={styles.variableText}>{item.id} - {item.label}</Text>
+          {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
+            <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
+        </View>
+      </TouchableOpacity>
+
+    );
+  };
+
+  function setIndices(data) {
+    data.forEach((item, index) => {
+      database()
+        .ref(`/users/${user.uid}/variables/${item.id}/`)
+        .update({ order: index })
+    })
+  }
+
+  // const ld = console.log(data);
 
   useFocusEffect(
     useCallback(() => {
@@ -73,24 +115,47 @@ export function DisplayRecipe({ route, navigation }) {
 
 
   return (
-    <>
-      <ScrollView>
+<>
+    <NestableScrollContainer>
         <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
-        {editDisplay}
-        <Text style={{ textAlign: "center" }}>
+
+      <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
+      <NestableDraggableFlatList
+        data={data}
+        onDragEnd={({ data }) => { setData(data), setIndices(data) }}
+        keyExtractor={(item) => item.key}
+        renderItem={renderItem}
+      />
+      <Text style={{ textAlign: "center" }}>
         <TouchableOpacity style={styles.modalButton} onPress={() => navigation.navigate("Edit", { loadedID: loadedID, loadedRecipe: loadedRecipe })}><Text style={styles.modalButtonText}>Edit</Text></TouchableOpacity>
         <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
         {"\n"}
         <TouchableOpacity onPress={() => addRemoveStar()}><Text style={styles.modalButtonText}>{loadedRecipe.favorite == true ? "Remove from Favorites" : "Add to Favorites"}</Text></TouchableOpacity>
         {"\n"}
         </Text>
+      </NestableScrollContainer>
+      <View style={{ backgroundColor: "white", height: 20 * scale, borderTopWidth: .5, borderColor: "gray" }}>
+      <Timer />
+    </View>
+    </>
+    // <>
+    //   <ScrollView>
+    //     <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
+    //     {editDisplay}
+    //     <Text style={{ textAlign: "center" }}>
+    //     <TouchableOpacity style={styles.modalButton} onPress={() => navigation.navigate("Edit", { loadedID: loadedID, loadedRecipe: loadedRecipe })}><Text style={styles.modalButtonText}>Edit</Text></TouchableOpacity>
+    //     <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
+    //     {"\n"}
+    //     <TouchableOpacity onPress={() => addRemoveStar()}><Text style={styles.modalButtonText}>{loadedRecipe.favorite == true ? "Remove from Favorites" : "Add to Favorites"}</Text></TouchableOpacity>
+    //     {"\n"}
+    //     </Text>
       
      
-      </ScrollView>
+    //   </ScrollView>
       
-      <View style={{ backgroundColor: "white", height: 20 * scale, borderTopWidth: .5, borderColor: "gray" }}>
-        <Timer />
-      </View>
-      </>
+    //   <View style={{ backgroundColor: "white", height: 20 * scale, borderTopWidth: .5, borderColor: "gray" }}>
+    //     <Timer />
+    //   </View>
+    //   </>
   )
 }

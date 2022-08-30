@@ -160,7 +160,7 @@ export function RecipeTemplate({ route, navigation }) {
       .ref(endpoint)
       .push(dataObject),
       alert("Added!")
-      reset();
+    reset();
   }
 
   function reset() {
