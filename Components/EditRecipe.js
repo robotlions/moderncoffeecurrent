@@ -1,4 +1,4 @@
-import { ScrollView, TouchableOpacity, Text, View, TextInput } from 'react-native';
+import { ScrollView, TouchableOpacity, Text, View, TextInput, Alert } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 import * as Functions from './Functions';
 import { styles } from './Styles';
@@ -139,7 +139,7 @@ export function EditRecipe({ route, navigation }) {
         style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
       >
         <View style={styles.variableEntry}><Text style={[styles.variableText, { maxWidth: "80%" }]}>{item.id} - {item.label}</Text>
-          {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
+          {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`)}>
             <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
         </View>
       </TouchableOpacity>
@@ -150,9 +150,39 @@ export function EditRecipe({ route, navigation }) {
   function setIndices(data) {
     data.forEach((item, index) => {
       database()
-        .ref(`/users/${user.uid}/variables/${item.id}/`)
+        .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}/`)
         .update({ order: index })
+      // console.log(item.id)
     })
+  }
+
+  function deleteAlert(endpoint) {
+    Alert.alert(
+      `Delete-O-Matic`,
+      `Are you sure?`,
+      [
+        {
+          text: `Delete`,
+          onPress: () => deleteSelected(endpoint),
+          style: "cancel",
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  }
+
+
+  function deleteSelected(endpoint) {
+    database()
+      .ref(endpoint)
+      .remove()
+      // .then(() => props.navigation.goBack());
   }
 
   if (!dragWindowVisible) {

@@ -26,7 +26,7 @@ function InputWindow(props) {
     }, []));
 
   useEffect(() => {
-    dataObject[props.item.variableName] = {variableValue: varState, order: props.item.order};
+    dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order };
   });
 
   const [varState, setVarState] = useState("");
@@ -37,7 +37,7 @@ function InputWindow(props) {
       placeholder={props.item.variableName}
       value={varState}
       onChangeText={setVarState}
-      onEndEditing={() => dataObject[props.item.variableName] = {variableValue: varState, order: props.item.order}}
+      onEndEditing={() => dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order }}
     />
   )
 };
@@ -52,7 +52,7 @@ export function CreateRecipe({ route, navigation }) {
   const [variableList, setVariableList] = useState([]);
 
 
-  
+
 
   useFocusEffect(
     useCallback(() => {
@@ -88,10 +88,23 @@ export function CreateRecipe({ route, navigation }) {
             else {
               variableObjects.forEach((item) => {
                 database().ref(`/users/${user.uid}/variables/`)
-                  .push(item);
+                  .push(item)
+
               })
+              setTimeout(() => {
+                database()
+                  .ref(`/users/${user.uid}/variables/`)
+                  .once('value')
+                  .then((snapshot) => {
+
+                    snapshot.forEach((baby) => { varArray.push(baby.val()) })
+                    setVariableList(varArray)
+
+                  })
+              }, 1000)
             }
-          } else {
+          }
+          else {
             console.log("No data available");
           }
         })
@@ -114,7 +127,7 @@ export function CreateRecipe({ route, navigation }) {
   }, [method]);
 
   const pickerMethodList = Object.values(loadedMethods)
-  .sort((a,b) => a.order-b.order)
+    .sort((a, b) => a.order - b.order)
     .filter((item) => item != "Favorites" && item != "Recent")
     .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
     );
@@ -156,6 +169,19 @@ export function CreateRecipe({ route, navigation }) {
     navigation.goBack();
   }
 
+  //   function reset(){
+  //     database()
+  //         .ref(`/users/${user.uid}/variables/`)
+  //         .once('value')
+  //         .then((snapshot) => {
+  //           if (isActive) {
+  //             if (snapshot.exists()) {
+  //               snapshot.forEach((baby) => { varArray.push(baby.val()) })
+  //               setVariableList(varArray)
+  //             }
+  //           }
+  //   })
+  // }
 
 
   return (
