@@ -124,6 +124,9 @@ export const styles = StyleSheet.create({
     height: 40,
     width: "90%",
     padding: 5,
+    backgroundColor:"white",
+    elevation: 1,
+    marginBottom: 2,
   },
 
   //   listTitleHeadline: {

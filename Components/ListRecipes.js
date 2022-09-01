@@ -19,7 +19,7 @@ export function ListRecipes({ route, navigation }) {
   const user = auth().currentUser;
 
   function selectRecipe(item) {
-    navigation.navigate("Display Recipe", { loadedID: item[0], loadedRecipe: item[1] });
+    navigation.navigate("Display Recipe", { loadedMethod: item[1].method, loadedID: item[0], loadedRecipe: item[1] });
   }
 
 

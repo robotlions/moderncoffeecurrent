@@ -80,7 +80,7 @@ export function EditRecipe({ route, navigation }) {
   const editDisplay = Object.entries(loadedRecipe)
     .sort(([akey, avalue], [bkey, bvalue]) => avalue.order - bvalue.order)
     .filter(([key, value]) => key != "order" && key != "method" && key != "favorite")
-    .map(([key, value], index) => <EditInputWindow key={index} itemKey={key} itemValue={value} dataObject={dataObject} />)
+    .map(([key, value], index) =><View key={index} style={{width:"100%", alignItems: "center", marginBottom: 5}}><Text style={{fontFamily: "Raleway-Bold", textAlign: "left"}}>{key}</Text><EditInputWindow key={index} itemKey={key} itemValue={value} dataObject={dataObject} /></View>)
 
 
   function updateEntry() {
@@ -138,7 +138,7 @@ export function EditRecipe({ route, navigation }) {
         disabled={isActive}
         style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
       >
-        <View style={styles.variableEntry}><Text style={[styles.variableText, { maxWidth: "80%" }]}>{item.id} - {item.label}</Text>
+        <View style={styles.variableEntry}><Text style={{ maxWidth: "80%", fontFamily: "Raleway-Medium", fontSize: 16 }}>{item.id} - {item.label}</Text>
           {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`)}>
             <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
         </View>
@@ -159,7 +159,7 @@ export function EditRecipe({ route, navigation }) {
   function deleteAlert(endpoint) {
     Alert.alert(
       `Delete-O-Matic`,
-      `Are you sure?`,
+      `Are you sure? This will permanently delete this variable from this recipe.`,
       [
         {
           text: `Delete`,
