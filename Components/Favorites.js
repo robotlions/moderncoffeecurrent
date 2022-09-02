@@ -1,23 +1,21 @@
 import { Text, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useCallback, useState } from 'react';
 import { styles } from './Styles';
-import favoriteSmiley from '../assets/images/favoriteCarafe.png';
+import favoriteIcon from '../assets/images/favoriteIcon.png';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
-import DraggableFlatList from 'react-native-draggable-flatlist';
 
 
 
 export function Favorites({ route, navigation }) {
 
-    // let favArray = []
 
 
     const [loadedData, setLoadedData] = useState([]);
-    const [loadedRecipe, setLoadedRecipe] = useState({});
-    const [loadedID, setLoadedID] = useState("");
-    const [loadedMethod, setLoadedMethod] = useState("")
+    // const [loadedRecipe, setLoadedRecipe] = useState({});
+    // const [loadedID, setLoadedID] = useState("");
+    // const [loadedMethod, setLoadedMethod] = useState("")
 
     const user = auth().currentUser;
 
@@ -56,7 +54,6 @@ export function Favorites({ route, navigation }) {
         }, []));
 
 
-const ld = console.log(loadedData)
 
 
     const displayData = 
@@ -72,7 +69,7 @@ const ld = console.log(loadedData)
                         <Text style={styles.entryHeadline}>{value["Recipe Name"].variableValue}</Text>
                         <Text style={styles.entryMethod}>{value.method}</Text>
                         <Text style={styles.entryDesc}>{value["Description"].variableValue}</Text>
-                        {value.favorite == true ? <Image source={favoriteSmiley} style={styles.favorite} /> : <Text> </Text>}
+                        {value.favorite == true ? <Image source={favoriteIcon} style={styles.favorite} /> : <Text> </Text>}
                     </TouchableOpacity>)))
     
 

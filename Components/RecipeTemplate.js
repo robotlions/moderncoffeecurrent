@@ -97,18 +97,18 @@ export function RecipeTemplate({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
-<ScaleDecorator>
-      <TouchableOpacity
-        onLongPress={drag}
-        disabled={isActive}
-        style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
-      >
-        <View style={styles.variableEntry}><Text style={styles.variableText}>{item.label}</Text>
-          {item.label != "Recipe Name" && item.label != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
-            <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
-        </View>
-      </TouchableOpacity>
-</ScaleDecorator>
+      <ScaleDecorator>
+        <TouchableOpacity
+          onLongPress={drag}
+          disabled={isActive}
+          style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+        >
+          <View style={styles.variableEntry}><Text style={styles.variableText}>{item.label}</Text>
+            {item.label != "Recipe Name" && item.label != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
+              <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
+          </View>
+        </TouchableOpacity>
+      </ScaleDecorator>
     );
   };
 
@@ -177,12 +177,12 @@ export function RecipeTemplate({ route, navigation }) {
       })
   }
 
-  const userVariableDisplay = Object.entries(loadedVariables)
-    .sort((a, b) => a[1].order - b[1].order)
-    .filter((item) => item[1].variableName != "Recipe Name" && item[1].variableName != "Description")
-    .map((item, index) =>
-      <View style={styles.variableEntry} key={index}><Text style={styles.variableText} >{item[1].variableName}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item[0]}`)}>
-        <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity></View>)
+  // const userVariableDisplay = Object.entries(loadedVariables)
+  //   .sort((a, b) => a[1].order - b[1].order)
+  //   .filter((item) => item[1].variableName != "Recipe Name" && item[1].variableName != "Description")
+  //   .map((item, index) =>
+  //     <View style={styles.variableEntry} key={index}><Text style={styles.variableText} >{item[1].variableName}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item[0]}`)}>
+  //       <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity></View>)
 
 
 

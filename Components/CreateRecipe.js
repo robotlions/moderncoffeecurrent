@@ -1,10 +1,8 @@
-import { View, Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
-import { variableArrayDefault, variableTemplate } from '../Data/Models';
 import { styles } from './Styles';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
-import { methodTemplate } from '../Data/Models';
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from '@react-navigation/native';
 import { variableObjects } from '../Data/Models';
@@ -169,19 +167,7 @@ export function CreateRecipe({ route, navigation }) {
     navigation.goBack();
   }
 
-  //   function reset(){
-  //     database()
-  //         .ref(`/users/${user.uid}/variables/`)
-  //         .once('value')
-  //         .then((snapshot) => {
-  //           if (isActive) {
-  //             if (snapshot.exists()) {
-  //               snapshot.forEach((baby) => { varArray.push(baby.val()) })
-  //               setVariableList(varArray)
-  //             }
-  //           }
-  //   })
-  // }
+
 
 
   return (

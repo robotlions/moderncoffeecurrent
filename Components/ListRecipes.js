@@ -1,7 +1,7 @@
 import { Text, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { useCallback, useState } from 'react';
 import { styles } from './Styles';
-import favoriteSmiley from '../assets/images/favoriteCarafe.png';
+import favoriteIcon from '../assets/images/favoriteIcon.png';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
@@ -62,7 +62,7 @@ export function ListRecipes({ route, navigation }) {
               <TouchableOpacity style={styles.entry} key={index} onLongPress={()=>{editAlert(item)}} onPress={() => selectRecipe(item)}>
                 <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue}</Text>
                 <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
-                {item[1].favorite == true ? <Image source={favoriteSmiley} style={styles.favorite} /> : <Text> </Text>}
+                {item[1].favorite == true ? <Image source={favoriteIcon} style={styles.favorite} /> : <Text> </Text>}
               </TouchableOpacity>)))
     }
     if (route.params.filter === "Favorites") {
@@ -75,7 +75,7 @@ export function ListRecipes({ route, navigation }) {
               <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue}</Text>
               <Text style={styles.entryMethod}>{item[1].method}</Text>
               <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
-              {item[1].favorite == true ? <Image source={favoriteSmiley} style={styles.favorite} /> : <Text> </Text>}
+              {item[1].favorite == true ? <Image source={favoriteIcon} style={styles.favorite} /> : <Text> </Text>}
             </TouchableOpacity>)))
     }
     else {
@@ -88,7 +88,7 @@ export function ListRecipes({ route, navigation }) {
               <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue}</Text>
               <Text style={styles.entryMethod}>{item[1].method}</Text>
               <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
-              {item[1].favorite == true ? <Image source={favoriteSmiley} style={styles.favorite} /> : <Text> </Text>}
+              {item[1].favorite == true ? <Image source={favoriteIcon} style={styles.favorite} /> : <Text> </Text>}
             </TouchableOpacity>))
 
     }
@@ -134,7 +134,6 @@ export function ListRecipes({ route, navigation }) {
             favorite: fav
           }
         );
-      alert("Updated!")
       setUpdated(!updated);
     }
 
