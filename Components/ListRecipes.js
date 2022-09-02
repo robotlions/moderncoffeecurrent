@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { Text, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { useCallback, useState } from 'react';
 import { styles } from './Styles';
 import favoriteSmiley from '../assets/images/favoriteCarafe.png';
@@ -15,6 +15,7 @@ export function ListRecipes({ route, navigation }) {
   const [loadedRecipe, setLoadedRecipe] = useState({});
   const [loadedID, setLoadedID] = useState("");
   const [loadedMethod, setLoadedMethod] = useState("")
+  const [updated, setUpdated] = useState(false);
 
   const user = auth().currentUser;
 
@@ -43,9 +44,9 @@ export function ListRecipes({ route, navigation }) {
         })
         return() => {loading = false};
       }
-    }, []));
+    }, [updated]));
 
-
+  
 
 
 
@@ -58,7 +59,7 @@ export function ListRecipes({ route, navigation }) {
           .sort((item) => item[1].favorite != true) //this makes all recipes with favorite==true to list first
           .map((item, index) =>
             route.params.filter === item[1].method && (
-              <TouchableOpacity style={styles.entry} key={index} onPress={() => selectRecipe(item)}>
+              <TouchableOpacity style={styles.entry} key={index} onLongPress={()=>{editAlert(item)}} onPress={() => selectRecipe(item)}>
                 <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue}</Text>
                 <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
                 {item[1].favorite == true ? <Image source={favoriteSmiley} style={styles.favorite} /> : <Text> </Text>}
@@ -93,24 +94,49 @@ export function ListRecipes({ route, navigation }) {
     }
   }
 
-//  const testData = 
-//       Object.entries(loadedData)
-//         .sort((item) => item[1].favorite != true) //this makes all recipes with favorite==true to list first
-//         .map((item, index) =>
-//           route.params.filter === item[1].method && (
-//             <TouchableOpacity style={styles.entry} key={index} onPress={() => selectRecipe(item)}>
-//               <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue}</Text>
-//               <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
-//               {item[1].favorite == true ? <Image source={favoriteSmiley} style={styles.favorite} /> : <Text> </Text>}
-//             </TouchableOpacity>));
-  
-
-
-
 
   const methodCheck =
     route.params.filter != "Favorites" && route.params.filter != "Recent" ? { method: route.params.filter } : { method: "" }
 
+
+    function editAlert(item) {
+      Alert.alert(
+        `modern coffee`,
+        `${item[1]["Recipe Name"].variableValue}`,
+        [
+          {
+            text: `Edit Recipe`,
+            onPress: () => navigation.navigate("Edit", {loadedMethod: item[1].method, loadedID: item[0], loadedRecipe: item[1]}),
+            style: "cancel",
+          },
+          {
+            text: item[1].favorite == true ? "Remove from favorites" : `Add to Favorites`,
+            onPress: () => addRemoveStar(item),
+            style: "cancel",
+          },
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    }
+  
+    function addRemoveStar(item) {
+      let fav = item[1].favorite == true ? false : true
+      database()
+        .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
+        .update(
+          {
+            favorite: fav
+          }
+        );
+      alert("Updated!")
+      setUpdated(!updated);
+    }
 
 
   return (<>
