@@ -80,7 +80,7 @@ export function EditRecipe({ route, navigation }) {
   const editDisplay = Object.entries(loadedRecipe)
     .sort(([akey, avalue], [bkey, bvalue]) => avalue.order - bvalue.order)
     .filter(([key, value]) => key != "order" && key != "method" && key != "favorite")
-    .map(([key, value], index) =><View key={index} style={{width:"100%", alignItems: "center", marginBottom: 5}}><Text style={{fontFamily: "Raleway-Bold", textAlign: "left"}}>{key}</Text><EditInputWindow key={index} itemKey={key} itemValue={value} dataObject={dataObject} /></View>)
+    .map(([key, value], index) => <View key={index} style={{ width: "100%", alignItems: "center", marginBottom: 5 }}><Text style={{ fontFamily: "Raleway-Bold", textAlign: "left" }}>{key}</Text><EditInputWindow key={index} itemKey={key} itemValue={value} dataObject={dataObject} /></View>)
 
 
   function updateEntry() {
@@ -97,6 +97,18 @@ export function EditRecipe({ route, navigation }) {
     .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
     );
 
+  const flatlistHeader = <View><Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
+
+    <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text></View>
+
+
+  const flatlistFooter = <View><Text style={{ textAlign: "center" }}>
+
+    <TouchableOpacity style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }} onPress={() => setDragWindowVisible(false)}><Text style={styles.modalButtonText}>Edit Recipe</Text></TouchableOpacity>
+  </Text>
+    <Text style={{ textAlign: "center" }}>
+      <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
+    </Text></View>
 
   const pickerDisplay =
 
@@ -132,7 +144,7 @@ export function EditRecipe({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
-
+<ScaleDecorator>
       <TouchableOpacity
         onLongPress={drag}
         disabled={isActive}
@@ -143,7 +155,7 @@ export function EditRecipe({ route, navigation }) {
             <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
         </View>
       </TouchableOpacity>
-
+</ScaleDecorator>
     );
   };
 
@@ -182,7 +194,7 @@ export function EditRecipe({ route, navigation }) {
     database()
       .ref(endpoint)
       .remove()
-      // .then(() => props.navigation.goBack());
+    // .then(() => props.navigation.goBack());
   }
 
   if (!dragWindowVisible) {
@@ -200,27 +212,16 @@ export function EditRecipe({ route, navigation }) {
 
   if (dragWindowVisible) {
     return (
-      <>
-        <NestableScrollContainer>
-          <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
 
-          <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
-          <NestableDraggableFlatList
-            data={data}
-            onDragEnd={({ data }) => { setData(data), setIndices(data) }}
-            keyExtractor={(item) => item.key}
-            renderItem={renderItem}
-          />
-          <Text style={{ textAlign: "center" }}>
-
-            <TouchableOpacity style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }} onPress={() => setDragWindowVisible(false)}><Text style={styles.modalButtonText}>Edit Recipe</Text></TouchableOpacity>
-          </Text>
-          <Text style={{ textAlign: "center" }}>
-            <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
-          </Text>
-        </NestableScrollContainer>
-
-      </>
+      <DraggableFlatList
+        data={data}
+        onDragEnd={({ data }) => { setData(data), setIndices(data) }}
+        keyExtractor={(item) => item.key}
+        renderItem={renderItem}
+        ListHeaderComponent={() => flatlistHeader }
+        ListFooterComponent={()=> flatlistFooter}
+      />
     )
+    
   }
 }

@@ -97,7 +97,7 @@ export function RecipeTemplate({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
-
+<ScaleDecorator>
       <TouchableOpacity
         onLongPress={drag}
         disabled={isActive}
@@ -108,7 +108,7 @@ export function RecipeTemplate({ route, navigation }) {
             <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
         </View>
       </TouchableOpacity>
-
+</ScaleDecorator>
     );
   };
 
@@ -187,22 +187,19 @@ export function RecipeTemplate({ route, navigation }) {
 
 
   return (
-    // <ScrollView style={{ marginLeft: 5, marginRight: 5 }}>
-    //   <Text style={[styles.entryHeadline, { paddingLeft: 0, marginBottom: 10 }]}>Manage Recipe Template</Text>
-    //   {userVariableDisplay}
-    //   <NewVariableInput endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />
-    // </ScrollView>
-    <NestableScrollContainer>
-      <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
-      <NestableDraggableFlatList
-        data={data}
-        onDragEnd={({ data }) => { setData(data), setIndices(data) }}
-        keyExtractor={(item) => item.key}
-        renderItem={renderItem}
-      />
-      <NewVariableInput pushNewVariable={pushNewVariable} endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />
 
-    </NestableScrollContainer>
+
+
+    <DraggableFlatList
+      data={data}
+      onDragEnd={({ data }) => { setData(data), setIndices(data) }}
+      keyExtractor={(item) => item.key}
+      renderItem={renderItem}
+      ListHeaderComponent={() => <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
+      }
+      ListFooterComponent={() => <NewVariableInput pushNewVariable={pushNewVariable} endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />}
+
+    />
 
   )
 }

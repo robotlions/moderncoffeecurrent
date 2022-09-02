@@ -22,7 +22,7 @@ export function Favorites({ route, navigation }) {
     const user = auth().currentUser;
 
     function selectRecipe(item, key, value) {
-        navigation.navigate("Display Recipe", { loadedID: key, loadedRecipe: value });
+        navigation.navigate("Display Recipe", { loadedMethod: value.method, loadedID: key, loadedRecipe: value });
     }
 
     function getData() {
@@ -56,12 +56,14 @@ export function Favorites({ route, navigation }) {
         }, []));
 
 
-
+const ld = console.log(loadedData)
 
 
     const displayData = 
 
-        
+    
+
+
             Object.values(loadedData)
                 .map((item, index) => Object.entries(item).filter(([key, value]) => value.favorite ==true )
                 .map(([key, value]) =>
