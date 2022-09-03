@@ -97,7 +97,6 @@ export function RecipeTemplate({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
-      <ScaleDecorator>
         <TouchableOpacity
           onLongPress={drag}
           disabled={isActive}
@@ -108,7 +107,6 @@ export function RecipeTemplate({ route, navigation }) {
               <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
           </View>
         </TouchableOpacity>
-      </ScaleDecorator>
     );
   };
 

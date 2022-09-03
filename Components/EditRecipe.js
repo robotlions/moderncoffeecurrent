@@ -1,21 +1,39 @@
 import { ScrollView, TouchableOpacity, Text, View, TextInput, Alert } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
-import * as Functions from './Functions';
 import { styles } from './Styles';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
-import { methodTemplate } from '../Data/Models';
 import { Picker } from "@react-native-picker/picker";
-import { scale } from './Styles';
-
-import DraggableFlatList, {
-  ScaleDecorator,
-  NestableScrollContainer,
-  NestableDraggableFlatList
-} from "react-native-draggable-flatlist";
 
 
+
+const NewVariableInput = (props) => {
+
+  database()
+    .ref(props.endpoint)
+    .once('value')
+    .then((snapshot) => { setOrderCount(snapshot.numChildren() + 1) })
+
+  const [thisState, setThisState] = useState("");
+  const [orderCount, setOrderCount] = useState(0)
+
+  return (
+    <>
+      <TextInput
+        style={styles.input}
+        placeholder="Input new variable"
+        value={thisState}
+        onChangeText={setThisState}
+      >
+      </TextInput>
+      {thisState != "" && <TouchableOpacity
+        style={{ paddingBottom: 10, paddingTop: 10 }}
+        onPress={() => { props.pushNewVariable({variableValue: "", order: orderCount }, `${props.endpoint}/${thisState}/`, props.navigation), setThisState(""), props.setLoading(true) }}>
+        <Text style={[styles.modalButtonText, { textAlign: "center", fontSize: 20 }]}>Save New Variable</Text></TouchableOpacity>}
+    </>
+  )
+};
 
 
 function EditInputWindow(props) {
@@ -44,14 +62,15 @@ export function EditRecipe({ route, navigation }) {
   let dataObject = {};
 
   const loadedID = route.params.loadedID;
-  const loadedRecipe = route.params.loadedRecipe;
+  // const loadedRecipe = {...route.params.loadedRecipe};
+  const [loadedRecipe, setLoadedRecipe] = useState({...route.params.loadedRecipe});
   const [method, setMethod] = useState(route.params.loadedRecipe.method);
   const [loadedMethods, setLoadedMethods] = useState("");
-  const [data, setData] = useState([]);
-  const [dragWindowVisible, setDragWindowVisible] = useState(false);
-
-  useFocusEffect(
-    useCallback(() => {
+  const [editing, setEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+useFocusEffect(
+  useCallback(() => {
       let loading = true;
       if (loading === true) {
         dataObject = route.params.loadedRecipe;
@@ -69,12 +88,25 @@ export function EditRecipe({ route, navigation }) {
           .catch((error) => {
             console.error(error);
           });
+          database()
+          .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
+          .once('value')
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              setLoadedRecipe(snapshot.val());
+            } else {
+              console.log("No data available");
+            }
+          })
+
+          .catch((error) => {
+            console.error(error);
+          });
       }
-      return (() => { loading = false })
+      return (() => { loading=false})
     }, []));
 
   const user = auth().currentUser;
-
 
 
   const editDisplay = Object.entries(loadedRecipe)
@@ -91,24 +123,42 @@ export function EditRecipe({ route, navigation }) {
     navigation.goBack();
   }
 
+  function pushNewVariable(dataObject, endpoint, navigation) {
+
+    database()
+      .ref(endpoint)
+      .set(dataObject),
+      alert("Added!")
+      reset();
+    // setUpdate(!update);
+  }
+ 
+  function reset(){
+    database()
+          .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
+          .once('value')
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              setLoadedRecipe(snapshot.val());
+            } else {
+              console.log("No data available");
+            }
+          })
+
+          .catch((error) => {
+            console.error(error);
+          });
+  }
+
   const pickerMethodList = Object.values(loadedMethods)
     .sort((a, b) => a.order - b.order)
     .filter((item) => item != "Favorites" && item != "Recent")
     .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
     );
 
-  const flatlistHeader = <View><Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
+  
 
-    <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text></View>
-
-
-  const flatlistFooter = <View><Text style={{ textAlign: "center" }}>
-
-    <TouchableOpacity style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }} onPress={() => setDragWindowVisible(false)}><Text style={styles.modalButtonText}>Edit Recipe</Text></TouchableOpacity>
-  </Text>
-    <Text style={{ textAlign: "center" }}>
-      <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
-    </Text></View>
+  
 
   const pickerDisplay =
 
@@ -127,101 +177,41 @@ export function EditRecipe({ route, navigation }) {
     </Picker>
 
 
-  useEffect(() => {
-    let initialData = Object.entries(loadedRecipe)
-      .filter((item) => item[0] != "order" && item[0] != "favorite" && item[0] != "method")
-      .sort((a, b) => a[1].order - b[1].order)
-      .map((item, index) => {
-        return {
-          id: item[0],
-          key: `item-${index}`,
-          label: item[1].variableValue,
-          order: item[1].order,
-        }
-      });
-    setData(initialData);
-  }, [loadedRecipe]);
+  
 
-  const renderItem = ({ item, drag, isActive }) => {
-    return (
-<ScaleDecorator>
-      <TouchableOpacity
-        onLongPress={drag}
-        disabled={isActive}
-        style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
-      >
-        <View style={styles.variableEntry}><Text style={{ maxWidth: "80%", fontFamily: "Raleway-Medium", fontSize: 16 }}>{item.id} - {item.label}</Text>
-          {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`)}>
-            <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
-        </View>
-      </TouchableOpacity>
-</ScaleDecorator>
-    );
-  };
+  
 
-  function setIndices(data) {
-    data.forEach((item, index) => {
-      database()
-        .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}/`)
-        .update({ order: index })
-      // console.log(item.id)
-    })
-  }
+  
 
-  function deleteAlert(endpoint) {
-    Alert.alert(
-      `Delete-O-Matic`,
-      `Are you sure? This will permanently delete this variable from this recipe.`,
-      [
-        {
-          text: `Delete`,
-          onPress: () => deleteSelected(endpoint),
-          style: "cancel",
-        },
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-      ],
-      {
-        cancelable: true,
-      }
-    );
-  }
-
-
-  function deleteSelected(endpoint) {
-    database()
-      .ref(endpoint)
-      .remove()
-    // .then(() => props.navigation.goBack());
-  }
-
-  if (!dragWindowVisible) {
+ 
     return (
       <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+        
         {pickerDisplay}
         {editDisplay}
-        <TouchableOpacity style={{ marginTop: 10, marginBottom: 10 }} onPress={() => setDragWindowVisible(true)}><Text style={styles.modalButtonText}>Rearrange Order</Text></TouchableOpacity>
+        <Text style={{fontFamily: "Raleway-Bold"}}>Add New Variable</Text>
+    <NewVariableInput pushNewVariable={pushNewVariable} endpoint={`/users/${user.uid}/recipes/${method}/${loadedID}`} user={user} navigation={navigation} setLoading={setLoading} />
+
+        <TouchableOpacity style={{ marginTop: 10, marginBottom: 10 }} onPress={() => navigation.navigate("Edit Single Recipe", {method: method, loadedRecipe: loadedRecipe, loadedID: loadedID})}><Text style={styles.modalButtonText}>Customize This Recipe</Text></TouchableOpacity>
 
         <TouchableOpacity style={{ marginBottom: 10 }} onPress={() => updateEntry()}><Text style={styles.modalButtonText}>Save Edits</Text></TouchableOpacity>
       </ScrollView>
     )
-  }
+  
 
 
-  if (dragWindowVisible) {
-    return (
+  // if (dragWindowVisible) {
+  //   return (
 
-      <DraggableFlatList
-        data={data}
-        onDragEnd={({ data }) => { setData(data), setIndices(data) }}
-        keyExtractor={(item) => item.key}
-        renderItem={renderItem}
-        ListHeaderComponent={() => flatlistHeader }
-        ListFooterComponent={()=> flatlistFooter}
-      />
-    )
-    
-  }
+  //     <DraggableFlatList
+  //       data={data}
+  //       onDragEnd={({ data }) => { setData(data), setIndices(data) }}
+  //       keyExtractor={(item) => item.key}
+  //       renderItem={renderItem}
+  //       ListHeaderComponent={() => flatlistHeader}
+  //       ListFooterComponent={() => flatlistFooter}
+  //     />
+  //   )
+
+  // }
 }

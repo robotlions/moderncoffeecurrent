@@ -9,6 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { DisplayRecipe } from './DisplayRecipe';
 import { Favorites } from './Favorites';
 import { RecipeTemplate } from './RecipeTemplate';
+import { EditSingleRecipeTemplate } from './EditSingleRecipeTemplate';
 import {Image} from 'react-native'
 
 
@@ -25,6 +26,7 @@ return (
 <Stack.Screen name="List Recipes" component={ListRecipes}
 options={({ route }) => ({ title: route.params.filter })} />
 <Stack.Screen name="Edit" component={EditRecipe} />
+<Stack.Screen name="Edit Single Recipe" component={EditSingleRecipeTemplate} />
 <Stack.Screen name="Brew Methods" component={BrewMethods} />
 <Stack.Screen name="Recipe Template" component={RecipeTemplate} />
 
