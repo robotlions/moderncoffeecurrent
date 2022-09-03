@@ -107,7 +107,7 @@ export const DeleteModule = (props) => {
     database()
       .ref(props.endpoint)
       .remove()
-      .then(() => props.navigation.goBack());
+      .then(() => props.navigation.navigate("HomeScreen"));
   }
   return (
     <TouchableOpacity style={props.buttonStyle} onPress={() => deleteAlert()}>

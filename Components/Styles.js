@@ -86,6 +86,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     // backgroundColor: "rgba(224, 163, 104,1)",
     elevation: 1,
+    backgroundColor: "white",
     marginBottom: 8,
     borderBottomColor: "#9f3201",
     borderBottomWidth: 1,
