@@ -104,8 +104,8 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
     <NavigationContainer>
-      <ImageBackground resizeMode="cover" style={{ width: "100%", height: 230 }} source={vintageCoffee}>
-        <Text style={styles.mainTitleText}>modern{"\n"}coffee</Text>
+      <ImageBackground resizeMode="cover" style={{ maxHeight:"30%" }} source={vintageCoffee}>
+        <Text style={styles.mainTitleText}>modern coffee</Text>
       </ImageBackground>
       {/* <NavStack /> */}
       <TabNav />

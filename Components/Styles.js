@@ -147,7 +147,7 @@ export const styles = StyleSheet.create({
     textShadowColor: "rgb(69,51,23)",
     textShadowOffset: { width: 3, height: 3 },
     textShadowRadius: 4,
-    marginTop: 65,
+    marginTop: 50,
   },
   modalButton: {
     height: 50,
