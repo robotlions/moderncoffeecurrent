@@ -1,11 +1,13 @@
 
-import { TouchableOpacity, Text, View, TextInput, Alert } from 'react-native';
+import { TouchableOpacity, Text, View, TextInput, Alert, Image } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 import * as Functions from './Functions';
 import { styles } from './Styles';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
+import hamburgerIcon from '../assets/images/hamburgerIcon.png';
+
 
 import DraggableFlatList, {
   ScaleDecorator,
@@ -107,18 +109,7 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
       .catch((error) => {
         console.error(error);
       });
-    // let initialData = Object.entries(loadedRecipe)
-    //   .filter((item) => item[0] != "order" && item[0] != "favorite" && item[0] != "method")
-    //   .sort((a, b) => a[1].order - b[1].order)
-    //   .map((item, index) => {
-    //     return {
-    //       id: item[0],
-    //       key: `item-${index}`,
-    //       label: item[1].variableValue,
-    //       order: item[1].order,
-    //     }
-    //   });
-    // setData(initialData);
+    
   }
 
   const flatlistHeader = <View>
@@ -128,7 +119,6 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
 
 
   const flatlistFooter = <View>
-    {/* <NewVariableInput pushNewVariable={pushNewVariable} endpoint={`/users/${user.uid}/recipes/${method}/${loadedID}`} user={user} navigation={navigation} setLoading={setLoading} /> */}
 
     <Text style={{ textAlign: "center" }}>
       <TouchableOpacity style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }} onPress={() => navigation.goBack()}><Text style={styles.modalButtonText}>Back to edit</Text></TouchableOpacity>
@@ -140,16 +130,22 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
+      <View 
+      style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+      >
         <TouchableOpacity
           onLongPress={drag}
+          onPress={drag}
           disabled={isActive}
-          style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
         >
+          <Image source={hamburgerIcon} style={{width: 25, height: 25, opacity:.7, marginLeft: 3, marginTop: 3, position: "absolute", marginRight: 10}}/>
+        </TouchableOpacity>
+
           <View style={styles.variableEntry}><Text style={{ maxWidth: "80%", fontFamily: "Raleway-Medium", fontSize: 16 }}>{item.id} - {item.label}</Text>
             {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`)}>
               <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
           </View>
-        </TouchableOpacity>
+        </View>
     );
   };
 

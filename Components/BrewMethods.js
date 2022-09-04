@@ -1,5 +1,4 @@
 import { Alert, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native';
-import * as Functions from "./Functions";
 import { useState, useEffect, useCallback } from 'react';
 import { styles } from './Styles';
 import database from '@react-native-firebase/database';
@@ -7,7 +6,36 @@ import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
 
 
+const NewMethodInput = (props) => {
+  const [thisState, setThisState] = useState("");
+  const [orderCount, setOrderCount] = useState(0)
+  
+  database().ref(props.endpoint).once('value').then((snapshot)=>{setOrderCount(snapshot.numChildren()+1)})
 
+  return (
+    <>
+      <TextInput
+        style={[styles.input, {width:"100%"}]}
+        placeholder="Input new brewing method"
+        value={thisState}
+        onChangeText={setThisState}
+      >
+      </TextInput>
+      {thisState != '' && <TouchableOpacity
+        onPress={() => { pushNewVariable({methodName: thisState, order:orderCount}, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
+        <Text style={[styles.modalButtonText, {textAlign: "center"}]}>Save New Method</Text></TouchableOpacity>}
+    </>
+  )
+};
+
+function pushNewVariable(dataObject, endpoint, navigation) {
+    
+    
+  database()
+    .ref(endpoint)
+    .push(dataObject),
+    alert("Added!")
+}
 
 
 export function BrewMethods({ route, navigation }) {
@@ -86,42 +114,11 @@ export function BrewMethods({ route, navigation }) {
      
   
 
-  const NewMethodInput = (props) => {
-    const [thisState, setThisState] = useState("");
-    const [orderCount, setOrderCount] = useState(0)
-    
-    database().ref(props.endpoint).once('value').then((snapshot)=>{setOrderCount(snapshot.numChildren()+1)})
-  
-    return (
-      <>
-        <TextInput
-          style={[styles.input, {width:"100%"}]}
-          placeholder="Input new brewing method"
-          value={thisState}
-          onChangeText={setThisState}
-        >
-        </TextInput>
-        <TouchableOpacity
-          onPress={() => { pushNewVariable({methodName: thisState, order:orderCount}, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
-          <Text style={[styles.modalButtonText, {textAlign: "center"}]}>Save</Text></TouchableOpacity>
-      </>
-    )
-  };
-
-
-  function pushNewVariable(dataObject, endpoint, navigation) {
-    
-    
-    database()
-      .ref(endpoint)
-      .push(dataObject),
-      alert("Added!")
-  }
-
-
   
 
-  const userMethodDisplay = Object.entries(loadedMethods).map((item, index) => 
+  const userMethodDisplay = Object.entries(loadedMethods)
+  .sort((a,b)=> a[1].order - b[1].order)
+  .map((item, index) => 
   <View style={styles.variableEntry} key={index}><Text style={styles.variableText}>{item[1].methodName}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/methods/${item[0]}`)}>
   <Text style={styles.buttonTextStyle}>Delete</Text></TouchableOpacity></View>)
 
