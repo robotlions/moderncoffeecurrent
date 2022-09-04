@@ -1,10 +1,12 @@
-import { Alert, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { Alert, Text, View, TextInput, ScrollView, TouchableOpacity, Image } from 'react-native';
 import * as Functions from "./Functions";
 import { useState, useEffect, useCallback } from 'react';
 import { styles } from './Styles';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
+import hamburgerIcon from '../assets/images/hamburgerIcon.png';
+
 import DraggableFlatList, {
   ScaleDecorator,
   NestableScrollContainer,
@@ -97,16 +99,20 @@ export function RecipeTemplate({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
+      <View 
+      style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+      >
         <TouchableOpacity
           onLongPress={drag}
           disabled={isActive}
-          style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }}
         >
-          <View style={styles.variableEntry}><Text style={styles.variableText}>{item.label}</Text>
+          <Image source={hamburgerIcon} style={{width: 25, height: 25, opacity:.7, marginLeft: 3, marginTop: 3, position: "absolute", marginRight: 10}}/>
+        </TouchableOpacity>
+          <View style={[styles.variableEntry, {paddingLeft:10}]}><Text style={styles.variableText}>{item.label}</Text>
             {item.label != "Recipe Name" && item.label != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
               <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
           </View>
-        </TouchableOpacity>
+        </View>
     );
   };
 

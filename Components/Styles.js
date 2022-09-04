@@ -226,7 +226,7 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     marginBottom: 5,
     justifyContent: "space-between",
-    paddingLeft: 50,
+    paddingLeft: 10,
     paddingRight: 10,
 
   },
