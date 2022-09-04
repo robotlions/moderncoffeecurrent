@@ -98,6 +98,15 @@ export const Timer = (props) => {
     }
 
     function pauseButton() {
+        if (inputSeconds != '') {
+            setSeconds(parseInt(inputSeconds))
+            setInputSeconds('')
+        }
+        if (inputMinutes != '') {
+            setMinutes(parseInt(inputMinutes))
+            setInputMinutes('')
+        }
+
         if (minutes == 0 && seconds == 0) {
             alert("Please set the timer first")
         }
@@ -112,8 +121,8 @@ export const Timer = (props) => {
     const minutesInput = <TextInput
         keyboardType='numeric'
         style={[styles.input, { width: "30%", textAlign: "center" }]}
-        value={minutes}
-        onChangeText={setMinutes}
+        value={inputMinutes}
+        onChangeText={setInputMinutes}
         onEndEditing={() => { setMinutes(parseInt(inputMinutes) || 0), setInputMinutes('') }}
         placeholder="Minutes"
     >
@@ -122,8 +131,8 @@ export const Timer = (props) => {
     const secondsInput = <TextInput
         keyboardType='numeric'
         style={[styles.input, { width: "30%", textAlign: "center" }]}
-        value={seconds}
-        onChangeText={setSeconds}
+        value={inputSeconds}
+        onChangeText={setInputSeconds}
         onEndEditing={() => { setSeconds(parseInt(inputSeconds) || 0), setInputSeconds('') }}
         placeholder="Seconds"
     >
