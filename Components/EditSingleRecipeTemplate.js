@@ -130,22 +130,21 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
-      <View 
-      style={{ height:50, elevation: 1, backgroundColor: "white", marginBottom: 5 }}
-      >
+      
         <TouchableOpacity
-        style={{width: 80}}
+              style={{ height:50, elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+
           onLongPress={drag}
           disabled={isActive}
         >
           <Image source={hamburgerIcon} style={{opacity:.7, marginLeft: 10, marginTop: 3, position: "absolute", marginRight: 10}}/>
-        </TouchableOpacity>
 
           <View style={[styles.variableEntry, {paddingLeft: 70}]}><Text style={{ maxWidth: "80%", fontFamily: "Raleway-Medium", fontSize: 16 }}>{item.id} - {item.label}</Text>
             {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`)}>
               <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
           </View>
-        </View>
+          </TouchableOpacity>
+        
     );
   };
 

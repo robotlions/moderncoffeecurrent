@@ -99,21 +99,20 @@ export function RecipeTemplate({ route, navigation }) {
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
-      <View 
-      style={{ height: 50, elevation: 1, backgroundColor: "white", marginBottom: 5 }}
-      >
+      
         <TouchableOpacity
-        style={{width: 80}}
+              style={{ height: 50, elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+
           onLongPress={drag}
           disabled={isActive}
         >
           <Image source={hamburgerIcon} style={{marginLeft: 10, opacity:.7, marginTop: 3, position: "absolute", marginRight: 10}}/>
-        </TouchableOpacity>
+        
           <View style={[styles.variableEntry, {paddingLeft:70}]}><Text style={styles.variableText}>{item.label}</Text>
             {item.label != "Recipe Name" && item.label != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item.id}`)}>
               <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
           </View>
-        </View>
+        </TouchableOpacity>
     );
   };
 
