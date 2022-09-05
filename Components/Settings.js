@@ -224,6 +224,14 @@ export function Settings({ route, navigation }) {
       
       <TouchableOpacity style={styles.settingsTouchable} onPress={() => setDeleteAccountModuleVisible(!deleteAccountModuleVisible)}><Text style={styles.modalButtonText}>Delete Account</Text></TouchableOpacity>
       {deleteAccountModuleVisible && deleteAccountModule}
+      <Text>{"\n"}</Text>
+      <Text>{"\n"}</Text>
+
+      <Text style={styles.modalButtonText}>About</Text>
+<Text style={{fontFamily: "Raleway-Medium"}}>Modern Coffee ver. 0.31 build 2{"\n"}
+Sept 2022{"\n"}
+© 2022 by Robot Lions{"\n"}
+Contact and feedback: info@robotlions.com</Text>
     </ScrollView>
   );
 }
