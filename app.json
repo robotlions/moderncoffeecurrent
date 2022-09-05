@@ -6,8 +6,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "icon": "assets/images/icon512.png",
+    "splash": {
+      "image": "assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
-      "bundleIdentifier": "com.robotlions.moderncoffee"
+      "supportsTablet": true,
+      "bundleIdentifier": "com.robotlions.moderncoffee",
+      "googleServicesFile": "./GoogleService-Info.plist"
     }
   }
 }
