@@ -46,11 +46,11 @@ export function TabNav(){
           // tabBarStyle:{backgroundColor: "rgba(253,121,8,.8)", paddingTop: 3},
           tabBarStyle:{bacgroundColor: "white", paddingTop: 3},
           tabBarHideOnKeyboard: true,
-          // tabBarActiveTintColor: "rgb(159, 50, 1)", 
-          tabBarActiveTintColor: "rgb(253, 121, 8)", 
+          tabBarActiveTintColor: "rgb(159, 50, 1)", 
+          // tabBarActiveTintColor: "rgb(253, 121, 8)", 
 
-        // tabBarInactiveTintColor: "rgba(159, 50, 1,.4)",
-        tabBarInactiveTintColor: "rgba(253, 121, 8,.4)",
+        tabBarInactiveTintColor: "rgba(159, 50, 1,.4)",
+        // tabBarInactiveTintColor: "rgba(253, 121, 8,.4)",
 
       headerShown: false,
       tabBarLabelStyle:{fontSize: 12, fontFamily: "Raleway-Bold"},

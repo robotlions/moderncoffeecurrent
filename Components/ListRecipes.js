@@ -62,7 +62,7 @@ export function ListRecipes({ route, navigation }) {
               <TouchableOpacity style={styles.entry} key={index} onLongPress={()=>{editAlert(item)}} onPress={() => selectRecipe(item)}>
                 <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue}</Text>
                 <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
-                {item[1].favorite == true ? <Image source={favoriteIcon} style={styles.favorite} /> : <Text> </Text>}
+                {item[1].favorite == true ? <Image source={favoriteIcon} style={styles.favorite} /> : null}
               </TouchableOpacity>)))
     }
     if (route.params.filter === "Favorites") {
@@ -142,7 +142,7 @@ export function ListRecipes({ route, navigation }) {
     <ScrollView>
       <DisplayData />
     </ScrollView>
-    {route.params.filter != "Favorites" && route.params.filter !="Recent" && <TouchableOpacity onPress={()=>navigation.navigate('Create Recipe', methodCheck)}style={styles.addItemTouchable}><Text style={[styles.categoryText, { color: "#fd7908" }]}>Create {route.params.filter} Recipe</Text></TouchableOpacity>}
+    {route.params.filter != "Favorites" && route.params.filter !="Recent" && <TouchableOpacity onPress={()=>navigation.navigate('Create Recipe', methodCheck)}style={styles.addItemTouchable}><Text style={[styles.categoryText, { color: "white" }]}>Create {route.params.filter} Recipe</Text></TouchableOpacity>}
 
   </>
   );

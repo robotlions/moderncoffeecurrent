@@ -6,7 +6,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "icon": "assets/images/icon512.png",
+    "icon": "assets/images/modernCoffeeLogo.png",
     "splash": {
       "image": "assets/images/splash.png",
       "resizeMode": "contain",
@@ -15,7 +15,13 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.robotlions.moderncoffee",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber": "5"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f2b30b22-baf3-4b00-adf2-8acfd85d04f0"
+      }
     }
   }
 }

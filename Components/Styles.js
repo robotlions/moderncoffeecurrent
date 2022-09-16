@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
   addItemTouchable: {
     borderWidth: 1,
     borderColor: "#fd7908",
+    backgroundColor: "#fd7908",
     borderLeftWidth: 0,
     borderRightWidth: 0,
     minHeight: 50,
@@ -46,11 +47,13 @@ export const styles = StyleSheet.create({
     marginBottom: 8,
     height: 50,
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#fd7908",
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-  },
+    // borderWidth: 1,
+    // borderColor: "#fd7908",
+    // borderLeftWidth: 0,
+    // borderRightWidth: 0,
+    backgroundColor: "white",
+    },
+
   categoryText: {
     textAlign: "center",
     fontFamily: "Raleway-Black",
@@ -88,10 +91,6 @@ export const styles = StyleSheet.create({
     elevation: 1,
     backgroundColor: "white",
     marginBottom: 8,
-    borderBottomColor: "#9f3201",
-    borderBottomWidth: 1,
-    borderBottomLeftRadius: 10,
-    borromBorderRightRadius: 10,
   },
 
   entryHeadline: {
@@ -120,14 +119,14 @@ export const styles = StyleSheet.create({
     bottom: 5,
   },
   input: {
-    borderColor: "gray",
-    borderWidth: 1,
+    // borderColor: "gray",
+    // borderWidth: 1,
     height: 40,
     width: "90%",
     padding: 5,
     backgroundColor:"white",
-    elevation: 1,
-    marginBottom: 2,
+    // elevation: 1,
+    marginBottom: 5,
   },
 
   //   listTitleHeadline: {

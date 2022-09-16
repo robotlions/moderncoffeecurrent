@@ -77,7 +77,7 @@ const methodDisplay = Object.values(methodList)
       <ScrollView>
         {favoritesDisplay}
         {methodDisplay}
-        <TouchableOpacity style={styles.addItemTouchable} onPress={() => navigation.navigate('Create Recipe')}><Text style={[styles.categoryText, { color: "#fd7908" }]}>Create Recipe</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.addItemTouchable} onPress={() => navigation.navigate('Create Recipe')}><Text style={[styles.categoryText, { color: "white" }]}>Create Recipe</Text></TouchableOpacity>
       </ScrollView>
       
     </>
