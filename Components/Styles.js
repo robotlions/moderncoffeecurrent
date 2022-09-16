@@ -26,7 +26,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     // backgroundColor: "#fd7908",
     backgroundColor: "#9f3208",
-    width: 100,
+    // width: 100,
     textAlign: "center",
     elevation: 3,
     height: 35,
@@ -129,6 +129,16 @@ export const styles = StyleSheet.create({
     marginBottom: 5,
   },
 
+  inputLogin: {
+    borderColor: "gray",
+    borderWidth: 1,
+    height: 40,
+    width: "90%",
+    padding: 5,
+    backgroundColor:"white",
+    // elevation: 1,
+    marginBottom: 5,
+  },
   //   listTitleHeadline: {
   //     fontFamily: "Raleway-Bold",
   //     fontSize: 30,

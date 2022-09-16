@@ -110,7 +110,7 @@ export const LoginModal = (props) => {
         transparent={true}>
         <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
           <View style={[styles.modalView, { alignItems: "center" }]}>
-            <TextInput style={styles.input}
+            <TextInput style={styles.inputLogin}
               value={email}
               onChangeText={setEmail}
               returnKeyType="next"
@@ -136,7 +136,7 @@ export const LoginModal = (props) => {
         transparent={true}>
         <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
           <View style={[styles.modalView, { alignItems: "center" }]}>
-            <TextInput style={styles.input}
+            <TextInput style={styles.inputLogin}
               value={email}
               onChangeText={setEmail}
               returnKeyType="next"
@@ -147,7 +147,7 @@ export const LoginModal = (props) => {
             <TextInput
               ref={passwordRef}
               secureTextEntry={true}
-              style={styles.input}
+              style={styles.inputLogin}
               value={password}
               onChangeText={setPassword}
               placeholder="Password"
@@ -156,7 +156,7 @@ export const LoginModal = (props) => {
             <TextInput
               ref={password2Ref}
               secureTextEntry={true}
-              style={styles.input}
+              style={styles.inputLogin}
               value={password2}
               onChangeText={setPassword2}
               placeholder="Re-enter Password"
@@ -179,7 +179,7 @@ export const LoginModal = (props) => {
         transparent={true}>
         <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
           <View style={[styles.modalView, { alignItems: "center" }]}>
-            <TextInput style={styles.input}
+            <TextInput style={styles.inputLogin}
               value={email}
               onChangeText={setEmail}
               returnKeyType="next"
@@ -190,13 +190,13 @@ export const LoginModal = (props) => {
             <TextInput
               ref={passwordRef}
               secureTextEntry={true}
-              style={styles.input}
+              style={styles.inputLogin}
               value={password}
               onChangeText={setPassword}
               placeholder="Password"
               onSubmitEditing={() => signIn()}
             />
-            <TouchableOpacity style={{marginTop: 10}}onPress={() => signIn()}><Text style={styles.buttonStandard}>Sign In</Text></TouchableOpacity>
+            <TouchableOpacity style={{marginTop: 10, width: "94%"}}onPress={() => signIn()}><Text style={styles.buttonStandard}>Sign In</Text></TouchableOpacity>
             <GoogleSigninButton
               style={{ maxWidth: "100%", maxHeight:70}}
               size={GoogleSigninButton.Size.Wide}
