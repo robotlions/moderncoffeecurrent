@@ -228,7 +228,7 @@ export function Settings({ route, navigation }) {
       <Text>{"\n"}</Text>
 
       <Text style={styles.modalButtonText}>About</Text>
-<Text style={{fontFamily: "Raleway-Medium"}}>Modern Coffee ver. 0.31 build 5{"\n"}
+<Text style={{fontFamily: "Raleway-Medium"}}>Modern Coffee ver. 0.40 build 6{"\n"}
 Sept 2022{"\n"}
 © 2022 by Robot Lions{"\n"}
 Contact and feedback: info@robotlions.com</Text>
