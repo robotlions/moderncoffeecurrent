@@ -148,17 +148,18 @@ export function BrewMethods({ route, navigation }) {
   </TextInput> 
     :
      <Text style={styles.variableText}>{item[1].methodName}</Text>}
-  
+  <Text>
   {editing===true && activeEdit===item[1].methodName
   ?
-  <TouchableOpacity style={styles.buttonStyle} onPress={()=>updateMethodName(item[0])}><Text style={styles.buttonTextStyle}>Save</Text></TouchableOpacity>
+  <TouchableOpacity style={styles.buttonStyle} onPress={()=>updateMethodName(item[0])}>
+    <Text style={[styles.buttonTextStyle, {marginRight: 20, color: "#fd7908"}]}>Save</Text></TouchableOpacity>
   :
   <TouchableOpacity style={styles.buttonStyle} onPress={() => editMethodName(item[1].methodName)}>
-  <Text style={styles.buttonTextStyle}>Edit</Text></TouchableOpacity>
+  <Text style={[styles.buttonTextStyle, {marginRight: 20, color: "#fd7908"}]}>Edit</Text></TouchableOpacity>
 }
   <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/methods/${item[0]}`)}>
   <Text style={styles.buttonTextStyle}>Delete</Text></TouchableOpacity>
-  
+  </Text>
   </View>)
 
   return (
