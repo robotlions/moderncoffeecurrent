@@ -234,6 +234,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     marginBottom: 5,
+alignItems: "center",
     justifyContent: "space-between",
     paddingLeft: 10,
     paddingRight: 10,
