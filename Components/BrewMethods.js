@@ -8,7 +8,8 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const NewMethodInput = (props) => {
   const [thisState, setThisState] = useState("");
-  const [orderCount, setOrderCount] = useState(0)
+  const [orderCount, setOrderCount] = useState(0);
+  
   
   database().ref(props.endpoint).once('value').then((snapshot)=>{setOrderCount(snapshot.numChildren()+1)})
 
@@ -44,7 +45,9 @@ export function BrewMethods({ route, navigation }) {
   const [loadedVariables, setLoadedVariables] = useState({});
   const [loadedMethods, setLoadedMethods] = useState({});
   const [loading, setLoading] = useState(true);
-
+  const [editInput, setEditInput] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [activeEdit, setActiveEdit] = useState(null);
 
 
 
@@ -84,7 +87,7 @@ export function BrewMethods({ route, navigation }) {
     function deleteAlert(endpoint) {
       Alert.alert(
         `Delete-O-Matic`,
-        `Are you sure?`,
+        `Are you sure? This will permanently remove this method and all of its receipes.`,
         [
           {
             text: `Delete`,
@@ -111,7 +114,21 @@ export function BrewMethods({ route, navigation }) {
         // .then(() => props.navigation.goBack());
     }
     
-     
+     function editMethodName(methodName){
+      setEditInput(methodName)
+      setEditing(!editing)
+      setActiveEdit(methodName)
+     }
+
+     function updateMethodName(endpoint){
+      database()
+      .ref(`/users/${user.uid}/methods/${endpoint}`)
+      .update({methodName: editInput})
+      setEditing(false);
+      setEditInput("");
+      setActiveEdit(null);
+      reset();
+     }
   
 
   
@@ -119,8 +136,30 @@ export function BrewMethods({ route, navigation }) {
   const userMethodDisplay = Object.entries(loadedMethods)
   .sort((a,b)=> a[1].order - b[1].order)
   .map((item, index) => 
-  <View style={styles.variableEntry} key={index}><Text style={styles.variableText}>{item[1].methodName}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/methods/${item[0]}`)}>
-  <Text style={styles.buttonTextStyle}>Delete</Text></TouchableOpacity></View>)
+  <View style={styles.variableEntry} key={index}>
+
+    {editing===true && activeEdit===item[1].methodName
+    ?
+    <TextInput
+    style={[styles.input, {width: "50%"}]}
+    value={editInput}
+    onChangeText={setEditInput}
+  >
+  </TextInput> 
+    :
+     <Text style={styles.variableText}>{item[1].methodName}</Text>}
+  
+  {editing===true && activeEdit===item[1].methodName
+  ?
+  <TouchableOpacity style={styles.buttonStyle} onPress={()=>updateMethodName(item[0])}><Text style={styles.buttonTextStyle}>Save</Text></TouchableOpacity>
+  :
+  <TouchableOpacity style={styles.buttonStyle} onPress={() => editMethodName(item[1].methodName)}>
+  <Text style={styles.buttonTextStyle}>Edit</Text></TouchableOpacity>
+}
+  <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/methods/${item[0]}`)}>
+  <Text style={styles.buttonTextStyle}>Delete</Text></TouchableOpacity>
+  
+  </View>)
 
   return (
     <ScrollView style={{marginLeft: 5, marginRight: 5}}>
