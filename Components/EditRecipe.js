@@ -156,7 +156,7 @@ useFocusEffect(
     .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
     );
 
-  
+    
 
   
 

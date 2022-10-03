@@ -1,4 +1,4 @@
-import { ScrollView, TouchableOpacity, Text, TextInput, View, SafeAreaView } from 'react-native';
+import { ScrollView, TouchableOpacity, Alert, Text, TextInput, View, SafeAreaView } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 import * as Functions from './Functions';
 import { styles } from './Styles';
@@ -121,7 +121,35 @@ export function DisplayRecipe({ route, navigation }) {
         <Text style={{ paddingLeft: 10, fontFamily: "Raleway-Medium" }}>{value.variableValue}</Text>
       </TouchableOpacity>)
 
+function deleteAlert(endpoint) {
+  Alert.alert(
+    `Delete-O-Matic`,
+    `Are you sure? This will permanently delete this recipe.`,
+    [
+      {
+        text: `Delete`,
+        onPress: () => deleteSelected(endpoint),
+        style: "cancel",
+      },
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+    ],
+    {
+      cancelable: true,
+    }
+  );
+}
 
+
+function deleteSelected(endpoint) {
+  database()
+    .ref(endpoint)
+    .remove()
+    // reset();
+  .then(() => navigation.goBack());
+}
 
   return (
 
@@ -130,7 +158,8 @@ export function DisplayRecipe({ route, navigation }) {
         <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
         {editDisplay}
         <Text style={{ textAlign: "center" }}>
-          <TouchableOpacity style={styles.modalButton} onPress={() => navigation.navigate("Edit", { loadedID: loadedID, loadedRecipe: loadedRecipe })}><Text style={styles.modalButtonText}>Edit</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.modalButton} onPress={() => navigation.navigate("Edit", { loadedID: loadedID, loadedRecipe: loadedRecipe })}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>Edit Recipe</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.modalButton} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>Delete Recipe</Text></TouchableOpacity>
           {"\n"}
           <TouchableOpacity onPress={() => addRemoveStar()}><Text style={styles.modalButtonText}>{loadedRecipe.favorite == true ? "Remove from Favorites" : "Add to Favorites"}</Text></TouchableOpacity>
           {"\n"}

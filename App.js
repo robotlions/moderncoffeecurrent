@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { TabNav } from './Components/NavStack';
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import vintageCoffee from './assets/images/vintageCoffee4.jpg'
+import vintageCoffee from './assets/images/vintageCoffee9.jpg'
 import { styles } from './Components/Styles';
 import { LoginModal } from './Components/LoginModal';
 import splashImage from './assets/images/splash.png';
