@@ -22,7 +22,7 @@ return (
 
 <Stack.Navigator screenOptions={{"headerTitleStyle":{"fontFamily":"Raleway-Bold"}}}>
 <Stack.Screen name="HomeScreen" options={{headerShown: false}}component={HomeScreen} />
-<Stack.Screen name="Create Recipe" options={{tabBarHideOnKeyboard:true}} component={CreateRecipe} />
+{/* <Stack.Screen name="Create Recipe" options={{headerShown: false, tabBarHideOnKeyboard:true}} component={CreateRecipe} /> */}
 <Stack.Screen name="List Recipes" component={ListRecipes}
 options={({ route }) => ({ title: route.params.filter })} />
 <Stack.Screen name="Edit" component={EditRecipe} />
@@ -60,7 +60,6 @@ export function TabNav(){
             name="Home"
             component={NavStack}
             options={{
-              
               tabBarIcon: (props) => {
               return (
                 
@@ -79,7 +78,9 @@ export function TabNav(){
           />
           <Tab.Screen name="Create Recipe" 
           component={CreateRecipe}
-            options={{ tabBarIcon: (props) => {
+            options={{ 
+              tabBarStyle:{display: "none"},
+              tabBarIcon: (props) => {
               return (
                 
                 <Image

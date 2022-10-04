@@ -1,4 +1,4 @@
-import { Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, TextInput, ScrollView, Alert, BackHandler, TouchableOpacity } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
 import { styles } from './Styles';
 import database from '@react-native-firebase/database';
@@ -129,6 +129,27 @@ export function CreateRecipe({ route, navigation }) {
     .filter((item) => item != "Favorites" && item != "Recent")
     .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
     );
+
+    useEffect(() => {
+      const backAction = () => {
+        Alert.alert("Hold on!", "Are you sure you want to go back?", [
+          {
+            text: "Cancel",
+            onPress: () => null,
+            style: "cancel"
+          },
+          { text: "YES", onPress: () => navigation.goBack() }
+        ]);
+        return true;
+      };
+  
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        backAction
+      );
+  
+      return () => backHandler.remove();
+    }, []);
 
 
   const pickerDisplay =

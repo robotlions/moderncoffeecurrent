@@ -66,6 +66,9 @@ export function DisplayRecipe({ route, navigation }) {
     }, [editing]));
 
 
+    
+
+
   function addRemoveStar() {
     loadedRecipe.favorite == true ? loadedRecipe.favorite = false : loadedRecipe.favorite = true
     database()
