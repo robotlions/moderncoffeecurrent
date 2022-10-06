@@ -39,7 +39,9 @@ function InputWindow(props) {
     />
   )
 };
+
 let dataObject = {};
+
 
 export function CreateRecipe({ route, navigation }) {
 
@@ -48,6 +50,7 @@ export function CreateRecipe({ route, navigation }) {
   const [loadedMethods, setLoadedMethods] = useState({});
   const [order, setOrder] = useState(0);
   const [variableList, setVariableList] = useState([]);
+  const [editing, setEditing] = useState(true);
 
 
 
@@ -131,14 +134,15 @@ export function CreateRecipe({ route, navigation }) {
     );
 
     useEffect(() => {
+      if (editing===true){
       const backAction = () => {
-        Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        Alert.alert("You have unsaved changes.", "Would you like to discard this recipe or keep working on it?", [
           {
-            text: "Cancel",
+            text: "Keep working",
             onPress: () => null,
             style: "cancel"
           },
-          { text: "YES", onPress: () => navigation.goBack() }
+          { text: "Discard", onPress: () => navigation.goBack() }
         ]);
         return true;
       };
@@ -149,7 +153,7 @@ export function CreateRecipe({ route, navigation }) {
       );
   
       return () => backHandler.remove();
-    }, []);
+    }}, []);
 
 
   const pickerDisplay =
