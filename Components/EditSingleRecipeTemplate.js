@@ -120,12 +120,12 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
 
   const flatlistFooter = <View>
 
-    <Text style={{ textAlign: "center" }}>
-      <TouchableOpacity style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }} onPress={() => navigation.goBack()}><Text style={styles.modalButtonText}>Back to edit</Text></TouchableOpacity>
+    <Text style={{ textAlign: "center", marginBottom: 20 }}>
+      <TouchableOpacity style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }} onPress={() => navigation.goBack()}><Text style={[styles.modalButtonText, {fontSize: 20}]}>Back to edit</Text></TouchableOpacity>
     </Text>
-    <Text style={{ textAlign: "center" }}>
+    {/* <Text style={{ textAlign: "center" }}>
       <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
-    </Text>
+    </Text> */}
   </View>
 
   const renderItem = ({ item, drag, isActive }) => {

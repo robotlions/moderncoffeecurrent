@@ -108,6 +108,7 @@ export function DisplayRecipe({ route, navigation }) {
 
       <View key={index}>
         <TextInput
+        autoFocus={true}
           style={[styles.input, { width: "100%", paddingLeft: 10 }]}
           value={editValue}
           onChangeText={setEditValue}
@@ -127,7 +128,7 @@ export function DisplayRecipe({ route, navigation }) {
 function deleteAlert(endpoint) {
   Alert.alert(
     `Delete-O-Matic`,
-    `Are you sure? This will permanently delete this recipe.`,
+    `Are you sure? This will permanently delete "${loadedRecipe["Recipe Name"].variableValue}".`,
     [
       {
         text: `Delete`,
