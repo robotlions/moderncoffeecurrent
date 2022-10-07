@@ -24,7 +24,7 @@ function InputWindow(props) {
     }, []));
 
   useEffect(() => {
-    dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order };
+    props.dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order };
   });
 
   const [varState, setVarState] = useState("");
@@ -35,12 +35,11 @@ function InputWindow(props) {
       placeholder={props.item.variableName}
       value={varState}
       onChangeText={setVarState}
-      onEndEditing={() => dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order }}
+      // onEndEditing={() => props.dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order }}
     />
   )
 };
 
-let dataObject = {};
 
 
 export function CreateRecipe({ route, navigation }) {
@@ -52,6 +51,7 @@ export function CreateRecipe({ route, navigation }) {
   const [variableList, setVariableList] = useState([]);
   const [editing, setEditing] = useState(true);
 
+  let dataObject = {};
 
 
 
@@ -197,7 +197,7 @@ export function CreateRecipe({ route, navigation }) {
 
   return (
 
-    <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ alignItems: "center" }}>
       {pickerDisplay}
       {inputDisplay}
       <TouchableOpacity onPress={() => method == "" ? alert("Please choose brew method") : pushNewEntry()}><Text style={[styles.modalButtonText, { marginTop: 10, marginBottom: 10, fontSize: 25 }]}>Save Recipe</Text></TouchableOpacity>
