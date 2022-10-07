@@ -7,6 +7,7 @@ import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import { useFocusEffect } from '@react-navigation/native';
 import hamburgerIcon from '../assets/images/hamburgerIcon.png';
+import updownIcon from '../assets/images/updownIcon.png';
 
 
 import DraggableFlatList, {
@@ -137,11 +138,15 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
           onLongPress={drag}
           disabled={isActive}
         >
-          <Image source={hamburgerIcon} style={{opacity:.7, marginLeft: 10, marginTop: 3, position: "absolute", marginRight: 10}}/>
+          <View style={{flex: 1, justifyContent:"center"}}>
+
+                    <Image source={updownIcon} style={{height:30, width: 30, marginLeft: 10, opacity:.5, marginTop: 3, position: "absolute", marginRight: 10}}/>
+
 
           <View style={[styles.variableEntry, {paddingLeft: 70}]}><Text style={{ maxWidth: "80%", fontFamily: "Raleway-Medium", fontSize: 16 }}>{item.id} - {item.label}</Text>
             {item.id != "Recipe Name" && item.id != "Description" && <TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`)}>
               <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity>}
+          </View>
           </View>
           </TouchableOpacity>
         

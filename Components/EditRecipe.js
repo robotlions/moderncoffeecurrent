@@ -120,7 +120,8 @@ useFocusEffect(
       .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
       .update(dataObject),
       alert("Updated!")
-    navigation.goBack();
+    navigation.goBack()
+    reset();
   }
 
   function pushNewVariable(dataObject, endpoint, navigation) {
@@ -185,7 +186,7 @@ useFocusEffect(
 
  
     return (
-      <ScrollView contentContainerStyle={{ alignItems: "center" }}>
+      <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ alignItems: "center" }}>
         
         {pickerDisplay}
         {editDisplay}

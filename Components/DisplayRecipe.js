@@ -158,23 +158,24 @@ function deleteSelected(endpoint) {
   return (
 
     <>
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
         {editDisplay}
-        <Text style={{ textAlign: "center" }}>
-          <TouchableOpacity style={styles.modalButton} onPress={() => navigation.navigate("Edit", { loadedID: loadedID, loadedRecipe: loadedRecipe })}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>Edit Recipe</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.modalButton} onPress={() => deleteAlert(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>Delete Recipe</Text></TouchableOpacity>
-          {"\n"}
-          <TouchableOpacity onPress={() => addRemoveStar()}><Text style={styles.modalButtonText}>{loadedRecipe.favorite == true ? "Remove from Favorites" : "Add to Favorites"}</Text></TouchableOpacity>
-          {"\n"}
-        </Text>
+        <View style={{flex:1, flexDirection: "row", justifyContent: "space-around"}}>
+          <TouchableOpacity onPress={() => navigation.navigate("Edit", { loadedID: loadedID, loadedRecipe: loadedRecipe })}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>Edit Recipe</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => deleteAlert(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>Delete Recipe</Text></TouchableOpacity>
+          </View>
+          
+          <TouchableOpacity style={{marginTop: 10, marginBottom: 10}} onPress={() => addRemoveStar()}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>{loadedRecipe.favorite == true ? "Remove from Favorites" : "Add to Favorites"}</Text></TouchableOpacity>
+          
+        
 
 
       </ScrollView>
 
-      <View style={{ backgroundColor: "white", height: 20 * scale, borderTopWidth: .5, borderColor: "gray" }}>
+      {!editing && <View style={{ backgroundColor: "white", height: 20 * scale, borderTopWidth: .5, borderColor: "gray" }}>
         <Timer />
-      </View>
+      </View>}
     </>
   )
 }
