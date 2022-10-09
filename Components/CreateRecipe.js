@@ -133,7 +133,8 @@ export function CreateRecipe({ route, navigation }) {
     .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
     );
 
-    useEffect(() => {
+    useFocusEffect(
+    useCallback(() => {
       if (editing===true){
       const backAction = () => {
         Alert.alert("You have unsaved changes.", "Would you like to discard this recipe or keep working on it?", [
@@ -142,7 +143,7 @@ export function CreateRecipe({ route, navigation }) {
             onPress: () => null,
             style: "cancel"
           },
-          { text: "Discard", onPress: () => navigation.goBack() }
+          { text: "Discard", onPress: () => {BackHandler.removeEventListener("bardwareBackPress", backAction), navigation.goBack()} }
         ]);
         return true;
       };
@@ -153,7 +154,7 @@ export function CreateRecipe({ route, navigation }) {
       );
   
       return () => backHandler.remove();
-    }}, []);
+    }}, []));
 
 
   const pickerDisplay =
