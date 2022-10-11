@@ -202,6 +202,8 @@ export function CreateRecipe({ route, navigation }) {
       {pickerDisplay}
       {inputDisplay}
       <TouchableOpacity onPress={() => method == "" ? alert("Please choose brew method") : pushNewEntry()}><Text style={[styles.modalButtonText, { marginTop: 10, marginBottom: 10, fontSize: 25 }]}>Save Recipe</Text></TouchableOpacity>
+      <TouchableOpacity onPress={() =>  {BackHandler.removeEventListener("bardwareBackPress"), navigation.goBack()}}><Text style={[styles.modalButtonText, { marginTop: 10, marginBottom: 10, fontSize: 25 }]}>Cancel</Text></TouchableOpacity>
+    
     </ScrollView>
 
   );
