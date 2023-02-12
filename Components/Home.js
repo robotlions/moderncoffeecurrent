@@ -74,7 +74,7 @@ const methodDisplay = Object.values(methodList)
       <StatusBar translucent={true} backgroundColor="transparent" />
 
 
-      <ScrollView>
+      <ScrollView style={styles.scrollViewStyle}>
         {favoritesDisplay}
         {methodDisplay}
         <TouchableOpacity style={styles.addItemTouchable} onPress={() => navigation.navigate('Create Recipe')}><Text style={[styles.categoryText, { color: "white" }]}>Create Recipe</Text></TouchableOpacity>

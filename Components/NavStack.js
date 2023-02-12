@@ -44,7 +44,7 @@ export function TabNav(){
         <Tab.Navigator
         screenOptions={{
           // tabBarStyle:{backgroundColor: "rgba(253,121,8,.8)", paddingTop: 3},
-          tabBarStyle:{bacgroundColor: "white", paddingTop: 3},
+          tabBarStyle:{backgroundColor: "white", paddingTop: 3},
           tabBarHideOnKeyboard: true,
           tabBarActiveTintColor: "rgb(159, 50, 1)", 
           // tabBarActiveTintColor: "rgb(253, 121, 8)", 

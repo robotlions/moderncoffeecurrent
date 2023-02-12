@@ -102,7 +102,7 @@ export default function App() {
  else{
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1}}>
     <NavigationContainer>
       <ImageBackground resizeMode="cover" style={{ maxHeight:"30%" }} source={vintageCoffee}>
         <Text style={styles.mainTitleText}>modern coffee</Text>

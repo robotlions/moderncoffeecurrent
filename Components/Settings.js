@@ -208,7 +208,9 @@ export function Settings({ route, navigation }) {
   return (
     <ScrollView style={{ paddingLeft: 10}}>
       <Text style={styles.modalButtonText}>Signed in as:</Text>
-      {user && user.displayName ? <Text>{user.displayName}</Text> : null}
+      {/* {user && user.displayName ? <Text>{user.displayName}</Text> : <Text>You can change your diplay name below.</Text>} */}
+      {/* {console.log(user.providerData[0].providerId)}
+      <Text>{String(user.providerData[0].providerId)}</Text> */}
       <Text>{user && user.email}</Text>
       <TouchableOpacity onPress={() => signOut()}><Text style={[styles.modalButtonText, { color: "#fd7908" }]}>Sign out</Text></TouchableOpacity>
       <Text>{"\n"}</Text>
@@ -217,10 +219,13 @@ export function Settings({ route, navigation }) {
       <TouchableOpacity style={styles.settingsTouchable} onPress={() => navigation.navigate("Recipe Template")}><Text style={styles.modalButtonText}>Customize Recipe Template</Text></TouchableOpacity>
       <Text>{"\n"}</Text>
       <Text style={{fontFamily: "Raleway-Medium"}}>Account</Text>
+      
+      {user.providerData[0].providerId==="password" && 
       <TouchableOpacity style={styles.settingsTouchable} onPress={() => setPassModalVisible(!passModalVisible)}><Text style={styles.modalButtonText}>Change Password</Text></TouchableOpacity>
+  }
       {passModalVisible && changePasswordModule}
-      <TouchableOpacity style={styles.settingsTouchable} onPress={() => setChangeDisplayNameModuleVisble(!changeDisplayNameModuleVisible)}><Text style={styles.modalButtonText}>Change Display Name</Text></TouchableOpacity>
-      {changeDisplayNameModuleVisible && changeDisplayNameModule}
+      {/* <TouchableOpacity style={styles.settingsTouchable} onPress={() => setChangeDisplayNameModuleVisble(!changeDisplayNameModuleVisible)}><Text style={styles.modalButtonText}>Change Display Name</Text></TouchableOpacity>
+      {changeDisplayNameModuleVisible && changeDisplayNameModule} */}
       
       <TouchableOpacity style={styles.settingsTouchable} onPress={() => setDeleteAccountModuleVisible(!deleteAccountModuleVisible)}><Text style={styles.modalButtonText}>Delete Account</Text></TouchableOpacity>
       {deleteAccountModuleVisible && deleteAccountModule}
@@ -228,9 +233,9 @@ export function Settings({ route, navigation }) {
       <Text>{"\n"}</Text>
 
       <Text style={styles.modalButtonText}>About</Text>
-<Text style={{fontFamily: "Raleway-Medium"}}>Modern Coffee ver. 0.51 build 9{"\n"}
-Sept 2022{"\n"}
-© 2022 by Robot Lions{"\n"}
+<Text style={{fontFamily: "Raleway-Medium"}}>Modern Coffee ver. 0.60 build 10{"\n"}
+Feb 2023{"\n"}
+© 2023 by Robot Lions{"\n"}
 Contact and feedback: info@robotlions.com</Text>
     </ScrollView>
   );

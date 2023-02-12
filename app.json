@@ -18,6 +18,10 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "buildNumber": "5"
     },
+    "android": {
+      "googleServicesFile": "./google-services.json"
+    },
+    "plugins": ["@react-native-google-signin/google-signin"],
     "extra": {
       "eas": {
         "projectId": "f2b30b22-baf3-4b00-adf2-8acfd85d04f0"

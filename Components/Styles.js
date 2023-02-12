@@ -64,6 +64,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+
   },
 
   customFieldEntry: {
@@ -204,6 +205,11 @@ export const styles = StyleSheet.create({
     fontFamily: "Raleway-Bold",
   },
 
+  scrollViewStyle:{
+//add background color here
+  },
+
+ 
   settingsTouchable:{
     marginBottom: 5,
   },
