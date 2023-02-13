@@ -4,6 +4,17 @@ import { styles } from "./Styles";
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';
 import * as Functions from "./Functions";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+
+GoogleSignin.configure({
+  webClientId:
+    '14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com',
+});
+
 
 
 export function Settings({ route, navigation }) {
@@ -16,6 +27,14 @@ export function Settings({ route, navigation }) {
   const [passModalVisible, setPassModalVisible] = useState(false);
   const [changeDisplayNameModuleVisible, setChangeDisplayNameModuleVisble] = useState(false);
   const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] = useState(false);
+
+  const user = auth().currentUser;
+
+  async function onGoogleButtonPress() {
+    const { idToken } = await GoogleSignin.signIn();
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    return auth().signInWithCredential(googleCredential);
+  }
 
   const changePasswordModule =
     <View>
@@ -65,18 +84,19 @@ export function Settings({ route, navigation }) {
         value={email}
         onChangeText={setEmail}
       />
+      {user.providerData[0].providerId==="password" &&
       <TextInput
         style={styles.input}
         placeholder="Current Password"
         secureTextEntry={true}
         value={password}
         onChangeText={setPassword}
-      />
+      />}
       <TouchableOpacity onPress={() => deleteAlert()}><Text style={[styles.modalButtonText, { color: "#fd7908" }]}>Permanently Delete Account</Text></TouchableOpacity>
 
     </View>
 
-  const user = auth().currentUser;
+  
 
   function signOut() {
     auth()
@@ -152,7 +172,7 @@ export function Settings({ route, navigation }) {
   function deleteAlert() {
 
     if (email != user.email) {
-      return alert("That password doesn't match this account.")
+      return alert("That email doesn't match this account.")
     }
     else {
       Alert.alert(
@@ -176,34 +196,58 @@ export function Settings({ route, navigation }) {
     }
   }
 
-
-
   function deleteAccount() {
-    const credential = auth.EmailAuthProvider.credential(
-      user.email,
-      password
-    )
+    
 
     database()
       .ref(`/users/${user.uid}/`)
       .remove();
-    auth()
-      .currentUser
-      .reauthenticateWithCredential(credential)
-      .then(() => {
+    
         auth()
           .currentUser
           .delete()
-        // .then(() => {
-        //   alert("Sorry to see you go!")
-        //   // navigation.navigate("Home");
-        // })
-      }).catch((error) => {
+        
+      
+      .catch((error) => {
         const errorCode = error.code
         console.log(errorCode)
       });
 
   }
+
+//THIS IS THE CORRECT DELETE FUNCTION. THE ONE ABOVE REMOVES THE REAUTHENTICATION FOR TESTING
+
+  // function deleteAccount() {
+  //   const credential = 
+    
+  //   auth.EmailAuthProvider.credential(
+  //     user.email,
+  //     password
+  //   )
+
+  //   database()
+  //     .ref(`/users/${user.uid}/`)
+  //     .remove();
+  //   auth()
+  //     .currentUser
+  //     .reauthenticateWithCredential(credential)
+  //     .then(() => {
+  //       auth()
+  //         .currentUser
+  //         .delete()
+  //       // .then(() => {
+  //       //   alert("Sorry to see you go!")
+  //       //   // navigation.navigate("Home");
+  //       // })
+  //     }
+  //     ).catch((error) => {
+  //       const errorCode = error.code
+  //       console.log(errorCode)
+  //     });
+
+  // }
+
+  
 
   return (
     <ScrollView style={{ paddingLeft: 10}}>
