@@ -52,14 +52,17 @@ export const LoginModal = (props) => {
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
-            console.log('That email address is already in use!');
+            alert('That email address is already in use. Did you create an account by signing in through Google?');
           }
 
           if (error.code === 'auth/invalid-email') {
-            console.log('That email address is invalid!');
+            alert('That email address is invalid.');
+          }
+          if (error.code === 'auth/weak-password') {
+            alert('Password must be a minimum of six characters.');
           }
 
-          // console.error(error);
+          console.log(error.code, error.message);
         })
     }
   };
@@ -81,7 +84,7 @@ export const LoginModal = (props) => {
           alert("Please enter a valid email address")
         };
         if (errorCode === 'auth/wrong-password') {
-          alert("I'm sorry, that's not the password for this user's secret, illegal account.")
+          alert("This password doesn't match the email. Did you create your account by signing in through Google?")
         };
 
       });
