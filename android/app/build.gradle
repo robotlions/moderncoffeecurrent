@@ -1,3 +1,8 @@
+plugins {
+  id 'com.android.application'
+  id 'com.google.gms.google-services'
+}
+
 apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 
@@ -196,13 +201,17 @@ android {
     }
 }
 
+
+
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
     implementation("com.facebook.react:react-android")
-implementation platform('com.google.firebase:firebase-bom:30.3.1')
-implementation 'com.google.firebase:firebase-analytics'
-implementation 'com.google.firebase:firebase-auth'
- implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    implementation platform('com.google.firebase:firebase-bom:31.2.3')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
     
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
