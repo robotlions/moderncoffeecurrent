@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
+import auth, { firebase } from "@react-native-firebase/auth";
 import * as Functions from "./Functions";
 import {
   GoogleSignin,
@@ -18,10 +18,10 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 
-GoogleSignin.configure({
-  webClientId:
-    "14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com",
-});
+// GoogleSignin.configure({
+//   webClientId:
+//     "14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com",
+// });
 
 export function Settings({ route, navigation }) {
   const [password, setPassword] = useState("");
@@ -173,6 +173,8 @@ export function Settings({ route, navigation }) {
       });
   }
 
+
+
   function deleteAlert() {
     
 
@@ -185,7 +187,7 @@ export function Settings({ route, navigation }) {
         [
           {
             text: `Yes, delete account`,
-            onPress: () => deleteAccount(),
+            onPress: user.providerData[0].providerId === "password" ? () => deleteEmailAccount() : ()=>deleteGoogleAccount(),
             style: "cancel",
           },
           {
@@ -200,35 +202,33 @@ export function Settings({ route, navigation }) {
     }
   }
 
-  // function deleteAccount() {
+  
 
-  //   database()
-  //     .ref(`/users/${user.uid}/`)
-  //     .remove();
+  async function deleteGoogleAccount() {
 
-  //       auth()
-  //         .currentUser
-  //         .delete()
+    // const { accessToken, idToken } = await GoogleSignin.getTokens();
+    // const credential = auth.GoogleAuthProvider.credential(idToken, accessToken);
 
-  //     .catch((error) => {
-  //       const errorCode = error.code
-  //       console.log(errorCode)
-  //     });
-
-  // }
-
-  //THIS IS THE CORRECT DELETE FUNCTION. THE ONE ABOVE REMOVES THE REAUTHENTICATION FOR TESTING
-
-
-
-  function deleteAccount() {
-    const credential = auth.EmailAuthProvider.credential(user.email, password);
-
-    // const credential =
-    //   user.providerData[0].providerId === "password" ? emailCred : googCred;
+    const {idToken} = await GoogleSignin.signIn();
+    const credential = auth.GoogleAuthProvider.credential(idToken);
 
     database().ref(`/users/${user.uid}/`).remove();
-    if(user.providerData[0].providerId === "password"){
+  
+    try {
+     
+      await auth().currentUser.reauthenticateWithCredential(credential)
+      .then(()=>{auth().currentUser.delete()});
+      console.log('User reauthenticated successfully!');
+    } catch (error) {
+      console.error('Error reauthenticating user:', error.message);
+    }
+  }
+
+
+  async function deleteEmailAccount() {
+    const credential = auth.EmailAuthProvider.credential(user.email, password);
+
+    database().ref(`/users/${user.uid}/`).remove();
     auth()
       .currentUser.reauthenticateWithCredential(credential)
       .then(() => {
@@ -238,14 +238,6 @@ export function Settings({ route, navigation }) {
         const errorCode = error.code;
         console.log(errorCode);
       });
-  }
-  else {
-    auth().currentUser.delete()
-    .catch((error) => {
-      const errorCode = error.code;
-      console.log(errorCode);
-    });
-  }
 }
 
   return (
