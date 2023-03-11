@@ -14,11 +14,13 @@ GoogleSignin.configure({
     '14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com',
 });
 
+
 async function onGoogleButtonPress() {
   const { idToken } = await GoogleSignin.signIn();
   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
   return auth().signInWithCredential(googleCredential);
 }
+
 
 
 export const LoginModal = (props) => {
@@ -48,6 +50,7 @@ export const LoginModal = (props) => {
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
+          auth().currentUser.sendEmailVerification();
           alert('User account created & signed in!');
         })
         .catch(error => {
