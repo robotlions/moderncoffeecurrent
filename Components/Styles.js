@@ -24,12 +24,10 @@ export const styles = StyleSheet.create({
     // color: "#9f3201",
     color: "white",
     fontSize: 18,
-    // backgroundColor: "#fd7908",
-    backgroundColor: "#9f3208",
-    // width: 100,
+    backgroundColor: "#fd7908",
     textAlign: "center",
     elevation: 3,
-    height: 35,
+    height: 40,
     textAlignVertical: "center",
     marginBottom: 5,
     borderRadius: 3,
@@ -171,8 +169,9 @@ export const styles = StyleSheet.create({
   modalButtonText: {
     fontFamily: "Raleway-Bold",
     // color: "rgb(1, 57, 72)",
-    color: "#9f3201",
-    fontSize: 18,
+    // color: "#9f3201",
+    color: "#fd7908",
+    fontSize: 20,
   },
 
   modalView: {

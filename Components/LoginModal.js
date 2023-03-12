@@ -1,19 +1,17 @@
-import { View, Text, TextInput, Modal, TouchableOpacity, Keyboard } from 'react-native';
-import { useState, useRef } from 'react';
-import { styles } from './Styles';
-import auth from '@react-native-firebase/auth';
+import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
+import { useState, useRef } from "react";
+import { styles } from "./Styles";
+import auth from "@react-native-firebase/auth";
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-} from '@react-native-google-signin/google-signin';
+} from "@react-native-google-signin/google-signin";
 
-//TODO: add ADD USER window in addition to login - also add SIGN IN WITH GOOGLE
 GoogleSignin.configure({
   webClientId:
-    '14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com',
+    "14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com",
 });
-
 
 async function onGoogleButtonPress() {
   const { idToken } = await GoogleSignin.signIn();
@@ -21,58 +19,55 @@ async function onGoogleButtonPress() {
   return auth().signInWithCredential(googleCredential);
 }
 
-
-
 export const LoginModal = (props) => {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [recoverPasswordModalVisible, setRecoverPasswordModalVisible] = useState(false);
+  const [recoverPasswordModalVisible, setRecoverPasswordModalVisible] =
+    useState(false);
   const passwordRef = useRef();
   const password2Ref = useRef();
 
-  // const auth = getAuth();
-
-
-
   function createUser() {
     if (email === "" || password === "") {
-      return alert("Please provide email and password")
+      return alert("Please provide email and password");
     }
     if (password != password2) {
-      return alert("The passwords don't match")
-    }
-    else {
+      return alert("The passwords don't match");
+    } else {
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Signed in 
+          // Signed in
           const user = userCredential.user;
           auth().currentUser.sendEmailVerification();
-          alert('User account created & signed in!');
+          alert(
+            "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
+          );
         })
-        .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
-            alert('That email address is already in use. Did you create an account by signing in through Google?');
+        .catch((error) => {
+          if (error.code === "auth/email-already-in-use") {
+            alert(
+              "That email address is already in use. Did you create an account by signing in through Google?"
+            );
           }
 
-          if (error.code === 'auth/invalid-email') {
-            alert('That email address is invalid.');
+          if (error.code === "auth/invalid-email") {
+            alert("That email address is invalid.");
           }
-          if (error.code === 'auth/weak-password') {
-            alert('Password must be a minimum of six characters.');
+          if (error.code === "auth/weak-password") {
+            alert("Password must be a minimum of six characters.");
           }
 
           console.log(error.code, error.message);
-        })
+        });
     }
-  };
+  }
 
   function signIn() {
     if (email == "" || password == "") {
-      return alert("Please enter email and password")
+      return alert("Please enter email and password");
     }
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -80,16 +75,17 @@ export const LoginModal = (props) => {
       .catch((error) => {
         console.log(error.code);
         const errorCode = error.code;
-        if (errorCode === 'auth/user-not-found') {
-          alert("No user by that name")
-        };
-        if (errorCode === 'auth/invalid-email') {
-          alert("Please enter a valid email address")
-        };
-        if (errorCode === 'auth/wrong-password') {
-          alert("This password doesn't match the email. Did you create your account by signing in through Google?")
-        };
-
+        if (errorCode === "auth/user-not-found") {
+          alert("No user by that name");
+        }
+        if (errorCode === "auth/invalid-email") {
+          alert("Please enter a valid email address");
+        }
+        if (errorCode === "auth/wrong-password") {
+          alert(
+            "This password doesn't match the email. Did you create your account by signing in through Google?"
+          );
+        }
       });
   }
 
@@ -97,58 +93,77 @@ export const LoginModal = (props) => {
     auth()
       .sendPasswordResetEmail(email)
       .then(() => {
-        alert('Password email sent!');
+        alert("Password email sent!");
         setRecoverPasswordModalVisible(false);
         setEmail("");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage)
-        alert(errorMessage)
+        console.log(errorCode, errorMessage);
+        alert(errorMessage);
       });
   }
 
   if (recoverPasswordModalVisible == true) {
     return (
-      <Modal
-        animationType="slide"
-        transparent={true}>
-        <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
+      <Modal animationType="slide" transparent={true}>
+        <View
+          style={{
+            paddingTop: 100,
+            height: "100%",
+            backgroundColor: "rgba(52, 52, 52, 0.7)",
+          }}
+        >
           <View style={[styles.modalView, { alignItems: "center" }]}>
-            <TextInput style={styles.inputLogin}
+            <TextInput
+              style={styles.inputLogin}
               value={email}
               onChangeText={setEmail}
               returnKeyType="next"
               placeholder="Email"
               onSubmitEditing={() => triggerEmailReset()}
-              blurOnSubmit={false} />
+              blurOnSubmit={false}
+            />
 
-
-            <TouchableOpacity onPress={() => triggerEmailReset()}><Text style={styles.modalButtonText}>Recover Password</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => triggerEmailReset()}>
+              <Text style={styles.modalButtonText}>Recover Password</Text>
+            </TouchableOpacity>
             <Text>{"\n"}</Text>
-            <TouchableOpacity onPress={() => { setRecoverPasswordModalVisible(false), setCreateModalVisible(false) }}><Text style={styles.modalButtonText}>Return to Login</Text></TouchableOpacity>
-
+            <TouchableOpacity
+              onPress={() => {
+                setRecoverPasswordModalVisible(false),
+                  setCreateModalVisible(false);
+              }}
+            >
+              <Text style={styles.modalButtonText}>Return to Login</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    )
+    );
   }
 
   if (createModalVisible == true) {
     return (
-      <Modal
-        animationType="slide"
-        transparent={true}>
-        <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
+      <Modal animationType="slide" transparent={true}>
+        <View
+          style={{
+            paddingTop: 100,
+            height: "100%",
+            backgroundColor: "rgba(52, 52, 52, 0.7)",
+          }}
+        >
           <View style={[styles.modalView, { alignItems: "center" }]}>
-            <TextInput style={styles.inputLogin}
+            <TextInput
+              style={styles.inputLogin}
               value={email}
               onChangeText={setEmail}
               returnKeyType="next"
               placeholder="Email"
               onSubmitEditing={() => passwordRef.current.focus()}
-              blurOnSubmit={false} />
+              blurOnSubmit={false}
+            />
 
             <TextInput
               ref={passwordRef}
@@ -169,29 +184,42 @@ export const LoginModal = (props) => {
               onSubmitEditing={() => createUser()}
             />
 
-            <TouchableOpacity onPress={() => createUser()}><Text style={styles.modalButtonText}>Create Account</Text></TouchableOpacity>
+            <TouchableOpacity style={{ marginTop: 10, width: "89%" }} onPress={() => createUser()}>
+              <Text style={styles.buttonStandard}>Create Account</Text>
+            </TouchableOpacity>
             <Text>{"\n"}</Text>
-            <TouchableOpacity onPress={() => { setCreateModalVisible(false), setRecoverPasswordModalVisible(false) }}><Text style={styles.modalButtonText}>Return to Login</Text></TouchableOpacity>
-
+            <TouchableOpacity
+              onPress={() => {
+                setCreateModalVisible(false),
+                  setRecoverPasswordModalVisible(false);
+              }}
+            >
+              <Text style={styles.modalButtonText}>Return to Login</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    )
-  }
-  else {
+    );
+  } else {
     return (
-      <Modal
-        animationType="slide"
-        transparent={true}>
-        <View style={{ paddingTop: 100, height: "100%", backgroundColor: "rgba(52, 52, 52, 0.7)" }}>
+      <Modal animationType="slide" transparent={true}>
+        <View
+          style={{
+            paddingTop: 100,
+            height: "100%",
+            backgroundColor: "rgba(52, 52, 52, 0.7)",
+          }}
+        >
           <View style={[styles.modalView, { alignItems: "center" }]}>
-            <TextInput style={styles.inputLogin}
+            <TextInput
+              style={styles.inputLogin}
               value={email}
               onChangeText={setEmail}
               returnKeyType="next"
               placeholder="Email"
               onSubmitEditing={() => passwordRef.current.focus()}
-              blurOnSubmit={false} />
+              blurOnSubmit={false}
+            />
 
             <TextInput
               ref={passwordRef}
@@ -202,23 +230,31 @@ export const LoginModal = (props) => {
               placeholder="Password"
               onSubmitEditing={() => signIn()}
             />
-            <TouchableOpacity style={{marginTop: 10, width: "94%"}}onPress={() => signIn()}><Text style={styles.buttonStandard}>Sign In</Text></TouchableOpacity>
+            <TouchableOpacity
+              style={{ marginTop: 10, width: "89%" }}
+              onPress={() => signIn()}
+            >
+              <Text style={styles.buttonStandard}>Sign In</Text>
+            </TouchableOpacity>
             <GoogleSigninButton
-              style={{ maxWidth: "100%", maxHeight:70}}
+              style={{ maxWidth: "100%", maxHeight: 70, marginBottom: 20 }}
               size={GoogleSigninButton.Size.Wide}
               color={GoogleSigninButton.Color.Dark}
               onPress={() => onGoogleButtonPress()}
-              // disabled={this.state.isSigninInProgress}
             />
-            <Text>{"\n"}-OR-{"\n"}</Text>
 
-            {/* <TouchableOpacity onPress={()=>onGoogleButtonPress()}><Text>Sign in with google?</Text></TouchableOpacity> */}
-            <TouchableOpacity onPress={() => setCreateModalVisible(true)}><Text style={styles.modalButtonText}>Create Account</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => setRecoverPasswordModalVisible(true)}><Text style={styles.modalButtonText}>Recover Password</Text></TouchableOpacity>
-
+            <TouchableOpacity onPress={() => setCreateModalVisible(true)}>
+              <Text style={styles.modalButtonText}>Create Account</Text>
+            </TouchableOpacity>
+            <Text>or</Text>
+            <TouchableOpacity
+              onPress={() => setRecoverPasswordModalVisible(true)}
+            >
+              <Text style={styles.modalButtonText}>Recover Password</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    )
+    );
   }
-}
+};
