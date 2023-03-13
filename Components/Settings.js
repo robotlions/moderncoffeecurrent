@@ -113,7 +113,8 @@ export function Settings({ route, navigation }) {
   );
 
   function signOut() {
-    auth().signOut();
+   auth().signOut();
+    GoogleSignin.signOut();
     navigation.navigate("Home");
   }
 
@@ -295,7 +296,7 @@ export function Settings({ route, navigation }) {
 
       <Text style={styles.modalButtonText}>About</Text>
       <Text style={{ fontFamily: "Raleway-Medium" }}>
-        Modern Coffee ver. 0.61 build 10{"\n"}
+        Modern Coffee ver. 0.62 build 11{"\n"}
         March 2023{"\n"}© 2023 by Robot Lions{"\n"}
         Contact and feedback: info@robotlions.com
       </Text>
