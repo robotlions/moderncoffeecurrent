@@ -4,6 +4,7 @@ import { Dimensions } from 'react-native';
 
 export const scale = Dimensions.get('window').scale
 export const winWidth = Dimensions.get('window').width
+export const winHeight = Dimensions.get('window').height
 
 export const styles = StyleSheet.create({
 
@@ -13,8 +14,9 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fd7908",
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    minHeight: 50,
+    minHeight: winHeight *.07,
     justifyContent: "center",
+    marginTop: 50,
 
 
   },
@@ -43,21 +45,15 @@ export const styles = StyleSheet.create({
   },
   categoryTouchable: {
     marginTop: 20,
-    height: 160,
-    width: 160,
+    height: winHeight *.13,
     justifyContent: "center",
-    // borderWidth: 1,
-    // borderColor: "#fd7908",
-    // borderLeftWidth: 1,
-    // borderRightWidth: 1,
-    // backgroundColor: "white",
     elevation: 2,
     },
 
   categoryText: {
     textAlign: "center",
     fontFamily: "Corben-Bold",
-    fontSize: 20,
+    fontSize: scale * 8,
     paddingLeft: 5,
     color: "white",
     textShadowColor:"#39230E",
@@ -254,6 +250,7 @@ alignItems: "center",
   variableText: {
     fontFamily: "Raleway-Medium",
     fontSize: 20,
+    maxWidth:'60%'
 
   },
 

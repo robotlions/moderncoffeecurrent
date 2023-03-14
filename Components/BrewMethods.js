@@ -9,9 +9,39 @@ import { useFocusEffect } from '@react-navigation/native';
 const NewMethodInput = (props) => {
   const [thisState, setThisState] = useState("");
   const [orderCount, setOrderCount] = useState(0);
+  const [bgColor, setBGColor] = useState(0);
+  const [loading, setLoading] = useState(true);
   
   
   database().ref(props.endpoint).once('value').then((snapshot)=>{setOrderCount(snapshot.numChildren()+1)})
+
+
+  const colorPalette={
+    1: "#A67C83",
+    2: "#7A5546",
+    3: "#5B3118",
+    4: "#734729",
+    5: "#AB3625",
+    6: "#935230",
+    7: "#9E6D5C",
+    8: "#C99074",
+    9: "#B68576",
+    10: "#B98D8B",
+    11: "#D1A59E",
+  }
+
+  function doRandom(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+ 
+    if(loading===true){
+    
+      let colorPick = doRandom(1,11)
+      setBGColor(colorPalette[colorPick])
+      setLoading(false);
+    }
+  
 
   return (
     <>
@@ -23,7 +53,7 @@ const NewMethodInput = (props) => {
       >
       </TextInput>
       {thisState != '' && <TouchableOpacity
-        onPress={() => { pushNewVariable({methodName: thisState, order:orderCount}, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
+        onPress={() => { pushNewVariable({methodName: thisState, order:orderCount, backgroundColor: bgColor}, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
         <Text style={[styles.modalButtonText, {textAlign: "center"}]}>Save New Method</Text></TouchableOpacity>}
     </>
   )

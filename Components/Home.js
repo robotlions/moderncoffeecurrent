@@ -76,11 +76,11 @@ const methodDisplay = Object.values(methodList)
 
 
       <ScrollView style={styles.scrollViewStyle}>
-      <View style={{flex:1, flexDirection: "row", flexWrap: "wrap", justifyContent:"space-evenly", marginBottom:30}}>
+      {/* <View style={{flex:1, flexDirection: "row", flexWrap: "wrap", justifyContent:"space-evenly", marginBottom:30}}> */}
 
         {favoritesDisplay}
         {methodDisplay}
-        </View>
+        {/* </View> */}
         <TouchableOpacity style={styles.addItemTouchable} onPress={() => navigation.navigate('Create Recipe')}><Text style={[styles.categoryText, { color: "white" }]}>Create Recipe</Text></TouchableOpacity>
       </ScrollView>
       
