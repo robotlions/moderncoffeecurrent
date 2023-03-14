@@ -46,7 +46,7 @@ export function HomeScreen({ route, navigation }) {
 
   const favoritesDisplay = 
   <TouchableOpacity
-    style={styles.categoryTouchable}
+    style={[styles.categoryTouchable, {backgroundColor: "#FD7908"}]}
     onPress={() => navigation.navigate('Favorites')}>
     <Text style={styles.categoryText}>Favorites</Text>
   </TouchableOpacity>
@@ -61,7 +61,7 @@ const methodDisplay = Object.values(methodList)
 
   <TouchableOpacity
   key={index}
-    style={styles.categoryTouchable}
+    style={[styles.categoryTouchable, {backgroundColor:item.backgroundColor}]}
     onPress={() => navigation.navigate('List Recipes', { filter: String(item.methodName) })}>
     <Text style={styles.categoryText}>{item.methodName}</Text>
   </TouchableOpacity>)

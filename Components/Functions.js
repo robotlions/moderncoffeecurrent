@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Alert, TextInput, Text, TouchableOpacity } from 'react-native';
 import { styles } from './Styles';
-import { Picker } from "@react-native-picker/picker";
-import { methodTemplate } from '../Data/Models';
+// import { Picker } from "@react-native-picker/picker";
+// import { methodTemplate } from '../Data/Models';
 import database from '@react-native-firebase/database';
 
 
