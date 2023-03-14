@@ -42,14 +42,16 @@ export const styles = StyleSheet.create({
     fontFamily: "Raleway-Medium",
   },
   categoryTouchable: {
-    marginBottom: 8,
-    height: 50,
+    marginTop: 20,
+    height: 160,
+    width: 160,
     justifyContent: "center",
-    // borderWidth: 1,
-    // borderColor: "#fd7908",
-    // borderLeftWidth: 0,
-    // borderRightWidth: 0,
+    borderWidth: 1,
+    borderColor: "#fd7908",
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
     backgroundColor: "white",
+    elevation: 3,
     },
 
   categoryText: {
@@ -57,7 +59,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Raleway-Black",
     fontSize: 25,
     paddingLeft: 5,
-    color: "#9f3201",
+    color: "#fd7908"
   },
   container: {
     flex: 1,
@@ -205,7 +207,7 @@ export const styles = StyleSheet.create({
   },
 
   scrollViewStyle:{
-//add background color here
+//insert main app background color here
   },
 
  

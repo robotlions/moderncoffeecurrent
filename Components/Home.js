@@ -58,12 +58,13 @@ export function HomeScreen({ route, navigation }) {
 const methodDisplay = Object.values(methodList)
 .sort((a,b)=> a.order-b.order)
 .map((item, index) =>
-<View key={index}>
+
   <TouchableOpacity
+  key={index}
     style={styles.categoryTouchable}
     onPress={() => navigation.navigate('List Recipes', { filter: String(item.methodName) })}>
     <Text style={styles.categoryText}>{item.methodName}</Text>
-  </TouchableOpacity></View>)
+  </TouchableOpacity>)
 
 
 
@@ -75,8 +76,11 @@ const methodDisplay = Object.values(methodList)
 
 
       <ScrollView style={styles.scrollViewStyle}>
+      <View style={{flex:1, flexDirection: "row", flexWrap: "wrap", justifyContent:"space-evenly", marginBottom:30}}>
+
         {favoritesDisplay}
         {methodDisplay}
+        </View>
         <TouchableOpacity style={styles.addItemTouchable} onPress={() => navigation.navigate('Create Recipe')}><Text style={[styles.categoryText, { color: "white" }]}>Create Recipe</Text></TouchableOpacity>
       </ScrollView>
       
