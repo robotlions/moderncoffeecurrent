@@ -46,36 +46,36 @@ export const EditInputWindow = (props) => {
   )
 };
 
-export const PickerDisplay = (props) => {
+// export const PickerDisplay = (props) => {
 
-  useEffect(() => {
-    props.dataObject.method = props.method;
-  });
+//   useEffect(() => {
+//     props.dataObject.method = props.method;
+//   });
 
-  const pickerMethodList = methodTemplate
-  .sort((a,b) => a.order-b.order)
-    .filter((item) => item != "Favorites" && item != "Recent")
-    .map((item, index) => <Picker.Item key={index} label={item} value={item} />
-    );
+//   const pickerMethodList = methodTemplate
+//   .sort((a,b) => a.order-b.order)
+//     .filter((item) => item != "Favorites" && item != "Recent")
+//     .map((item, index) => <Picker.Item key={index} label={item} value={item} />
+//     );
 
-  const userMethods = Object.values(props.loadedMethods).map((item, index) => <Picker.Item key={index} label={item} value={item} />)
-  return (
-    <Picker
-      style={styles.picker}
-      selectedValue={props.method}
-      onValueChange={(itemValue, itemIndex) => { props.setMethod(itemValue), props.dataObject.method = itemValue }}
-    >
-      <Picker.Item
-        color="gray"
-        enabled={false}
-        label="Select Brewing Method"
-        value=""
-      />
-      {pickerMethodList}
-      {userMethods}
-    </Picker>
-  )
-};
+//   const userMethods = Object.values(props.loadedMethods).map((item, index) => <Picker.Item key={index} label={item} value={item} />)
+//   return (
+//     <Picker
+//       style={styles.picker}
+//       selectedValue={props.method}
+//       onValueChange={(itemValue, itemIndex) => { props.setMethod(itemValue), props.dataObject.method = itemValue }}
+//     >
+//       <Picker.Item
+//         color="gray"
+//         enabled={false}
+//         label="Select Brewing Method"
+//         value=""
+//       />
+//       {pickerMethodList}
+//       {userMethods}
+//     </Picker>
+//   )
+// };
 
 
 

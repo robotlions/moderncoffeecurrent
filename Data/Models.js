@@ -84,8 +84,8 @@ export const methodTemplate = [
 export const methodObjects = [
     // "Recent",
     // "Favorites",
-    {methodName:"Pourover", order: 1},
-    {methodName: "French Press", order: 2},
+    {methodName:"Pourover", order: 2},
+    {methodName: "French Press", order: 1},
     {methodName: "Drip", order: 3},
     {methodName: "Moka Pot", order: 4},
     {methodName: "Espresso", order: 5},
@@ -97,10 +97,3 @@ export const methodObjects = [
 
 ]
 
-
-const testray =
-
-[
-    {"Agitation": "", "Amount": "", "Bloom": "", "Coffee Brand": "", "Description": "", "Equipment": "", "Grind Size": "", "Milk Amount": "", "Milk Temp": "", "Milk Type": "", "Notes": "", "Recipe Name": "will this show up in the array", "Roast": "", "Sweetener Amount": "", "Sweetener Type": "", "Water Amount": "", "Water Temp": "", "Water Type": "", "method": "Drip", "new variable test": ""},
-     {"Agitation": "", "Amount": "", "Bloom": "", "Coffee Brand": "", "Description": "", "Equipment": "", "Grind Size": "let's see if this updates", "Milk Amount": "", "Milk Temp": "", "Milk Type": "", "Notes": "", "Recipe Name": "new recipe 1", "Roast": "", "Sweetener Amount": "", "Sweetener Type": "", "Water Amount": "", "Water Temp": "", "Water Type": "", "favorite": true, "method": "Drip", "new variable test": ""},
-      {"Agitation": "", "Amount": "", "Bloom": "", "Coffee Brand": "", "Description": "", "Equipment": "", "Grind Size": "", "Milk Amount": "", "Milk Temp": "", "Milk Type": "", "Notes": "", "Recipe Name": "new directory for added recipe?", "Roast": "", "Sweetener Amount": "", "Sweetener Type": "", "Water Amount": "", "Water Temp": "", "Water Type": "", "method": "The Joan Collins Special", "new variable test": ""}]
