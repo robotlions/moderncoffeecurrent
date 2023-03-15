@@ -131,7 +131,6 @@ export const styles = StyleSheet.create({
     width: "90%",
     padding: 5,
     backgroundColor:"white",
-    elevation: 1,
     marginBottom: 5,
   },
 
@@ -265,10 +264,9 @@ alignItems: "center",
     justifyContent: "space-between",
     paddingLeft: 10,
     paddingRight: 10,
-    borderBottomColor: "gray",
-    borderBottomWidth: 1,
-    borderBottomLeftRadius:10,
-    borderBottomRightRadius: 10,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 10,
 
   },
   variableText: {

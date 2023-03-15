@@ -171,7 +171,8 @@ export function BrewMethods({ route, navigation }) {
     {editing===true && activeEdit===item[1].methodName
     ?
     <TextInput
-    style={[styles.input, {width: "50%"}]}
+    autoFocus={true}
+    style={[styles.input, {width: "50%", borderWidth:0, marginTop:2,backgroundColor:"transparent"}]}
     value={editInput}
     onChangeText={setEditInput}
   >

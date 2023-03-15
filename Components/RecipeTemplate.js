@@ -102,7 +102,7 @@ export function RecipeTemplate({ route, navigation }) {
     return (
       
         <TouchableOpacity
-              style={{height: 50, elevation: 1, backgroundColor: "white", marginBottom: 5 }}
+              
 
           onLongPress={drag}
           disabled={isActive}
@@ -202,7 +202,7 @@ export function RecipeTemplate({ route, navigation }) {
       onDragEnd={({ data }) => { setData(data), setIndices(data) }}
       keyExtractor={(item) => item.key}
       renderItem={renderItem}
-      ListHeaderComponent={() => <Text style={[styles.modalButtonText, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
+      ListHeaderComponent={() => <Text style={[styles.entryHeadline, { textAlign: "center", marginBottom: 5 }]}>Drag to reorder</Text>
       }
       ListFooterComponent={() => <NewVariableInput pushNewVariable={pushNewVariable} endpoint={`/users/${user.uid}/variables/`} user={user} navigation={navigation} setLoading={setLoading} />}
 
