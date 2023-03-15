@@ -120,13 +120,13 @@ export const styles = StyleSheet.create({
     bottom: 5,
   },
   input: {
-    // borderColor: "gray",
-    // borderWidth: 1,
+    borderColor: "gray",
+    borderWidth: .5,
     height: 40,
     width: "90%",
     padding: 5,
     backgroundColor:"white",
-    // elevation: 1,
+    elevation: 1,
     marginBottom: 5,
   },
 

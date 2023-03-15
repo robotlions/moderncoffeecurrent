@@ -17,6 +17,8 @@ export const Timer = (props) => {
     const [inputSeconds, setInputSeconds] = useState('');
     const [timerModalVisible, setTimerModalVisible] = useState(false);
     const [paused, setPaused] = useState(true);
+    const [minPlace, setMinPlace] = useState("Minutes");
+    const [secPlace, setSecPlace] = useState("Seconds");
 
     var Sound = require('react-native-sound');
     var alarmSound = new Sound('alarm.mp3');
@@ -123,8 +125,10 @@ export const Timer = (props) => {
         style={[styles.input, { width: "30%", textAlign: "center" }]}
         value={inputMinutes}
         onChangeText={setInputMinutes}
-        onEndEditing={() => { setMinutes(parseInt(inputMinutes) || 0), setInputMinutes('') }}
-        placeholder="Minutes"
+        onEndEditing={() => { parseInt(inputMinutes)>0 && setMinutes(parseInt(inputMinutes) || 0), setInputMinutes('') }}
+        onFocus={()=>setMinPlace("")}
+        onBlur={()=>setMinPlace("Minutes")}
+        placeholder={minPlace}
     >
 
     </TextInput>
@@ -133,8 +137,10 @@ export const Timer = (props) => {
         style={[styles.input, { width: "30%", textAlign: "center" }]}
         value={inputSeconds}
         onChangeText={setInputSeconds}
-        onEndEditing={() => { setSeconds(parseInt(inputSeconds) || 0), setInputSeconds('') }}
-        placeholder="Seconds"
+        onEndEditing={() => {parseInt(inputSeconds)>0 && setSeconds(parseInt(inputSeconds) || 0), setInputSeconds('') }}
+        onFocus={()=>setSecPlace("")}
+        onBlur={()=>setSecPlace("Seconds")}
+        placeholder={secPlace}
     >
 
     </TextInput>
@@ -153,7 +159,7 @@ export const Timer = (props) => {
                 <Text style={{ fontSize: 40, fontWeight: "bold" }}>
                     {minutes < 10 ? `0${minutes}` : minutes}:{seconds < 10 ? `0${seconds}` : seconds}
                 </Text>
-                <View style={{ flex: 1, flexDirection: "row", marginBottom: "15%" }}>{minutesInput}{secondsInput}</View>
+                {!timerCounting && <View style={{ flex: 1, flexDirection: "row", marginBottom: "15%" }}>{minutesInput}{secondsInput}</View>}
 
                 <Text>
                     <TouchableOpacity onPress={() => pauseButton()}><Image style={[styles.timerIcons, { marginLeft: 5, marginRight: 5 }]} source={paused ? playicon : pauseicon} /></TouchableOpacity>
