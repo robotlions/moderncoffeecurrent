@@ -52,6 +52,9 @@ export default function App() {
           "Corben-Bold": {
             uri: require("./assets/fonts/Corben-Bold.ttf"),
           },
+          "Corben-Regular": {
+            uri: require("./assets/fonts/Corben-Regular.ttf"),
+          },
 
         });
         // Artificially delay for two seconds to simulate a slow loading

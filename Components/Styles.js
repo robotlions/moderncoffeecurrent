@@ -90,12 +90,13 @@ export const styles = StyleSheet.create({
     // backgroundColor: "rgba(224, 163, 104,1)",
     elevation: 1,
     backgroundColor: "white",
+    height: winHeight *.1,
     marginBottom: 8,
   },
 
   entryHeadline: {
     fontSize: scale * 8,
-    fontFamily: "Raleway-Bold",
+    fontFamily: "Corben-Bold",
     paddingLeft: 5,
     color: "#9f3201",
   },
@@ -103,11 +104,11 @@ export const styles = StyleSheet.create({
   entryDesc: {
     fontFamily: "Raleway-Medium",
     paddingLeft: 5,
-    fontStyle: "italic",
+    // fontStyle: "italic",
 
   },
   entryMethod: {
-    fontFamily: "Raleway-Bold",
+    fontFamily: "Raleway-Black",
     paddingLeft: 5,
 
   },

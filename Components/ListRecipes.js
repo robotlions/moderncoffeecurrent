@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
+import { Text, TouchableOpacity, ScrollView, Image, Alert, View } from 'react-native';
 import { useCallback, useState } from 'react';
 import { styles } from './Styles';
 import favoriteIcon from '../assets/images/favoriteIcon.png';
@@ -59,6 +59,7 @@ export function ListRecipes({ route, navigation }) {
           .sort((item) => item[1].favorite != true) //this makes all recipes with favorite==true to list first
           .map((item, index) =>
             route.params.filter === item[1].method && (
+              
               <TouchableOpacity style={styles.entry} key={index} onLongPress={()=>{editAlert(item)}} onPress={() => selectRecipe(item)}>
                 <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue != "" ? item[1]["Recipe Name"].variableValue : "<Untitled>"}</Text>
                 <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
