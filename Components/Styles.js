@@ -203,6 +203,19 @@ export const styles = StyleSheet.create({
     width: "90%",
   },
 
+  recipeVariableTouchable:{
+    elevation: 2,
+    backgroundColor: "white", 
+    marginBottom: 10, 
+    height:winHeight *.06,
+    // borderBottomColor: "light gray",
+    // borderBottomWidth: 1,
+    // borderBottomLeftRadius: 5,
+    // borderBottomRightRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   recipeModalText: {
     fontFamily: "Raleway-Medium",
   },

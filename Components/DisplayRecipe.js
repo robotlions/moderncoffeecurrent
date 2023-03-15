@@ -121,7 +121,7 @@ export function DisplayRecipe({ route, navigation }) {
         </TouchableOpacity>
       </View>
       :
-      <TouchableOpacity onLongPress={() => selectVariable(key, value.variableValue)} style={{ elevation: 1, backgroundColor: "white", marginBottom: 5 }} key={index}>
+      <TouchableOpacity onLongPress={() => selectVariable(key, value.variableValue)}  style={styles.recipeVariableTouchable} key={index}>
         <Text style={{ fontFamily: "Raleway-Bold", paddingLeft: 10 }}>{key}</Text>
         <Text style={{ paddingLeft: 10, fontFamily: "Raleway-Medium" }}>{value.variableValue}</Text>
       </TouchableOpacity>)
@@ -160,7 +160,7 @@ function deleteSelected(endpoint) {
 
     <>
       <ScrollView keyboardShouldPersistTaps="handled">
-        <Text style={{ fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10 }}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
+        <Text style={{ textAlign: "center", fontFamily: "Raleway-Bold", fontSize: 18, paddingLeft: 10, marginBottom: 10}}>{route.params.loadedRecipe["Recipe Name"].variableValue}</Text>
         {editDisplay}
         <View style={{flex:1, flexDirection: "row", justifyContent: "space-around"}}>
           <TouchableOpacity onPress={() => navigation.navigate("Edit", { loadedID: loadedID, loadedRecipe: loadedRecipe })}><Text style={[styles.modalButtonText, {textAlign: "center"}]}>Edit Recipe</Text></TouchableOpacity>
