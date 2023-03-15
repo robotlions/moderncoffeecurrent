@@ -79,7 +79,8 @@ export function DisplayRecipe({ route, navigation }) {
         }
       );
     alert("Updated!")
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
+    navigation.goBack();
   }
 
   function selectVariable(key, value) {

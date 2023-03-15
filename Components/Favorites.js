@@ -54,7 +54,9 @@ export function Favorites({ route, navigation }) {
         }, []));
 
 
-
+        function doRandom(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+          }
 
     const displayData = 
 
@@ -65,7 +67,7 @@ export function Favorites({ route, navigation }) {
                 .map((item, index) => Object.entries(item).filter(([key, value]) => value.favorite ==true )
                 .map(([key, value]) =>
                 (
-                    <TouchableOpacity style={[styles.entry, {backgroundColor: value.backgroundColor}]} key={index} onPress={() => selectRecipe(item, key, value)}>
+                    <TouchableOpacity style={[styles.entry, {backgroundColor: value.backgroundColor}]} key={index+doRandom(1,1000)} onPress={() => selectRecipe(item, key, value)}>
                         <Text style={styles.entryHeadline}>{value["Recipe Name"].variableValue}</Text>
                         <Text style={styles.entryMethod}>{value.method}</Text>
                         <Text style={styles.entryDesc}>{value["Description"].variableValue}</Text>

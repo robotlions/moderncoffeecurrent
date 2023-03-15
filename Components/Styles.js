@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
 
   entryDesc: {
     fontFamily: "Raleway-Medium",
-    color: "white",
+    color: "black",
     paddingLeft: 5,
     // fontStyle: "italic",
 
@@ -114,6 +114,7 @@ export const styles = StyleSheet.create({
   entryMethod: {
     fontFamily: "Raleway-Black",
     paddingLeft: 5,
+    color: "white",
 
   },
   favorite: {
