@@ -194,7 +194,7 @@ export function BrewMethods({ route, navigation }) {
 
   return (
     <ScrollView style={{marginLeft: 5, marginRight: 5}}>
-      <Text style={[styles.entryHeadline, {paddingLeft: 0, marginBottom:10}]}>Manage brew methods</Text>
+      <Text style={[styles.entryHeadline, {textAlign:"center", marginBottom:10}]}>Manage brew methods</Text>
       {userMethodDisplay}
       <NewMethodInput endpoint={`/users/${user.uid}/methods/`} user={user} navigation={navigation} setLoading={setLoading} />
     </ScrollView>

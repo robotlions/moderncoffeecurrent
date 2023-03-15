@@ -98,15 +98,15 @@ export const styles = StyleSheet.create({
     fontSize: scale * 8,
     fontFamily: "Corben-Bold",
     paddingLeft: 5,
-    color: "white",
+    color: "#fd7908",
     textShadowColor:"#39230E",
     textShadowOffset: {width: 1, height: 1},
-    textShadowRadius: 3,
+    textShadowRadius: 1,
   },
 
   entryDesc: {
     fontFamily: "Raleway-Medium",
-    color: "black",
+    color: "white",
     paddingLeft: 5,
     // fontStyle: "italic",
 
@@ -245,18 +245,23 @@ export const styles = StyleSheet.create({
 
   variableEntry: {
     flex: 1,
+    height: winHeight *.05,
     flexDirection: "row",
-    marginBottom: 5,
+    marginBottom: 10,
 alignItems: "center",
     justifyContent: "space-between",
     paddingLeft: 10,
     paddingRight: 10,
+    borderBottomColor: "gray",
+    borderBottomWidth: 1,
+    borderBottomLeftRadius:10,
+    borderBottomRightRadius: 10,
 
   },
   variableText: {
     fontFamily: "Raleway-Medium",
     fontSize: 20,
-    maxWidth:'60%'
+    maxWidth:'60%',
 
   },
 
