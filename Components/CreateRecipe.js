@@ -50,6 +50,8 @@ export function CreateRecipe({ route, navigation }) {
   const [order, setOrder] = useState(0);
   const [variableList, setVariableList] = useState([]);
   const [editing, setEditing] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [bgColor, setBGColor] = useState("");
 
   let dataObject = {};
 
@@ -180,9 +182,36 @@ export function CreateRecipe({ route, navigation }) {
       <InputWindow key={index} dataObject={dataObject} item={item} />)
 
 
+      const colorPalette={
+        1: "#A67C83",
+        2: "#7A5546",
+        3: "#5B3118",
+        4: "#734729",
+        5: "#AB3625",
+        6: "#935230",
+        7: "#9E6D5C",
+        8: "#C99074",
+        9: "#B68576",
+        10: "#B98D8B",
+        11: "#D1A59E",
+      }
+    
+      function doRandom(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+      }
+    
+     
+        function getColor(){
+        
+          let colorPick = doRandom(1,11)
+          return colorPalette[colorPick]
+          
+        }
+
 
 
   function pushNewEntry() {
+    dataObject.backgroundColor = getColor();
     dataObject.method = method;
     dataObject.order = order;
     database()

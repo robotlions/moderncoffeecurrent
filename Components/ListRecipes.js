@@ -60,7 +60,7 @@ export function ListRecipes({ route, navigation }) {
           .map((item, index) =>
             route.params.filter === item[1].method && (
               
-              <TouchableOpacity style={styles.entry} key={index} onLongPress={()=>{editAlert(item)}} onPress={() => selectRecipe(item)}>
+              <TouchableOpacity style={[styles.entry, {backgroundColor: item[1].backgroundColor}]} key={index} onLongPress={()=>{editAlert(item)}} onPress={() => selectRecipe(item)}>
                 <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue != "" ? item[1]["Recipe Name"].variableValue : "<Untitled>"}</Text>
                 <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
                 {item[1].favorite == true ? <Image source={favoriteIcon} style={styles.favorite} /> : null}
@@ -72,7 +72,7 @@ export function ListRecipes({ route, navigation }) {
           .filter((item) => item[1].favorite === true)
           .map((item, index) =>
           (
-            <TouchableOpacity style={styles.entry} key={index} onPress={() => selectRecipe(item)}>
+            <TouchableOpacity style={[styles.entry, {backgroundColor: item[1].backgroundColor}]} key={index} onPress={() => selectRecipe(item)}>
               <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue != "" ? item[1]["Recipe Name"].variableValue : "<Untitled>"}</Text>
               <Text style={styles.entryMethod}>{item[1].method}</Text>
               <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>
@@ -85,7 +85,7 @@ export function ListRecipes({ route, navigation }) {
 
           .filter((item, index) => index < 5)
           .map((item, index) =>
-            <TouchableOpacity style={styles.entry} key={index} onPress={() => selectRecipe(item)}>
+            <TouchableOpacity style={[styles.entry, {backgroundColor: item[1].backgroundColor}]} key={index} onPress={() => selectRecipe(item)}>
               <Text style={styles.entryHeadline}>{item[1]["Recipe Name"].variableValue != "" ? item[1]["Recipe Name"].variableValue : "<Untitled>"}</Text>
               <Text style={styles.entryMethod}>{item[1].method}</Text>
               <Text style={styles.entryDesc}>{item[1]["Description"].variableValue}</Text>

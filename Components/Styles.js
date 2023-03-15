@@ -98,11 +98,15 @@ export const styles = StyleSheet.create({
     fontSize: scale * 8,
     fontFamily: "Corben-Bold",
     paddingLeft: 5,
-    color: "#9f3201",
+    color: "white",
+    textShadowColor:"#39230E",
+    textShadowOffset: {width: 1, height: 1},
+    textShadowRadius: 3,
   },
 
   entryDesc: {
     fontFamily: "Raleway-Medium",
+    color: "white",
     paddingLeft: 5,
     // fontStyle: "italic",
 

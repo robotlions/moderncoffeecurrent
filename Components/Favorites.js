@@ -65,7 +65,7 @@ export function Favorites({ route, navigation }) {
                 .map((item, index) => Object.entries(item).filter(([key, value]) => value.favorite ==true )
                 .map(([key, value]) =>
                 (
-                    <TouchableOpacity style={styles.entry} key={index} onPress={() => selectRecipe(item, key, value)}>
+                    <TouchableOpacity style={[styles.entry, {backgroundColor: value.backgroundColor}]} key={index} onPress={() => selectRecipe(item, key, value)}>
                         <Text style={styles.entryHeadline}>{value["Recipe Name"].variableValue}</Text>
                         <Text style={styles.entryMethod}>{value.method}</Text>
                         <Text style={styles.entryDesc}>{value["Description"].variableValue}</Text>

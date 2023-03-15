@@ -103,7 +103,7 @@ export function DisplayRecipe({ route, navigation }) {
 
   const editDisplay = Object.entries(loadedRecipe)
     .sort(([akey, avalue], [bkey, bvalue]) => avalue.order - bvalue.order)
-    .filter(([key, value]) => key != "favorite" && key != "method" && key != "order")
+    .filter(([key, value]) => key != "favorite" && key != "method" && key != "order" && key != "backgroundColor")
     .map(([key, value], index) => editing == true && activeEdit == key ?
 
       <View key={index}>
