@@ -1,29 +1,24 @@
-import reactDom from 'react-dom';
-import { StyleSheet } from 'react-native';
-import { Dimensions } from 'react-native';
+import { StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
 
-export const scale = Dimensions.get('window').scale
-export const winWidth = Dimensions.get('window').width
-export const winHeight = Dimensions.get('window').height
+export const scale = Dimensions.get("window").scale;
+export const winWidth = Dimensions.get("window").width;
+export const winHeight = Dimensions.get("window").height;
 
 export const styles = StyleSheet.create({
-
   addItemTouchable: {
     borderWidth: 1,
     borderColor: "#fd7908",
     backgroundColor: "#fd7908",
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    minHeight: winHeight *.07,
+    minHeight: winHeight * 0.07,
     justifyContent: "center",
     marginTop: 50,
-
-
   },
 
   buttonStandard: {
     fontFamily: "Raleway-Bold",
-    // color: "#9f3201",
     color: "white",
     fontSize: 18,
     backgroundColor: "#fd7908",
@@ -45,10 +40,10 @@ export const styles = StyleSheet.create({
   },
   categoryTouchable: {
     marginTop: 20,
-    height: winHeight *.13,
+    height: winHeight * 0.1,
     justifyContent: "center",
     elevation: 2,
-    },
+  },
 
   categoryText: {
     textAlign: "center",
@@ -56,21 +51,19 @@ export const styles = StyleSheet.create({
     fontSize: scale * 8,
     paddingLeft: 5,
     color: "white",
-    textShadowColor:"#39230E",
-    textShadowOffset: {width: 1, height: 1},
+    textShadowColor: "#39230E",
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-
+    backgroundColor: "#fff",
   },
 
   customFieldEntry: {
     elevation: 2,
     marginBottom: 3,
     paddingLeft: 5,
-
   },
   deleteButton: {
     color: "red",
@@ -83,14 +76,12 @@ export const styles = StyleSheet.create({
     color: "#fd7908",
     fontSize: 15,
     paddingLeft: 5,
-
   },
   entry: {
     width: "100%",
-    // backgroundColor: "rgba(224, 163, 104,1)",
     elevation: 1,
     backgroundColor: "white",
-    height: winHeight *.1,
+    height: winHeight * 0.1,
     marginBottom: 8,
   },
 
@@ -99,8 +90,8 @@ export const styles = StyleSheet.create({
     fontFamily: "Corben-Bold",
     paddingLeft: 5,
     color: "#fd7908",
-    textShadowColor:"#39230E",
-    textShadowOffset: {width: 1, height: 1},
+    textShadowColor: "#39230E",
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
   },
 
@@ -109,13 +100,11 @@ export const styles = StyleSheet.create({
     color: "white",
     paddingLeft: 5,
     // fontStyle: "italic",
-
   },
   entryMethod: {
     fontFamily: "Raleway-Black",
     paddingLeft: 5,
     color: "white",
-
   },
   favorite: {
     height: 15,
@@ -126,11 +115,11 @@ export const styles = StyleSheet.create({
   },
   input: {
     borderColor: "gray",
-    borderWidth: .5,
+    borderWidth: 0.5,
     height: 40,
     width: "90%",
     padding: 5,
-    backgroundColor:"white",
+    backgroundColor: "white",
     marginBottom: 5,
   },
 
@@ -140,17 +129,10 @@ export const styles = StyleSheet.create({
     height: 40,
     width: "90%",
     padding: 5,
-    backgroundColor:"white",
-    // elevation: 1,
+    backgroundColor: "white",
+    elevation: 1,
     marginBottom: 5,
   },
-  //   listTitleHeadline: {
-  //     fontFamily: "Raleway-Bold",
-  //     fontSize: 30,
-  //     paddingLeft: 5,
-  //     marginBottom: 10,
-  //     alignSelf: "center",
-  //   },
 
   mainTitleText: {
     fontFamily: "Corben-Bold",
@@ -158,7 +140,6 @@ export const styles = StyleSheet.create({
     lineHeight: 65,
     textAlign: "center",
     color: "#fd7908",
-    // textShadowColor: "rgb(69,51,23)",
     textShadowColor: "white",
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 1,
@@ -174,8 +155,6 @@ export const styles = StyleSheet.create({
   },
   modalButtonText: {
     fontFamily: "Raleway-Bold",
-    // color: "rgb(1, 57, 72)",
-    // color: "#9f3201",
     color: "#fd7908",
     fontSize: 20,
   },
@@ -195,22 +174,18 @@ export const styles = StyleSheet.create({
     marginRight: 10,
     height: 40,
     width: 40,
-    opacity: .8,
+    opacity: 0.8,
   },
 
   picker: {
     width: "90%",
   },
 
-  recipeVariableTouchable:{
+  recipeVariableTouchable: {
     elevation: 2,
-    backgroundColor: "white", 
-    marginBottom: 10, 
-    height:winHeight *.06,
-    // borderBottomColor: "light gray",
-    // borderBottomWidth: 1,
-    // borderBottomLeftRadius: 5,
-    // borderBottomRightRadius: 5,
+    backgroundColor: "white",
+    marginBottom: 10,
+    height: winHeight * 0.06,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -223,12 +198,11 @@ export const styles = StyleSheet.create({
     fontFamily: "Raleway-Bold",
   },
 
-  scrollViewStyle:{
-//insert main app background color here
+  scrollViewStyle: {
+    //insert main app background color here
   },
 
- 
-  settingsTouchable:{
+  settingsTouchable: {
     marginBottom: 5,
   },
 
@@ -236,12 +210,9 @@ export const styles = StyleSheet.create({
     height: 16 * scale,
     width: 16 * scale,
     tintColor: "#9f3201",
-    opacity: .9,
+    opacity: 0.9,
   },
 
-  //   scrollView: {
-  //     alignItems: "center",
-  //   },
 
   timerView: {
     justifyContent: "center",
@@ -257,23 +228,21 @@ export const styles = StyleSheet.create({
 
   variableEntry: {
     flex: 1,
-    height: winHeight *.05,
+    height: winHeight * 0.05,
     flexDirection: "row",
     marginBottom: 10,
-alignItems: "center",
+    alignItems: "center",
     justifyContent: "space-between",
     paddingLeft: 10,
     paddingRight: 10,
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 10,
-
   },
   variableText: {
     fontFamily: "Raleway-Medium",
     fontSize: 20,
-    maxWidth:'60%',
-
+    maxWidth: "60%",
   },
 
   XcloseIcon: {

@@ -5,11 +5,12 @@ import stopicon from '../assets/images/stopicon.png';
 import playicon from '../assets/images/playicon.png';
 import pauseicon from '../assets/images/pauseicon.png';
 import { scale } from './Styles';
+import { useKeepAwake } from 'expo-keep-awake';
 
 
 
 export const Timer = (props) => {
-
+useKeepAwake();
     const [seconds, setSeconds] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [timerCounting, setTimerCounting] = useState(false);
