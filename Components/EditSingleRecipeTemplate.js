@@ -82,7 +82,7 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
 
   useEffect(() => {
     let initialData = Object.entries(loadedRecipe)
-      .filter((item) => item[0] != "order" && item[0] != "favorite" && item[0] != "method")
+      .filter((item) => item[0] != "order" && item[0] != "favorite" && item[0] != "method" && item[0] != "backgroundColor")
       .sort((a, b) => a[1].order - b[1].order)
       .map((item, index) => {
         return {

@@ -111,7 +111,7 @@ useFocusEffect(
 
   const editDisplay = Object.entries(loadedRecipe)
     .sort(([akey, avalue], [bkey, bvalue]) => avalue.order - bvalue.order)
-    .filter(([key, value]) => key != "order" && key != "method" && key != "favorite")
+    .filter(([key, value]) => key != "order" && key != "method" && key != "favorite" && key != "backgroundColor")
     .map(([key, value], index) => <View key={index} style={{ width: "100%", alignItems: "center", marginBottom: 5 }}><Text style={{ fontFamily: "Raleway-Bold", textAlign: "left" }}>{key}</Text><EditInputWindow key={index} itemKey={key} itemValue={value} dataObject={dataObject} /></View>)
 
 
