@@ -24,8 +24,8 @@ export function DisplayRecipe({ route, navigation }) {
   const [activeEdit, setActiveEdit] = useState(null);
   const [editValue, setEditValue] = useState("");
 
-  useFocusEffect(
-    useCallback(() => {
+  useEffect(()=>{
+    
       let loading = true;
       if (loading === true) {
         database()
@@ -35,14 +35,14 @@ export function DisplayRecipe({ route, navigation }) {
             if (snapshot.exists()) {
               setLoadedMethods(snapshot.val());
             } else {
-              console.log("No data available");
+              // console.log("No data available");
             }
           })
 
           .catch((error) => {
             console.error(error);
           });
-
+        }
         database()
           .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
           .once("value")
@@ -50,18 +50,18 @@ export function DisplayRecipe({ route, navigation }) {
             if (snapshot.exists()) {
               setLoadedRecipe(snapshot.val());
             } else {
-              console.log("No data available");
+              // console.log("No data available");
             }
           })
 
           .catch((error) => {
             console.error(error);
           });
-      }
+      
       return () => {
         loading = false;
-      };
-    }, [editing])
+      }
+    },[editing]
   );
 
   function addRemoveStar() {
