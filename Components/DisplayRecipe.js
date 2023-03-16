@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   View,
+  KeyboardAvoidingView
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -108,7 +109,7 @@ export function DisplayRecipe({ route, navigation }) {
     )
     .map(([key, value], index) =>
       editing == true && activeEdit == key ? (
-        <View key={index}>
+        <KeyboardAvoidingView key={index}>
           <TextInput
             autoFocus={true}
             style={[styles.input, { width: "100%", paddingLeft: 10 }]}
@@ -116,19 +117,21 @@ export function DisplayRecipe({ route, navigation }) {
             onChangeText={setEditValue}
             placeholder={key}
           />
+          
           <TouchableOpacity onPress={() => unSelect(key, value)}>
             <Text
               style={{
-                textAlign: "right",
-                paddingRight: 10,
+                textAlign: "center",
                 fontFamily: "Raleway-Medium",
                 color: "green",
+                fontSize: 20,
+                paddingBottom: 10,
               }}
             >
               DONE
             </Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       ) : (
         <TouchableOpacity
           onLongPress={() => selectVariable(key, value.variableValue)}
