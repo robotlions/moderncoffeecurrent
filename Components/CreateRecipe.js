@@ -1,30 +1,37 @@
-import { Text, TextInput, ScrollView, Alert, BackHandler, TouchableOpacity } from 'react-native';
-import { useState, useEffect, useCallback } from 'react';
-import { styles } from './Styles';
-import database from '@react-native-firebase/database';
-import auth from '@react-native-firebase/auth';
+import {
+  Text,
+  TextInput,
+  ScrollView,
+  Alert,
+  BackHandler,
+  TouchableOpacity,
+} from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import { styles } from "./Styles";
+import database from "@react-native-firebase/database";
+import auth from "@react-native-firebase/auth";
 import { Picker } from "@react-native-picker/picker";
-import { useFocusEffect } from '@react-navigation/native';
-import { variableObjects } from '../Data/Models';
-
-
+import { useFocusEffect } from "@react-navigation/native";
+import { variableObjects } from "../Data/Models";
 
 function InputWindow(props) {
-
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
       if (isActive) {
-
-        setVarState("")
+        setVarState("");
       }
       return () => {
         isActive = false;
       };
-    }, []));
+    }, [])
+  );
 
   useEffect(() => {
-    props.dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order };
+    props.dataObject[props.item.variableName] = {
+      variableValue: varState,
+      order: props.item.order,
+    };
   });
 
   const [varState, setVarState] = useState("");
@@ -37,13 +44,10 @@ function InputWindow(props) {
       onChangeText={setVarState}
       // onEndEditing={() => props.dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order }}
     />
-  )
-};
-
-
+  );
+}
 
 export function CreateRecipe({ route, navigation }) {
-
   const user = auth().currentUser;
   const [method, setMethod] = useState("");
   const [loadedMethods, setLoadedMethods] = useState({});
@@ -55,62 +59,56 @@ export function CreateRecipe({ route, navigation }) {
 
   let dataObject = {};
 
-
-
   useFocusEffect(
     useCallback(() => {
       let varArray = [];
       let isActive = true;
       if (isActive) {
         dataObject = {};
-        setMethod(route.params ? route.params.method : "")
+        setMethod(route.params ? route.params.method : "");
       }
 
       database()
         .ref(`/users/${user.uid}/methods/`)
-        .on('value', snapshot => {
-
+        .on("value", (snapshot) => {
           if (isActive) {
             if (snapshot.exists()) {
-              setLoadedMethods(snapshot.val())
+              setLoadedMethods(snapshot.val());
             } else {
-              setLoadedMethods({})
-              // console.log("No data available");
+              setLoadedMethods({});
             }
           }
-        })
+        });
       database()
         .ref(`/users/${user.uid}/variables/`)
-        .once('value')
+        .once("value")
         .then((snapshot) => {
           if (isActive) {
             if (snapshot.exists()) {
-              snapshot.forEach((baby) => { varArray.push(baby.val()) })
-              setVariableList(varArray)
-            }
-            else {
+              snapshot.forEach((baby) => {
+                varArray.push(baby.val());
+              });
+              setVariableList(varArray);
+            } else {
               variableObjects.forEach((item) => {
-                database().ref(`/users/${user.uid}/variables/`)
-                  .push(item)
-
-              })
+                database().ref(`/users/${user.uid}/variables/`).push(item);
+              });
               setTimeout(() => {
                 database()
                   .ref(`/users/${user.uid}/variables/`)
-                  .once('value')
+                  .once("value")
                   .then((snapshot) => {
-
-                    snapshot.forEach((baby) => { varArray.push(baby.val()) })
-                    setVariableList(varArray)
-
-                  })
-              }, 1000)
+                    snapshot.forEach((baby) => {
+                      varArray.push(baby.val());
+                    });
+                    setVariableList(varArray);
+                  });
+              }, 1000);
             }
-          }
-          else {
+          } else {
             console.log("No data available");
           }
-        })
+        });
       return () => {
         isActive = false;
       };
@@ -123,48 +121,68 @@ export function CreateRecipe({ route, navigation }) {
   useEffect(() => {
     database()
       .ref(`/users/${user.uid}/recipes/${method}`)
-      .once('value')
+      .once("value")
       .then((snapshot) => {
-        setOrder(snapshot.numChildren() + 1)
-      })
+        setOrder(snapshot.numChildren() + 1);
+      });
   }, [method]);
 
   const pickerMethodList = Object.values(loadedMethods)
     .sort((a, b) => a.order - b.order)
     .filter((item) => item != "Favorites" && item != "Recent")
-    .map((item, index) => <Picker.Item key={index} label={item.methodName} value={item.methodName} />
-    );
+    .map((item, index) => (
+      <Picker.Item
+        key={index}
+        label={item.methodName}
+        value={item.methodName}
+      />
+    ));
 
-    useFocusEffect(
+  useFocusEffect(
     useCallback(() => {
-      if (editing===true){
-      const backAction = () => {
-        Alert.alert("You have unsaved changes.", "Would you like to discard this recipe or keep working on it?", [
-          {
-            text: "Keep working",
-            onPress: () => null,
-            style: "cancel"
-          },
-          { text: "Discard", onPress: () => {BackHandler.removeEventListener("bardwareBackPress", backAction), navigation.goBack()} }
-        ]);
-        return true;
-      };
-  
-      const backHandler = BackHandler.addEventListener(
-        "hardwareBackPress",
-        backAction
-      );
-  
-      return () => backHandler.remove();
-    }}, []));
+      if (editing === true) {
+        const backAction = () => {
+          Alert.alert(
+            "You have unsaved changes.",
+            "Would you like to discard this recipe or keep working on it?",
+            [
+              {
+                text: "Keep working",
+                onPress: () => null,
+                style: "cancel",
+              },
+              {
+                text: "Discard",
+                onPress: () => {
+                  BackHandler.removeEventListener(
+                    "bardwareBackPress",
+                    backAction
+                  ),
+                    navigation.goBack();
+                },
+              },
+            ]
+          );
+          return true;
+        };
 
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
 
-  const pickerDisplay =
+        return () => backHandler.remove();
+      }
+    }, [])
+  );
 
+  const pickerDisplay = (
     <Picker
       style={styles.picker}
       selectedValue={method}
-      onValueChange={(itemValue, itemIndex) => { setMethod(itemValue), dataObject.method = itemValue }}
+      onValueChange={(itemValue, itemIndex) => {
+        setMethod(itemValue), (dataObject.method = itemValue);
+      }}
     >
       <Picker.Item
         color="gray"
@@ -174,41 +192,36 @@ export function CreateRecipe({ route, navigation }) {
       />
       {pickerMethodList}
     </Picker>
-
+  );
 
   const inputDisplay = variableList
     .sort((a, b) => a.order - b.order)
-    .map((item, index) =>
-      <InputWindow key={index} dataObject={dataObject} item={item} />)
+    .map((item, index) => (
+      <InputWindow key={index} dataObject={dataObject} item={item} />
+    ));
 
+  const colorPalette = {
+    1: "#A67C83",
+    2: "#7A5546",
+    3: "#5B3118",
+    4: "#734729",
+    5: "#AB3625",
+    6: "#935230",
+    7: "#9E6D5C",
+    8: "#C99074",
+    9: "#B68576",
+    10: "#B98D8B",
+    11: "#D1A59E",
+  };
 
-      const colorPalette={
-        1: "#A67C83",
-        2: "#7A5546",
-        3: "#5B3118",
-        4: "#734729",
-        5: "#AB3625",
-        6: "#935230",
-        7: "#9E6D5C",
-        8: "#C99074",
-        9: "#B68576",
-        10: "#B98D8B",
-        11: "#D1A59E",
-      }
-    
-      function doRandom(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-      }
-    
-     
-        function getColor(){
-        
-          let colorPick = doRandom(1,11)
-          return colorPalette[colorPick]
-          
-        }
+  function doRandom(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 
-
+  function getColor() {
+    let colorPick = doRandom(1, 11);
+    return colorPalette[colorPick];
+  }
 
   function pushNewEntry() {
     dataObject.backgroundColor = getColor();
@@ -222,18 +235,42 @@ export function CreateRecipe({ route, navigation }) {
     navigation.goBack();
   }
 
-
-
-
   return (
-
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ alignItems: "center" }}>
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{ alignItems: "center" }}
+    >
       {pickerDisplay}
       {inputDisplay}
-      <TouchableOpacity onPress={() => method == "" ? alert("Please choose brew method") : pushNewEntry()}><Text style={[styles.modalButtonText, { marginTop: 10, marginBottom: 10, fontSize: 25 }]}>Save Recipe</Text></TouchableOpacity>
-      <TouchableOpacity onPress={() =>  {BackHandler.removeEventListener("bardwareBackPress"), navigation.goBack()}}><Text style={[styles.modalButtonText, { marginTop: 10, marginBottom: 10, fontSize: 25 }]}>Cancel</Text></TouchableOpacity>
-    
+      <TouchableOpacity
+        onPress={() =>
+          method == "" ? alert("Please choose brew method") : pushNewEntry()
+        }
+      >
+        <Text
+          style={[
+            styles.modalButtonText,
+            { marginTop: 10, marginBottom: 10, fontSize: 25 },
+          ]}
+        >
+          Save Recipe
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          BackHandler.removeEventListener("bardwareBackPress"),
+            navigation.goBack();
+        }}
+      >
+        <Text
+          style={[
+            styles.modalButtonText,
+            { marginTop: 10, marginBottom: 10, fontSize: 25 },
+          ]}
+        >
+          Cancel
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
-
   );
 }

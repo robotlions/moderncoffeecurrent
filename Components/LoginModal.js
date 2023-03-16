@@ -24,8 +24,10 @@ export const LoginModal = (props) => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [recoverPasswordModalVisible, setRecoverPasswordModalVisible] =
-    useState(false);
+  const [
+    recoverPasswordModalVisible,
+    setRecoverPasswordModalVisible,
+  ] = useState(false);
   const passwordRef = useRef();
   const password2Ref = useRef();
 
@@ -184,7 +186,10 @@ export const LoginModal = (props) => {
               onSubmitEditing={() => createUser()}
             />
 
-            <TouchableOpacity style={{ marginTop: 10, width: "89%" }} onPress={() => createUser()}>
+            <TouchableOpacity
+              style={{ marginTop: 10, width: "89%" }}
+              onPress={() => createUser()}
+            >
               <Text style={styles.buttonStandard}>Create Account</Text>
             </TouchableOpacity>
             <Text>{"\n"}</Text>

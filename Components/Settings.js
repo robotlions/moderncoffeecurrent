@@ -10,18 +10,8 @@ import {
 import { useState } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
-import auth, { firebase } from "@react-native-firebase/auth";
-import * as Functions from "./Functions";
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
-
-// GoogleSignin.configure({
-//   webClientId:
-//     "14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com",
-// });
+import auth from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 export function Settings({ route, navigation }) {
   const [password, setPassword] = useState("");
@@ -31,13 +21,15 @@ export function Settings({ route, navigation }) {
 
   const [email, setEmail] = useState("");
   const [passModalVisible, setPassModalVisible] = useState(false);
-  const [changeDisplayNameModuleVisible, setChangeDisplayNameModuleVisble] =
-    useState(false);
-  const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] =
-    useState(false);
+  const [
+    changeDisplayNameModuleVisible,
+    setChangeDisplayNameModuleVisble,
+  ] = useState(false);
+  const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] = useState(
+    false
+  );
 
   const user = auth().currentUser;
-
 
   const changePasswordModule = (
     <View>
@@ -113,7 +105,7 @@ export function Settings({ route, navigation }) {
   );
 
   function signOut() {
-   auth().signOut();
+    auth().signOut();
     GoogleSignin.signOut();
     navigation.navigate("Home");
   }
@@ -174,11 +166,7 @@ export function Settings({ route, navigation }) {
       });
   }
 
-
-
   function deleteAlert() {
-    
-
     if (email != user.email) {
       return alert("That email doesn't match this account.");
     } else {
@@ -188,7 +176,10 @@ export function Settings({ route, navigation }) {
         [
           {
             text: `Yes, delete account`,
-            onPress: user.providerData[0].providerId === "password" ? () => deleteEmailAccount() : ()=>deleteGoogleAccount(),
+            onPress:
+              user.providerData[0].providerId === "password"
+                ? () => deleteEmailAccount()
+                : () => deleteGoogleAccount(),
             style: "cancel",
           },
           {
@@ -203,28 +194,23 @@ export function Settings({ route, navigation }) {
     }
   }
 
-  
-
   async function deleteGoogleAccount() {
-
-    // const { accessToken, idToken } = await GoogleSignin.getTokens();
-    // const credential = auth.GoogleAuthProvider.credential(idToken, accessToken);
-
-    const {idToken} = await GoogleSignin.signIn();
+    const { idToken } = await GoogleSignin.signIn();
     const credential = auth.GoogleAuthProvider.credential(idToken);
 
     database().ref(`/users/${user.uid}/`).remove();
-  
+
     try {
-     
-      await auth().currentUser.reauthenticateWithCredential(credential)
-      .then(()=>{auth().currentUser.delete()});
-      console.log('User reauthenticated successfully!');
+      await auth()
+        .currentUser.reauthenticateWithCredential(credential)
+        .then(() => {
+          auth().currentUser.delete();
+        });
+      console.log("User reauthenticated successfully!");
     } catch (error) {
-      console.error('Error reauthenticating user:', error.message);
+      console.error("Error reauthenticating user:", error.message);
     }
   }
-
 
   async function deleteEmailAccount() {
     const credential = auth.EmailAuthProvider.credential(user.email, password);
@@ -239,14 +225,12 @@ export function Settings({ route, navigation }) {
         const errorCode = error.code;
         console.log(errorCode);
       });
-}
+  }
 
   return (
     <ScrollView style={{ paddingLeft: 10 }}>
       <Text style={styles.modalButtonText}>Signed in as:</Text>
-      {/* {user && user.displayName ? <Text>{user.displayName}</Text> : <Text>You can change your diplay name below.</Text>} */}
-      {/* {console.log(user.providerData[0].providerId)}
-      <Text>{String(user.providerData[0].providerId)}</Text> */}
+
       <Text>{user && user.email}</Text>
       <TouchableOpacity onPress={() => signOut()}>
         <Text style={[styles.modalButtonText, { color: "#fd7908" }]}>
@@ -279,8 +263,6 @@ export function Settings({ route, navigation }) {
         </TouchableOpacity>
       )}
       {passModalVisible && changePasswordModule}
-      {/* <TouchableOpacity style={styles.settingsTouchable} onPress={() => setChangeDisplayNameModuleVisble(!changeDisplayNameModuleVisible)}><Text style={styles.modalButtonText}>Change Display Name</Text></TouchableOpacity>
-      {changeDisplayNameModuleVisible && changeDisplayNameModule} */}
 
       <TouchableOpacity
         style={styles.settingsTouchable}

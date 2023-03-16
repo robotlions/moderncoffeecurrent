@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Alert, TextInput, Text, TouchableOpacity } from 'react-native';
-import { styles } from './Styles';
-// import { Picker } from "@react-native-picker/picker";
-// import { methodTemplate } from '../Data/Models';
-import database from '@react-native-firebase/database';
-
-
+import { useEffect, useState } from "react";
+import { Alert, TextInput, Text, TouchableOpacity } from "react-native";
+import { styles } from "./Styles";
+import database from "@react-native-firebase/database";
 
 export const NewVariableInput = (props) => {
   const [thisState, setThisState] = useState("");
@@ -17,33 +13,49 @@ export const NewVariableInput = (props) => {
         placeholder="Input new variable"
         value={thisState}
         onChangeText={setThisState}
-      >
-      </TextInput>
+      ></TextInput>
       <TouchableOpacity
-        onPress={() => { pushNewVariable({methodName: thisState}, props.endpoint, props.navigation), setThisState(""), props.setLoading(true) }}>
-        <Text style={styles.modalButtonText}>Save</Text></TouchableOpacity>
+        onPress={() => {
+          pushNewVariable(
+            { methodName: thisState },
+            props.endpoint,
+            props.navigation
+          ),
+            setThisState(""),
+            props.setLoading(true);
+        }}
+      >
+        <Text style={styles.modalButtonText}>Save</Text>
+      </TouchableOpacity>
     </>
-  )
+  );
 };
 
-
-
 export const EditInputWindow = (props) => {
-
   useEffect(() => {
-    dataObject[props.item.variableName] = {variableValue: varState, order: props.item.order};
+    dataObject[props.item.variableName] = {
+      variableValue: varState,
+      order: props.item.order,
+    };
   });
 
-  const [varState, setVarState] = useState(String(props.itemValue.variableValue));
+  const [varState, setVarState] = useState(
+    String(props.itemValue.variableValue)
+  );
   return (
     <TextInput
       style={styles.input}
       placeholder={props.itemKey}
       value={varState}
       onChangeText={setVarState}
-      onEndEditing={() => dataObject[props.item.variableName] = {variableValue: varState, order: props.item.order}}
+      onEndEditing={() =>
+        (dataObject[props.item.variableName] = {
+          variableValue: varState,
+          order: props.item.order,
+        })
+      }
     />
-  )
+  );
 };
 
 // export const PickerDisplay = (props) => {
@@ -77,10 +89,7 @@ export const EditInputWindow = (props) => {
 //   )
 // };
 
-
-
 export const DeleteModule = (props) => {
-
   function deleteAlert() {
     Alert.alert(
       `Delete-O-Matic`,
@@ -102,7 +111,6 @@ export const DeleteModule = (props) => {
     );
   }
 
-
   function deleteSelected() {
     database()
       .ref(props.endpoint)
@@ -111,45 +119,39 @@ export const DeleteModule = (props) => {
   }
   return (
     <TouchableOpacity style={props.buttonStyle} onPress={() => deleteAlert()}>
-      <Text style={props.buttonTextStyle}>Delete</Text></TouchableOpacity>
-  )
-
-}
-
-
+      <Text style={props.buttonTextStyle}>Delete</Text>
+    </TouchableOpacity>
+  );
+};
 
 export function getData(props) {
   database()
     .ref(props.endpoint)
-    .once('value')
+    .once("value")
     .then((snapshot) => {
       if (snapshot.exists()) {
-
-        props.setLoadedData(Object.entries(snapshot.val()))
-
+        props.setLoadedData(Object.entries(snapshot.val()));
       } else {
         console.log("No data available");
       }
-    }).catch((error) => {
-      console.error(error);
     })
-};
-
+    .catch((error) => {
+      console.error(error);
+    });
+}
 
 export function pushNewVariable(dataObject, endpoint, navigation) {
   dataObject.order = 0;
-  database().ref(endpoint).once('value').then((snapshot)=>{snapshot.numChildren()+1})
   database()
     .ref(endpoint)
-    .push()
-    .push(dataObject),
-    alert("Added!")
+    .once("value")
+    .then((snapshot) => {
+      snapshot.numChildren() + 1;
+    });
+  database().ref(endpoint).push().push(dataObject), alert("Added!");
 }
 
 export function updateEntry(dataObject, endpoint, navigation) {
-  database()
-    .ref(endpoint)
-    .update(dataObject),
-    alert("Updated!")
+  database().ref(endpoint).update(dataObject), alert("Updated!");
   navigation.navigate("Home");
 }

@@ -213,7 +213,6 @@ export const styles = StyleSheet.create({
     opacity: 0.9,
   },
 
-
   timerView: {
     justifyContent: "center",
 
