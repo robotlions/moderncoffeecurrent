@@ -1,6 +1,5 @@
-import { ScrollView, TouchableOpacity, Alert, Text, TextInput, View, SafeAreaView } from 'react-native';
+import { ScrollView, TouchableOpacity, Alert, Text, TextInput, View } from 'react-native';
 import { useState, useEffect, useCallback } from 'react';
-import * as Functions from './Functions';
 import { styles } from './Styles';
 import database from '@react-native-firebase/database';
 import auth from '@react-native-firebase/auth';

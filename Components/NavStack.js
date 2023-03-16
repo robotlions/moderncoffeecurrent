@@ -10,6 +10,7 @@ import { DisplayRecipe } from './DisplayRecipe';
 import { Favorites } from './Favorites';
 import { RecipeTemplate } from './RecipeTemplate';
 import { EditSingleRecipeTemplate } from './EditSingleRecipeTemplate';
+import {StandaloneTimer} from './StandaloneTimer';
 import {Image} from 'react-native'
 
 
@@ -22,14 +23,12 @@ return (
 
 <Stack.Navigator screenOptions={{"headerTitleStyle":{"fontFamily":"Raleway-Bold"}}}>
 <Stack.Screen name="HomeScreen" options={{headerShown: false}}component={HomeScreen} />
-{/* <Stack.Screen name="Create Recipe" options={{headerShown: false, tabBarHideOnKeyboard:true}} component={CreateRecipe} /> */}
 <Stack.Screen name="List Recipes" component={ListRecipes}
 options={({ route }) => ({ title: route.params.filter })} />
 <Stack.Screen name="Edit" component={EditRecipe} />
 <Stack.Screen name="Edit Single Recipe" component={EditSingleRecipeTemplate} />
 <Stack.Screen name="Brew Methods" component={BrewMethods} />
 <Stack.Screen name="Recipe Template" component={RecipeTemplate} />
-
 <Stack.Screen name="Favorites" component={Favorites} />
 <Stack.Screen name="Display Recipe" component={DisplayRecipe}
 options={({ route }) => ({ title: `Recipe for ${route.params.loadedRecipe.method}` })}/>
@@ -96,6 +95,27 @@ export function TabNav(){
             },
           
             title: 'Create Recipe', headerTitleStyle: { fontFamily: "Raleway-Bold" } }}
+            
+          />
+          <Tab.Screen name="Timer" 
+          component={StandaloneTimer}
+            options={{ 
+              tabBarIcon: (props) => {
+              return (
+                
+                <Image
+                  style={{ 
+                    tintColor: props.color,
+                    height: 30,
+                    width: 30,
+                  }}
+                  
+                  source={require("../assets/images/timerIcon.png")}
+                />
+              );
+            },
+          
+            title: 'Timer', headerTitleStyle: { fontFamily: "Raleway-Bold" } }}
             
           />
     <Tab.Screen
