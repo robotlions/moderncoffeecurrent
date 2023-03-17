@@ -278,7 +278,7 @@ export function Settings({ route, navigation }) {
 
       <Text style={styles.modalButtonText}>About</Text>
       <Text style={{ fontFamily: "Raleway-Medium" }}>
-        Modern Coffee ver. 0.70 build 17{"\n"}
+        Modern Coffee ver. 0.7.031723.2 build 18{"\n"}
         March 2023{"\n"}© 2023 by Robot Lions{"\n"}
         Contact and feedback: info@robotlions.com
       </Text>

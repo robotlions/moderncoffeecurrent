@@ -45,7 +45,7 @@ export default function App() {
           },
         });
 
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        // await new Promise((resolve) => setTimeout(resolve, 5000));
       } catch (e) {
         console.warn(e);
       } finally {
