@@ -102,7 +102,7 @@ export function RecipeTemplate({ route, navigation }) {
   useFocusEffect(
     useCallback(() => {
       let active = true;
-      if ((active = true)) {
+      if (active == true) {
         database()
           .ref(`/users/${user.uid}/variables/`)
           .once("value")
@@ -120,6 +120,31 @@ export function RecipeTemplate({ route, navigation }) {
       };
     }, [])
   );
+
+  // useEffect(() => {
+  //   if (loading === true) {
+  //     getData();
+  //     setLoading(false);
+  //   }
+  // });
+
+  // function getData() {
+  //   database()
+  //     .ref(`/users/${user.uid}/variables/`)
+  //     .once("value")
+  //     .then((snapshot) => {
+  //       if (snapshot.exists()) {
+  //         setLoadedMethods(snapshot.val());
+  //       } else {
+  //         setLoadedMethods({});
+  //         console.log("No data available");
+  //       }
+  //     })
+
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
@@ -192,7 +217,10 @@ export function RecipeTemplate({ route, navigation }) {
   }
 
   function pushNewVariable(dataObject, endpoint, navigation) {
-    database().ref(endpoint).push(dataObject), alert("Added!");
+    database()
+    .ref(endpoint)
+    .push(dataObject)
+    alert("Added!");
     reset();
   }
 
