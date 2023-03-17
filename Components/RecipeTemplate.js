@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  KeyboardAvoidingView
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -32,7 +33,7 @@ const NewVariableInput = (props) => {
   const [orderCount, setOrderCount] = useState(0);
 
   return (
-    <>
+    <KeyboardAvoidingView>
       <TextInput
         style={[
           styles.input,
@@ -41,13 +42,14 @@ const NewVariableInput = (props) => {
             paddingLeft: 10,
             backgroundColor: "white",
             borderColor: "white",
+            textAlign: "center"
           },
         ]}
-        placeholder="Input new variable"
+        placeholder="Add new variable here"
         value={thisState}
         onChangeText={setThisState}
       ></TextInput>
-      {thisState != "" && (
+      {thisState != "" ? (
         <TouchableOpacity
           style={{ paddingBottom: 10, paddingTop: 10 }}
           onPress={() => {
@@ -63,14 +65,15 @@ const NewVariableInput = (props) => {
           <Text
             style={[
               styles.modalButtonText,
-              { textAlign: "center", fontSize: 20 },
+              { textAlign: "center", fontSize: 20, paddingBottom:20 },
             ]}
           >
             Save New Variable
           </Text>
-        </TouchableOpacity>
-      )}
-    </>
+        </TouchableOpacity>)
+        :<Text style={[styles.inactiveButton, {paddingBottom:20}]}></Text>
+      }
+    </KeyboardAvoidingView>
   );
 };
 
@@ -216,6 +219,8 @@ export function RecipeTemplate({ route, navigation }) {
 
   return (
     <DraggableFlatList
+    keyboardShouldPersistTaps="handled"
+
       data={data}
       onDragEnd={({ data }) => {
         setData(data), setIndices(data);

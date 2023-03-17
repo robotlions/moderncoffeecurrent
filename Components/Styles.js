@@ -113,6 +113,14 @@ export const styles = StyleSheet.create({
     right: 10,
     bottom: 5,
   },
+
+  inactiveButton:{
+    textAlign: "center",
+    fontFamily: "Raleway-Bold",
+    color: "gray",
+    fontSize: 20,
+
+  },
   input: {
     borderColor: "gray",
     borderWidth: 0.5,
@@ -237,6 +245,8 @@ export const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 10,
+    marginLeft:5,
+    marginRight:5
   },
   variableText: {
     fontFamily: "Raleway-Medium",

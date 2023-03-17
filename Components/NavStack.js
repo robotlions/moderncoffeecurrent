@@ -91,7 +91,7 @@ export function TabNav() {
         name="Create Recipe"
         component={CreateRecipe}
         options={{
-          tabBarStyle: { display: "none" },
+          // tabBarStyle: { display: "none" },
           tabBarIcon: (props) => {
             return (
               <Image

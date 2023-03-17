@@ -258,7 +258,7 @@ export function CreateRecipe({ route, navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
-          BackHandler.removeEventListener("bardwareBackPress"),
+          BackHandler.removeEventListener("hardwareBackPress"),
             navigation.goBack();
         }}
       >

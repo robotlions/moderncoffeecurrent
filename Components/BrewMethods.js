@@ -5,6 +5,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -50,14 +51,15 @@ const NewMethodInput = (props) => {
   }
 
   return (
-    <>
+    <KeyboardAvoidingView
+    >
       <TextInput
-        style={[styles.input, { width: "100%" }]}
+        style={[styles.input, { width: "100%", textAlign:"center" }]}
         placeholder="Input new brewing method"
         value={thisState}
         onChangeText={setThisState}
       ></TextInput>
-      {thisState != "" && (
+      {thisState != "" ? (
         <TouchableOpacity
           onPress={() => {
             pushNewVariable(
@@ -73,12 +75,12 @@ const NewMethodInput = (props) => {
               props.setLoading(true);
           }}
         >
-          <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
+          <Text style={[styles.modalButtonText, { textAlign: "center", paddingBottom:20 }]}>
             Save New Method
           </Text>
         </TouchableOpacity>
-      )}
-    </>
+      ): <Text style={[styles.inactiveButton, {paddingBottom:20}]}></Text>}
+    </KeyboardAvoidingView>
   );
 };
 
@@ -229,7 +231,10 @@ export function BrewMethods({ route, navigation }) {
     ));
 
   return (
-    <ScrollView style={{ marginLeft: 5, marginRight: 5 }}>
+    <ScrollView 
+    keyboardShouldPersistTaps="handled"
+    
+    style={{ marginLeft: 5, marginRight: 5 }}>
       <Text
         style={[
           styles.entryHeadline,
