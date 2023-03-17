@@ -42,7 +42,6 @@ function InputWindow(props) {
       placeholder={props.item.variableName}
       value={varState}
       onChangeText={setVarState}
-      // onEndEditing={() => props.dataObject[props.item.variableName] = { variableValue: varState, order: props.item.order }}
     />
   );
 }

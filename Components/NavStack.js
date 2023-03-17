@@ -87,7 +87,7 @@ export function TabNav() {
           headerTitleStyle: { fontFamily: "Raleway-Bold" },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Create Recipe"
         component={CreateRecipe}
         options={{
@@ -108,7 +108,7 @@ export function TabNav() {
           title: "Create Recipe",
           headerTitleStyle: { fontFamily: "Raleway-Bold" },
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Timer"
         component={StandaloneTimer}

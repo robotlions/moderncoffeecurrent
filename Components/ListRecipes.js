@@ -164,10 +164,10 @@ export function ListRecipes({ route, navigation }) {
         },
         {
           text:
-            item[1].favorite == true
-              ? "Remove from favorites"
-              : `Add to Favorites`,
-          onPress: () => addRemoveStar(item),
+            
+             
+              `Delete Recipe`,
+          onPress: () => deleteAlert(item),
           style: "cancel",
         },
         {
@@ -179,6 +179,36 @@ export function ListRecipes({ route, navigation }) {
         cancelable: true,
       }
     );
+  }
+
+  function deleteAlert(item) {
+    Alert.alert(
+      `Delete-O-Matic`,
+      `Are you sure? This will permanently delete "${item[1]["Recipe Name"].variableValue}".`,
+      [
+        {
+          text: `Delete`,
+          onPress: () => deleteSelected(item),
+          style: "cancel",
+        },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  }
+
+  function deleteSelected(item) {
+    database()
+      .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
+      .remove()
+      .then(()=>setUpdated(!updated));
+      // reset();
+      // .then(() => navigation.goBack());
   }
 
   function addRemoveStar(item) {
