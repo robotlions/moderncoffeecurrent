@@ -241,13 +241,13 @@ export function Settings({ route, navigation }) {
       <Text style={{ fontFamily: "Raleway-Medium" }}>Customize</Text>
       <TouchableOpacity
         style={styles.settingsTouchable}
-        onPress={() => navigation.navigate("Brew Methods")}
+        onPress={() => navigation.navigate("Edit Brew Methods")}
       >
         <Text style={styles.modalButtonText}>Customize Brew Methods</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.settingsTouchable}
-        onPress={() => navigation.navigate("Recipe Template")}
+        onPress={() => navigation.navigate("Edit Recipe Template")}
       >
         <Text style={styles.modalButtonText}>Customize Recipe Template</Text>
       </TouchableOpacity>

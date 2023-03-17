@@ -40,8 +40,8 @@ export function NavStack() {
         name="Edit Single Recipe"
         component={EditSingleRecipeTemplate}
       />
-      <Stack.Screen name="Brew Methods" component={BrewMethods} />
-      <Stack.Screen name="Recipe Template" component={RecipeTemplate} />
+      <Stack.Screen name="Edit Brew Methods" component={BrewMethods} />
+      <Stack.Screen name="Edit Recipe Template" component={RecipeTemplate} />
       <Stack.Screen name="Favorites" component={Favorites} />
       <Stack.Screen
         name="Display Recipe"

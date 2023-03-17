@@ -13,6 +13,12 @@ import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 
+import DraggableFlatList, {
+  ScaleDecorator,
+  NestableScrollContainer,
+  NestableDraggableFlatList,
+} from "react-native-draggable-flatlist";
+
 const NewMethodInput = (props) => {
   const [thisState, setThisState] = useState("");
   const [orderCount, setOrderCount] = useState(0);
@@ -96,6 +102,47 @@ export function BrewMethods({ route, navigation }) {
   const [editInput, setEditInput] = useState("");
   const [editing, setEditing] = useState(false);
   const [activeEdit, setActiveEdit] = useState(null);
+  const [data, setData] = useState([]);
+
+
+
+  useEffect(() => {
+    let initialData = Object.entries(loadedMethods)
+      .sort((a, b) => a[1].order - b[1].order)
+      .map((item, index) => {
+        return {
+          id: item[0],
+          key: `item-${index}`,
+          label: item[1].methodName,
+          order: item[1].order,
+          height: 100,
+        };
+      });
+    setData(initialData);
+  }, [loadedMethods]);
+
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     let active = true;
+  //     if (active == true) {
+  //       database()
+  //         .ref(`/users/${user.uid}/methods/`)
+  //         .once("value")
+  //         .then((snapshot) => {
+  //           if (snapshot.exists()) {
+  //             setLoadedVariables(snapshot.val());
+  //           } else {
+  //             setLoadedVariables({});
+  //             console.log("No data available");
+  //           }
+  //         });
+  //     }
+  //     return () => {
+  //       active = false;
+  //     };
+  //   }, [loading])
+  // );
 
   function getData() {
     database()
@@ -168,11 +215,19 @@ export function BrewMethods({ route, navigation }) {
     reset();
   }
 
-  const userMethodDisplay = Object.entries(loadedMethods)
-    .sort((a, b) => a[1].order - b[1].order)
-    .map((item, index) => (
-      <View style={styles.variableEntry} key={index}>
-        {editing === true && activeEdit === item[1].methodName ? (
+  function setIndices(data) {
+    data.forEach((item, index) => {
+      database()
+        .ref(`/users/${user.uid}/methods/${item.id}/`)
+        .update({ order: index });
+    });
+  }
+
+  const renderItem = ({ item, drag, isActive }) => {
+    return (
+      <TouchableOpacity onLongPress={drag} disabled={isActive}>
+      <View style={styles.variableEntry}>
+        {editing === true && activeEdit === item.label ? (
           <TextInput
             autoFocus={true}
             style={[
@@ -188,18 +243,19 @@ export function BrewMethods({ route, navigation }) {
             onChangeText={setEditInput}
           ></TextInput>
         ) : (
-          <Text style={styles.variableText}>{item[1].methodName}</Text>
+          
+          <Text style={styles.variableText}>{item.label}</Text>
         )}
         <Text>
-          {editing === true && activeEdit === item[1].methodName ? (
+          {editing === true && activeEdit === item.label ? (
             <TouchableOpacity
               style={styles.buttonStyle}
-              onPress={() => updateMethodName(item[0])}
+              onPress={() => updateMethodName(item.id)}
             >
               <Text
                 style={[
                   styles.buttonTextStyle,
-                  { marginRight: 20, color: "#fd7908" },
+                  { marginRight: 20, color: "green" },
                 ]}
               >
                 Save
@@ -208,7 +264,7 @@ export function BrewMethods({ route, navigation }) {
           ) : (
             <TouchableOpacity
               style={styles.buttonStyle}
-              onPress={() => editMethodName(item[1].methodName)}
+              onPress={() => editMethodName(item.label)}
             >
               <Text
                 style={[
@@ -222,34 +278,46 @@ export function BrewMethods({ route, navigation }) {
           )}
           <TouchableOpacity
             style={styles.buttonStyle}
-            onPress={() => deleteAlert(`/users/${user.uid}/methods/${item[0]}`)}
+            onPress={() => deleteAlert(`/users/${user.uid}/methods/${item.id}`)}
           >
             <Text style={styles.buttonTextStyle}>Delete</Text>
           </TouchableOpacity>
         </Text>
       </View>
-    ));
+      </TouchableOpacity>
+    )};
 
   return (
-    <ScrollView 
+
+<DraggableFlatList
     keyboardShouldPersistTaps="handled"
-    
-    style={{ marginLeft: 5, marginRight: 5 }}>
-      <Text
-        style={[
-          styles.entryHeadline,
-          { textAlign: "center", marginBottom: 10 },
-        ]}
-      >
-        Manage brew methods
-      </Text>
-      {userMethodDisplay}
-      <NewMethodInput
+
+      data={data}
+      onDragEnd={({ data }) => {
+        setData(data), setIndices(data);
+      }}
+      keyExtractor={(item) => item.key}
+      renderItem={renderItem}
+      ListHeaderComponent={() => (
+        <Text
+          style={[
+            styles.entryHeadline,
+            { textAlign: "center", marginBottom: 5 },
+          ]}
+        >
+          Drag to reorder
+        </Text>
+      )}
+      ListFooterComponent={() => (
+        <NewMethodInput
         endpoint={`/users/${user.uid}/methods/`}
         user={user}
         navigation={navigation}
         setLoading={setLoading}
       />
-    </ScrollView>
+      )}
+    />
+
+   
   );
 }
