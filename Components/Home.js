@@ -5,7 +5,7 @@ import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
-import { methodObjects } from "../Data/Models";
+import { methodObjects, variableObjects } from "../Data/Models";
 
 export function HomeScreen({ route, navigation }) {
   const user = auth().currentUser;
@@ -21,7 +21,10 @@ export function HomeScreen({ route, navigation }) {
             if (!snapshot.exists()) {
               methodObjects.forEach((item) => {
                 database().ref(`/users/${user.uid}/methods/`).push(item);
-              });
+              })
+              variableObjects.forEach((item) => {
+                database().ref(`/users/${user.uid}/variables/`).push(item);
+              })
             } else {
               setMethodList(snapshot.val());
             }

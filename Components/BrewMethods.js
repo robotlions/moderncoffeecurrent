@@ -5,7 +5,7 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -57,10 +57,9 @@ const NewMethodInput = (props) => {
   }
 
   return (
-    <KeyboardAvoidingView
-    >
+    <KeyboardAvoidingView>
       <TextInput
-        style={[styles.input, { width: "100%", textAlign:"center" }]}
+        style={[styles.input, { width: "100%", textAlign: "center" }]}
         placeholder="Input new brewing method"
         value={thisState}
         onChangeText={setThisState}
@@ -81,11 +80,18 @@ const NewMethodInput = (props) => {
               props.setLoading(true);
           }}
         >
-          <Text style={[styles.modalButtonText, { textAlign: "center", paddingBottom:20 }]}>
+          <Text
+            style={[
+              styles.modalButtonText,
+              { textAlign: "center", paddingBottom: 20 },
+            ]}
+          >
             Save New Method
           </Text>
         </TouchableOpacity>
-      ): <Text style={[styles.inactiveButton, {paddingBottom:20}]}></Text>}
+      ) : (
+        <Text style={[styles.inactiveButton, { paddingBottom: 20 }]}></Text>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -104,26 +110,6 @@ export function BrewMethods({ route, navigation }) {
   const [activeEdit, setActiveEdit] = useState(null);
   const [data, setData] = useState([]);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     let isActive = true;
-  //     database()
-  //       .ref(`/users/${user.uid}/methods/`)
-  //       .on("value", (snapshot) => {
-  //         if (isActive) {
-  //           if (!snapshot.exists()) {
-  //             methodObjects.forEach((item) => {
-  //               database().ref(`/users/${user.uid}/methods/`).push(item);
-  //             });
-  //           } 
-  //         }
-  //       });
-  //     return () => {
-  //       isActive = false;
-  //     };
-  //   }, [user])
-  // );
-
   useEffect(() => {
     let initialData = Object.entries(loadedMethods)
       .sort((a, b) => a[1].order - b[1].order)
@@ -138,29 +124,6 @@ export function BrewMethods({ route, navigation }) {
       });
     setData(initialData);
   }, [loadedMethods]);
-
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     let active = true;
-  //     if (active == true) {
-  //       database()
-  //         .ref(`/users/${user.uid}/methods/`)
-  //         .once("value")
-  //         .then((snapshot) => {
-  //           if (snapshot.exists()) {
-  //             setLoadedVariables(snapshot.val());
-  //           } else {
-  //             setLoadedVariables({});
-  //             console.log("No data available");
-  //           }
-  //         });
-  //     }
-  //     return () => {
-  //       active = false;
-  //     };
-  //   }, [loading])
-  // );
 
   function getData() {
     database()
@@ -244,72 +207,72 @@ export function BrewMethods({ route, navigation }) {
   const renderItem = ({ item, drag, isActive }) => {
     return (
       <TouchableOpacity onLongPress={drag} disabled={isActive}>
-      <View style={styles.variableEntry}>
-        {editing === true && activeEdit === item.label ? (
-          <TextInput
-            autoFocus={true}
-            style={[
-              styles.input,
-              {
-                width: "50%",
-                borderWidth: 0,
-                marginTop: 2,
-                backgroundColor: "transparent",
-              },
-            ]}
-            value={editInput}
-            onChangeText={setEditInput}
-          ></TextInput>
-        ) : (
-          
-          <Text style={styles.variableText}>{item.label}</Text>
-        )}
-        <Text>
+        <View style={styles.variableEntry}>
           {editing === true && activeEdit === item.label ? (
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => updateMethodName(item.id)}
-            >
-              <Text
-                style={[
-                  styles.buttonTextStyle,
-                  { marginRight: 20, color: "green" },
-                ]}
-              >
-                Save
-              </Text>
-            </TouchableOpacity>
+            <TextInput
+              autoFocus={true}
+              style={[
+                styles.input,
+                {
+                  width: "50%",
+                  borderWidth: 0,
+                  marginTop: 2,
+                  backgroundColor: "transparent",
+                },
+              ]}
+              value={editInput}
+              onChangeText={setEditInput}
+            ></TextInput>
           ) : (
+            <Text style={styles.variableText}>{item.label}</Text>
+          )}
+          <Text>
+            {editing === true && activeEdit === item.label ? (
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => updateMethodName(item.id)}
+              >
+                <Text
+                  style={[
+                    styles.buttonTextStyle,
+                    { marginRight: 20, color: "green" },
+                  ]}
+                >
+                  Save
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                onPress={() => editMethodName(item.label)}
+              >
+                <Text
+                  style={[
+                    styles.buttonTextStyle,
+                    { marginRight: 20, color: "#fd7908" },
+                  ]}
+                >
+                  Edit
+                </Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               style={styles.buttonStyle}
-              onPress={() => editMethodName(item.label)}
+              onPress={() =>
+                deleteAlert(`/users/${user.uid}/methods/${item.id}`)
+              }
             >
-              <Text
-                style={[
-                  styles.buttonTextStyle,
-                  { marginRight: 20, color: "#fd7908" },
-                ]}
-              >
-                Edit
-              </Text>
+              <Text style={styles.buttonTextStyle}>Delete</Text>
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            style={styles.buttonStyle}
-            onPress={() => deleteAlert(`/users/${user.uid}/methods/${item.id}`)}
-          >
-            <Text style={styles.buttonTextStyle}>Delete</Text>
-          </TouchableOpacity>
-        </Text>
-      </View>
+          </Text>
+        </View>
       </TouchableOpacity>
-    )};
+    );
+  };
 
   return (
-
-<DraggableFlatList
-    keyboardShouldPersistTaps="handled"
-
+    <DraggableFlatList
+      keyboardShouldPersistTaps="handled"
       data={data}
       onDragEnd={({ data }) => {
         setData(data), setIndices(data);
@@ -328,14 +291,12 @@ export function BrewMethods({ route, navigation }) {
       )}
       ListFooterComponent={() => (
         <NewMethodInput
-        endpoint={`/users/${user.uid}/methods/`}
-        user={user}
-        navigation={navigation}
-        setLoading={setLoading}
-      />
+          endpoint={`/users/${user.uid}/methods/`}
+          user={user}
+          navigation={navigation}
+          setLoading={setLoading}
+        />
       )}
     />
-
-   
   );
 }

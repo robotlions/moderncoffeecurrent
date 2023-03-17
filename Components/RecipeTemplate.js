@@ -3,24 +3,16 @@ import {
   Text,
   View,
   TextInput,
-  ScrollView,
   TouchableOpacity,
-  Image,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
-import updownIcon from "../assets/images/updownIcon.png";
-import { variableObjects } from "../Data/Models";
 
-import DraggableFlatList, {
-  ScaleDecorator,
-  NestableScrollContainer,
-  NestableDraggableFlatList,
-} from "react-native-draggable-flatlist";
+import DraggableFlatList from "react-native-draggable-flatlist";
 
 const NewVariableInput = (props) => {
   database()
@@ -43,7 +35,7 @@ const NewVariableInput = (props) => {
             paddingLeft: 10,
             backgroundColor: "white",
             borderColor: "white",
-            textAlign: "center"
+            textAlign: "center",
           },
         ]}
         placeholder="Add new variable here"
@@ -60,20 +52,21 @@ const NewVariableInput = (props) => {
               props.navigation
             ),
               setThisState("");
-              props.setLoading(!props.loading);
+            props.setLoading(!props.loading);
           }}
         >
           <Text
             style={[
               styles.modalButtonText,
-              { textAlign: "center", fontSize: 20, paddingBottom:20 },
+              { textAlign: "center", fontSize: 20, paddingBottom: 20 },
             ]}
           >
             Save New Variable
           </Text>
-        </TouchableOpacity>)
-        :<Text style={[styles.inactiveButton, {paddingBottom:20}]}></Text>
-      }
+        </TouchableOpacity>
+      ) : (
+        <Text style={[styles.inactiveButton, { paddingBottom: 20 }]}></Text>
+      )}
     </KeyboardAvoidingView>
   );
 };
@@ -101,31 +94,14 @@ export function RecipeTemplate({ route, navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      let varArray=[];
       let active = true;
       if (active == true) {
-        
         database()
           .ref(`/users/${user.uid}/variables/`)
           .once("value")
           .then((snapshot) => {
             if (snapshot.exists()) {
               setLoadedVariables(snapshot.val());
-            } else {
-              variableObjects.forEach((item) => {
-                database().ref(`/users/${user.uid}/variables/`).push(item);
-              });
-              setTimeout(() => {
-                database()
-                  .ref(`/users/${user.uid}/variables/`)
-                  .once("value")
-                  .then((snapshot) => {
-                    snapshot.forEach((baby) => {
-                      varArray.push(baby.val());
-                    });
-                    setLoadedVariables(varArray);
-                  });
-              }, 1000);
             }
           });
       }
@@ -135,27 +111,10 @@ export function RecipeTemplate({ route, navigation }) {
     }, [loading])
   );
 
-
-
-  
-
   const renderItem = ({ item, drag, isActive }) => {
     return (
       <TouchableOpacity onLongPress={drag} disabled={isActive}>
-        <View style={{ flex: 1}}>
-          {/* <Image
-            source={updownIcon}
-            style={{
-              height: 30,
-              width: 30,
-              marginLeft: 10,
-              opacity: 0.5,
-              marginTop: 3,
-              position: "absolute",
-              marginRight: 10,
-            }}
-          /> */}
-
+        <View style={{ flex: 1 }}>
           <View style={styles.variableEntry}>
             <Text style={styles.variableText}>{item.label}</Text>
             {item.label != "Recipe Name" && item.label != "Description" && (
@@ -205,39 +164,19 @@ export function RecipeTemplate({ route, navigation }) {
 
   function deleteSelected(endpoint) {
     database().ref(endpoint).remove();
-    // reset();
-    setLoading(!loading)
+    setLoading(!loading);
   }
 
   function pushNewVariable(dataObject, endpoint, navigation) {
-    database()
-    .ref(endpoint)
-    .push(dataObject)
+    database().ref(endpoint).push(dataObject);
     alert("Added!");
-    // reset();
-    setLoading(!loading)
+    setLoading(!loading);
   }
-
-  function reset() {
-    database()
-      .ref(`/users/${user.uid}/variables/`)
-      .once("value")
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setLoadedVariables(snapshot.val());
-        } else {
-          setLoadedVariables({});
-          console.log("No data available");
-        }
-      });
-  }
-
 
 
   return (
     <DraggableFlatList
-    keyboardShouldPersistTaps="handled"
-
+      keyboardShouldPersistTaps="handled"
       data={data}
       onDragEnd={({ data }) => {
         setData(data), setIndices(data);
