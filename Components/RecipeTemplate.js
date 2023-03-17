@@ -14,6 +14,7 @@ import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 import updownIcon from "../assets/images/updownIcon.png";
+import { variableObjects } from "../Data/Models";
 
 import DraggableFlatList, {
   ScaleDecorator,
@@ -100,8 +101,10 @@ export function RecipeTemplate({ route, navigation }) {
 
   useFocusEffect(
     useCallback(() => {
+      let varArray=[];
       let active = true;
       if (active == true) {
+        
         database()
           .ref(`/users/${user.uid}/variables/`)
           .once("value")
@@ -109,8 +112,20 @@ export function RecipeTemplate({ route, navigation }) {
             if (snapshot.exists()) {
               setLoadedVariables(snapshot.val());
             } else {
-              setLoadedVariables({});
-              console.log("No data available");
+              variableObjects.forEach((item) => {
+                database().ref(`/users/${user.uid}/variables/`).push(item);
+              });
+              setTimeout(() => {
+                database()
+                  .ref(`/users/${user.uid}/variables/`)
+                  .once("value")
+                  .then((snapshot) => {
+                    snapshot.forEach((baby) => {
+                      varArray.push(baby.val());
+                    });
+                    setLoadedVariables(varArray);
+                  });
+              }, 1000);
             }
           });
       }
@@ -119,6 +134,8 @@ export function RecipeTemplate({ route, navigation }) {
       };
     }, [loading])
   );
+
+
 
   
 

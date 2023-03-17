@@ -228,7 +228,9 @@ export function Settings({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={{ paddingLeft: 10 }}>
+    <ScrollView style={{ paddingLeft: 10  }}
+    keyboardShouldPersistTaps="handled"
+    >
       <Text style={styles.modalButtonText}>Signed in as:</Text>
 
       <Text>{user && user.email}</Text>

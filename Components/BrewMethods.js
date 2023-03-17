@@ -104,7 +104,25 @@ export function BrewMethods({ route, navigation }) {
   const [activeEdit, setActiveEdit] = useState(null);
   const [data, setData] = useState([]);
 
-
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     let isActive = true;
+  //     database()
+  //       .ref(`/users/${user.uid}/methods/`)
+  //       .on("value", (snapshot) => {
+  //         if (isActive) {
+  //           if (!snapshot.exists()) {
+  //             methodObjects.forEach((item) => {
+  //               database().ref(`/users/${user.uid}/methods/`).push(item);
+  //             });
+  //           } 
+  //         }
+  //       });
+  //     return () => {
+  //       isActive = false;
+  //     };
+  //   }, [user])
+  // );
 
   useEffect(() => {
     let initialData = Object.entries(loadedMethods)
