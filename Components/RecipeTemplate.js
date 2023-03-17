@@ -58,8 +58,8 @@ const NewVariableInput = (props) => {
               props.endpoint,
               props.navigation
             ),
-              setThisState(""),
-              props.setLoading(true);
+              setThisState("");
+              props.setLoading(!props.loading);
           }}
         >
           <Text
@@ -80,7 +80,6 @@ const NewVariableInput = (props) => {
 export function RecipeTemplate({ route, navigation }) {
   const user = auth().currentUser;
   const [loadedVariables, setLoadedVariables] = useState({});
-  const [loadedMethods, setLoadedMethods] = useState({});
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -118,39 +117,16 @@ export function RecipeTemplate({ route, navigation }) {
       return () => {
         active = false;
       };
-    }, [])
+    }, [loading])
   );
 
-  // useEffect(() => {
-  //   if (loading === true) {
-  //     getData();
-  //     setLoading(false);
-  //   }
-  // });
-
-  // function getData() {
-  //   database()
-  //     .ref(`/users/${user.uid}/variables/`)
-  //     .once("value")
-  //     .then((snapshot) => {
-  //       if (snapshot.exists()) {
-  //         setLoadedMethods(snapshot.val());
-  //       } else {
-  //         setLoadedMethods({});
-  //         console.log("No data available");
-  //       }
-  //     })
-
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
+  
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
       <TouchableOpacity onLongPress={drag} disabled={isActive}>
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <Image
+        <View style={{ flex: 1}}>
+          {/* <Image
             source={updownIcon}
             style={{
               height: 30,
@@ -161,9 +137,9 @@ export function RecipeTemplate({ route, navigation }) {
               position: "absolute",
               marginRight: 10,
             }}
-          />
+          /> */}
 
-          <View style={[styles.variableEntry, { paddingLeft: 70 }]}>
+          <View style={styles.variableEntry}>
             <Text style={styles.variableText}>{item.label}</Text>
             {item.label != "Recipe Name" && item.label != "Description" && (
               <TouchableOpacity
@@ -212,8 +188,8 @@ export function RecipeTemplate({ route, navigation }) {
 
   function deleteSelected(endpoint) {
     database().ref(endpoint).remove();
-    reset();
-    // .then(() => props.navigation.goBack());
+    // reset();
+    setLoading(!loading)
   }
 
   function pushNewVariable(dataObject, endpoint, navigation) {
@@ -221,7 +197,8 @@ export function RecipeTemplate({ route, navigation }) {
     .ref(endpoint)
     .push(dataObject)
     alert("Added!");
-    reset();
+    // reset();
+    setLoading(!loading)
   }
 
   function reset() {
@@ -238,12 +215,7 @@ export function RecipeTemplate({ route, navigation }) {
       });
   }
 
-  // const userVariableDisplay = Object.entries(loadedVariables)
-  //   .sort((a, b) => a[1].order - b[1].order)
-  //   .filter((item) => item[1].variableName != "Recipe Name" && item[1].variableName != "Description")
-  //   .map((item, index) =>
-  //     <View style={styles.variableEntry} key={index}><Text style={styles.variableText} >{item[1].variableName}</Text><TouchableOpacity style={styles.buttonStyle} onPress={() => deleteAlert(`/users/${user.uid}/variables/${item[0]}`)}>
-  //       <Text style={styles.deleteButton}>Delete</Text></TouchableOpacity></View>)
+
 
   return (
     <DraggableFlatList
@@ -272,6 +244,7 @@ export function RecipeTemplate({ route, navigation }) {
           user={user}
           navigation={navigation}
           setLoading={setLoading}
+          loading={loading}
         />
       )}
     />
