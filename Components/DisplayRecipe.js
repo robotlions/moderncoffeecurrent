@@ -25,6 +25,8 @@ export function DisplayRecipe({ route, navigation }) {
   const [activeEdit, setActiveEdit] = useState(null);
   const [editValue, setEditValue] = useState("");
 
+
+
   useEffect(()=>{
     
       let loading = true;
@@ -43,7 +45,7 @@ export function DisplayRecipe({ route, navigation }) {
           .catch((error) => {
             console.error(error);
           });
-        }
+        
         database()
           .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
           .once("value")
@@ -62,7 +64,7 @@ export function DisplayRecipe({ route, navigation }) {
       return () => {
         loading = false;
       }
-    },[editing]
+  }},[editing]
   );
 
   function addRemoveStar() {
