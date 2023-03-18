@@ -170,9 +170,26 @@ export function BrewMethods({ route, navigation }) {
   }
 
   function deleteSelected(endpoint) {
+    database().ref(`/users/${user.uid}/methods/`).once("value", (snapshot) => {
+    if(snapshot.exists()){
+    if(Object.keys(snapshot.val()).length<=1){
+      alert("The app can't function without brew methods. Resetting!")
+    database().ref(endpoint).remove()
+    navigation.navigate("HomeScreen");
+
+    }
+    else{
     database().ref(endpoint).remove();
-    reset();
+  }}
+  reset();
+});
   }
+
+  // function deleteSelected(){
+  //   database().ref(endpoint).remove();
+  //   reset();
+
+  // }
 
   function editMethodName(methodName) {
     setEditInput(methodName);
