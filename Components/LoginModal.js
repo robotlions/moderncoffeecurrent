@@ -8,28 +8,34 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 
+
+
 GoogleSignin.configure({
   webClientId:
     "14249102574-n202743ce00eg8h6rdqjpotmdn3cnmge.apps.googleusercontent.com",
 });
 
 async function onGoogleButtonPress() {
-  const { idToken } = await GoogleSignin.signIn();
-  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-  return auth().signInWithCredential(googleCredential);
-}
+    const { idToken } = await GoogleSignin.signIn();
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+    return auth().signInWithCredential(googleCredential)
+    
+  }
+
+
 
 export const LoginModal = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [createModalVisible, setCreateModalVisible] = useState(false);
-  const [
-    recoverPasswordModalVisible,
-    setRecoverPasswordModalVisible,
-  ] = useState(false);
+  const [recoverPasswordModalVisible, setRecoverPasswordModalVisible] =
+    useState(false);
   const passwordRef = useRef();
   const password2Ref = useRef();
+
+
 
   function createUser() {
     if (email === "" || password === "") {
@@ -41,12 +47,11 @@ export const LoginModal = (props) => {
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
-          auth().currentUser.sendEmailVerification();
+          auth().currentUser.sendEmailVerification()
           alert(
             "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
-          );
+          )
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -90,6 +95,8 @@ export const LoginModal = (props) => {
         }
       });
   }
+
+  
 
   function triggerEmailReset() {
     auth()
