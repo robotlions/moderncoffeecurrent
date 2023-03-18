@@ -250,7 +250,7 @@ export function EditRecipe({ route, navigation }) {
           })
         }
       >
-        <Text style={styles.modalButtonText}>Customize This Recipe</Text>
+        <Text style={styles.modalButtonText}>Reorder this recipe</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

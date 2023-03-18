@@ -187,29 +187,16 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
     return (
       <TouchableOpacity
         style={{
-          height: 50,
-          elevation: 1,
-          backgroundColor: "white",
+          minHeight: 50,
           marginBottom: 5,
         }}
         onLongPress={drag}
         disabled={isActive}
       >
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <Image
-            source={updownIcon}
-            style={{
-              height: 30,
-              width: 30,
-              marginLeft: 10,
-              opacity: 0.5,
-              marginTop: 3,
-              position: "absolute",
-              marginRight: 10,
-            }}
-          />
+          
 
-          <View style={[styles.variableEntry, { paddingLeft: 70 }]}>
+          <View style={styles.variableEntry}>
             <Text
               style={{
                 maxWidth: "80%",

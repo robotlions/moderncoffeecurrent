@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
   },
   categoryTouchable: {
     marginTop: 20,
-    height: winHeight * 0.1,
+    minHeight: winHeight * 0.1,
     justifyContent: "center",
     elevation: 2,
   },
@@ -81,7 +81,7 @@ export const styles = StyleSheet.create({
     width: "100%",
     elevation: 1,
     backgroundColor: "white",
-    height: winHeight * 0.1,
+    minHeight: winHeight * 0.1,
     marginBottom: 8,
   },
 
@@ -193,9 +193,10 @@ export const styles = StyleSheet.create({
     elevation: 2,
     backgroundColor: "white",
     marginBottom: 10,
-    height: winHeight * 0.06,
+    minHeight: winHeight * 0.06,
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: winHeight*0.01,
   },
 
   recipeModalText: {
@@ -235,7 +236,7 @@ export const styles = StyleSheet.create({
 
   variableEntry: {
     flex: 1,
-    height: winHeight * 0.05,
+    minHeight: winHeight * 0.05,
     flexDirection: "row",
     marginBottom: 10,
     alignItems: "center",

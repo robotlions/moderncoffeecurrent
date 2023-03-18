@@ -12,7 +12,6 @@ import favoriteIcon from "../assets/images/favoriteIcon.png";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
-import DraggableFlatList from "react-native-draggable-flatlist";
 
 export function ListRecipes({ route, navigation }) {
   const [loadedData, setLoadedData] = useState([]);
@@ -38,7 +37,6 @@ export function ListRecipes({ route, navigation }) {
           .once("value")
           .then((snapshot) => {
             if (snapshot.exists()) {
-              // console.log(Object.entries(snapshot.val()))
               setLoadedData(snapshot.val());
             } else {
               console.log("No data available");
