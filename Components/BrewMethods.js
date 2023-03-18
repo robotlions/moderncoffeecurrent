@@ -3,20 +3,15 @@ import {
   Text,
   View,
   TextInput,
-  ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
 } from "react-native";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
-import { useFocusEffect } from "@react-navigation/native";
 
 import DraggableFlatList, {
-  ScaleDecorator,
-  NestableScrollContainer,
-  NestableDraggableFlatList,
 } from "react-native-draggable-flatlist";
 
 const NewMethodInput = (props) => {
@@ -102,7 +97,6 @@ function pushNewVariable(dataObject, endpoint, navigation) {
 
 export function BrewMethods({ route, navigation }) {
   const user = auth().currentUser;
-  const [loadedVariables, setLoadedVariables] = useState({});
   const [loadedMethods, setLoadedMethods] = useState({});
   const [loading, setLoading] = useState(true);
   const [editInput, setEditInput] = useState("");

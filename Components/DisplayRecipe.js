@@ -38,7 +38,7 @@ export function DisplayRecipe({ route, navigation }) {
             if (snapshot.exists()) {
               setLoadedMethods(snapshot.val());
             } else {
-              // console.log("No data available");
+              console.log("No data available");
             }
           })
 
@@ -53,7 +53,7 @@ export function DisplayRecipe({ route, navigation }) {
             if (snapshot.exists()) {
               setLoadedRecipe(snapshot.val());
             } else {
-              // console.log("No data available");
+              console.log("No data available");
             }
           })
 
@@ -77,7 +77,6 @@ export function DisplayRecipe({ route, navigation }) {
         favorite: loadedRecipe.favorite,
       });
     alert("Updated!");
-    // navigation.navigate("Home");
     navigation.goBack();
   }
 
@@ -175,21 +174,14 @@ export function DisplayRecipe({ route, navigation }) {
     database()
       .ref(endpoint)
       .remove()
-      // reset();
       .then(() => navigation.goBack());
   }
 
   return (
-    <>
+    
       <ScrollView keyboardShouldPersistTaps="handled">
         <Text
-          style={{
-            textAlign: "center",
-            fontFamily: "Raleway-Bold",
-            fontSize: 18,
-            paddingLeft: 10,
-            marginBottom: 10,
-          }}
+          style={[styles.entryHeadline, {textAlign:"center"}]}
         >
           {route.params.loadedRecipe["Recipe Name"].variableValue}
         </Text>
@@ -238,9 +230,7 @@ export function DisplayRecipe({ route, navigation }) {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* !editing && <View style={{ backgroundColor: "white", height: 20 * scale, borderTopWidth: .5, borderColor: "gray" }}>
-        <Timer />
-      </View> */}
-    </>
+      
+    
   );
 }

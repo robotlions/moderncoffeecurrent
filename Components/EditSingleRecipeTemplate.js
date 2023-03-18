@@ -14,9 +14,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import updownIcon from "../assets/images/updownIcon.png";
 
 import DraggableFlatList, {
-  ScaleDecorator,
-  NestableScrollContainer,
-  NestableDraggableFlatList,
+  
 } from "react-native-draggable-flatlist";
 
 const NewVariableInput = (props) => {
@@ -82,8 +80,7 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
   });
   const [method, setMethod] = useState(route.params.loadedRecipe.method);
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [update, setUpdate] = useState(false);
+ 
 
   useFocusEffect(
     useCallback(() => {
@@ -183,9 +180,6 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
           </Text>
         </TouchableOpacity>
       </Text>
-      {/* <Text style={{ textAlign: "center" }}>
-      <Functions.DeleteModule navigation={navigation} endpoint={`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}`} reset={() => reset()} buttonStyle={styles.modalButton} buttonTextStyle={styles.modalButtonText} />
-    </Text> */}
     </View>
   );
 

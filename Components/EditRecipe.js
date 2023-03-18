@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TextInput,
-  Alert,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -90,13 +89,11 @@ export function EditRecipe({ route, navigation }) {
   let dataObject = {};
 
   const loadedID = route.params.loadedID;
-  // const loadedRecipe = {...route.params.loadedRecipe};
   const [loadedRecipe, setLoadedRecipe] = useState({
     ...route.params.loadedRecipe,
   });
   const [method, setMethod] = useState(route.params.loadedRecipe.method);
   const [loadedMethods, setLoadedMethods] = useState("");
-  const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useFocusEffect(
@@ -179,7 +176,6 @@ export function EditRecipe({ route, navigation }) {
   function pushNewVariable(dataObject, endpoint, navigation) {
     database().ref(endpoint).set(dataObject), alert("Added!");
     reset();
-    // setUpdate(!update);
   }
 
   function reset() {
@@ -266,18 +262,5 @@ export function EditRecipe({ route, navigation }) {
     </ScrollView>
   );
 
-  // if (dragWindowVisible) {
-  //   return (
-
-  //     <DraggableFlatList
-  //       data={data}
-  //       onDragEnd={({ data }) => { setData(data), setIndices(data) }}
-  //       keyExtractor={(item) => item.key}
-  //       renderItem={renderItem}
-  //       ListHeaderComponent={() => flatlistHeader}
-  //       ListFooterComponent={() => flatlistFooter}
-  //     />
-  //   )
-
-  // }
+  
 }
