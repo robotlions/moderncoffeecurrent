@@ -165,10 +165,6 @@ export function ListRecipes({ route, navigation }) {
           onPress: () => deleteAlert(item),
           style: "cancel",
         },
-        // {
-        //   text: "Cancel",
-        //   style: "cancel",
-        // },
       
       {
         text: item[1].favorite == true ? "Remove from favorites" : `Add to Favorites`,
