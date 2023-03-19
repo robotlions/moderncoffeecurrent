@@ -165,16 +165,34 @@ export function ListRecipes({ route, navigation }) {
           onPress: () => deleteAlert(item),
           style: "cancel",
         },
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-      ],
+        // {
+        //   text: "Cancel",
+        //   style: "cancel",
+        // },
+      
+      {
+        text: item[1].favorite == true ? "Remove from favorites" : `Add to Favorites`,
+        onPress: () => addRemoveStar(item),
+        style: "cancel",
+      },
+    ],
       {
         cancelable: true,
       }
     );
   }
+
+  async function addRemoveStar(item) {
+      let fav = item[1].favorite == true ? false : true
+      await database()
+        .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
+        .update(
+          {
+            favorite: fav
+          }
+        );
+      return setUpdated(!updated);
+    }
 
   function deleteAlert(item) {
     Alert.alert(

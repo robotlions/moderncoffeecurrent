@@ -20,6 +20,7 @@ export function DisplayRecipe({ route, navigation }) {
   const [editing, setEditing] = useState(false);
   const [activeEdit, setActiveEdit] = useState(null);
   const [editValue, setEditValue] = useState("");
+  const [favoriteStatus, setFavoriteStatus] = useState(loadedRecipe.favorite==true? "Add to favorites" : "Remove from favorites");
 
   useEffect(() => {
     let loading = true;
@@ -50,6 +51,8 @@ export function DisplayRecipe({ route, navigation }) {
           }
         })
 
+      
+
         .catch((error) => {
           console.error(error);
         });
@@ -60,17 +63,22 @@ export function DisplayRecipe({ route, navigation }) {
     }
   }, [editing]);
 
-  function addRemoveStar() {
+
+
+  
+
+  async function addRemoveStar() {
     loadedRecipe.favorite == true
       ? (loadedRecipe.favorite = false)
       : (loadedRecipe.favorite = true);
-    database()
+   await database()
       .ref(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)
       .update({
         favorite: loadedRecipe.favorite,
       });
-    alert("Updated!");
-    navigation.goBack();
+   return  alert(loadedRecipe.favorite == true ? "Added to favorites" : "Removed from favorites"),
+   setFavoriteStatus(loadedRecipe.favorite==true? "Remove from favorites" : "Add to favorites");
+    // navigation.goBack();
   }
 
   function selectVariable(key, value) {
@@ -170,6 +178,7 @@ export function DisplayRecipe({ route, navigation }) {
       .then(() => navigation.goBack());
   }
 
+
   return (
     <ScrollView keyboardShouldPersistTaps="handled">
       <Text style={[styles.entryHeadline, { textAlign: "center" }]}>
@@ -213,9 +222,10 @@ export function DisplayRecipe({ route, navigation }) {
         onPress={() => addRemoveStar()}
       >
         <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
-          {loadedRecipe.favorite == true
+        {/* {loadedRecipe.favorite == true
             ? "Remove from Favorites"
-            : "Add to Favorites"}
+            : "Add to Favorites"} */}
+            {favoriteStatus}
         </Text>
       </TouchableOpacity>
     </ScrollView>
