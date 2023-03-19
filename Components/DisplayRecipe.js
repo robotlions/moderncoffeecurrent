@@ -11,6 +11,7 @@ import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function DisplayRecipe({ route, navigation }) {
   const loadedID = route.params.loadedID;
@@ -20,9 +21,11 @@ export function DisplayRecipe({ route, navigation }) {
   const [editing, setEditing] = useState(false);
   const [activeEdit, setActiveEdit] = useState(null);
   const [editValue, setEditValue] = useState("");
-  const [favoriteStatus, setFavoriteStatus] = useState(loadedRecipe.favorite==true? "Add to favorites" : "Remove from favorites");
+  const [favoriteStatus, setFavoriteStatus] = useState("loading");
+  const [updated, setUpdated] = useState(false);
 
-  useEffect(() => {
+  useFocusEffect(
+  useCallback(() => {
     let loading = true;
     if (loading === true) {
       database()
@@ -51,17 +54,25 @@ export function DisplayRecipe({ route, navigation }) {
           }
         })
 
+        database()
+        .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/favorite`)
+        .once("value")
+        .then((snapshot) => snapshot.val()===true ? setFavoriteStatus("Remove from favorites") : setFavoriteStatus("Add to favorites"))
+
+        
+
       
 
         .catch((error) => {
           console.error(error);
         });
 
+
       return () => {
         loading = false;
       };
     }
-  }, [editing]);
+  }, [editing, updated]));
 
 
 
@@ -77,7 +88,8 @@ export function DisplayRecipe({ route, navigation }) {
         favorite: loadedRecipe.favorite,
       });
    return  alert(loadedRecipe.favorite == true ? "Added to favorites" : "Removed from favorites"),
-   setFavoriteStatus(loadedRecipe.favorite==true? "Remove from favorites" : "Add to favorites");
+   setFavoriteStatus(loadedRecipe.favorite==true? "Remove from favorites" : "Add to favorites"),
+   setUpdated(!updated);
     // navigation.goBack();
   }
 
