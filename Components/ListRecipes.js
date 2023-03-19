@@ -161,10 +161,7 @@ export function ListRecipes({ route, navigation }) {
           style: "cancel",
         },
         {
-          text:
-            
-             
-              `Delete Recipe`,
+          text: `Delete Recipe`,
           onPress: () => deleteAlert(item),
           style: "cancel",
         },
@@ -204,9 +201,9 @@ export function ListRecipes({ route, navigation }) {
     database()
       .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
       .remove()
-      .then(()=>setUpdated(!updated));
-      // reset();
-      // .then(() => navigation.goBack());
+      .then(() => setUpdated(!updated));
+    // reset();
+    // .then(() => navigation.goBack());
   }
 
   function addRemoveStar(item) {
@@ -224,16 +221,17 @@ export function ListRecipes({ route, navigation }) {
       <ScrollView>
         <DisplayData />
       </ScrollView>
-      {route.params.filter != "Favorites" && route.params.filter != "Recent" && (
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Create Recipe", methodCheck)}
-          style={styles.addItemTouchable}
-        >
-          <Text style={[styles.categoryText, { color: "white" }]}>
-            Create {route.params.filter} Recipe
-          </Text>
-        </TouchableOpacity>
-      )}
+      {route.params.filter != "Favorites" &&
+        route.params.filter != "Recent" && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Create Recipe", methodCheck)}
+            style={styles.addItemTouchable}
+          >
+            <Text style={[styles.categoryText, { color: "white" }]}>
+              Create {route.params.filter} Recipe
+            </Text>
+          </TouchableOpacity>
+        )}
     </>
   );
 }

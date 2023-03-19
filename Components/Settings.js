@@ -3,7 +3,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Keyboard,
   Alert,
   ScrollView,
 } from "react-native";
@@ -21,13 +20,10 @@ export function Settings({ route, navigation }) {
 
   const [email, setEmail] = useState("");
   const [passModalVisible, setPassModalVisible] = useState(false);
-  const [
-    changeDisplayNameModuleVisible,
-    setChangeDisplayNameModuleVisble,
-  ] = useState(false);
-  const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] = useState(
-    false
-  );
+  const [changeDisplayNameModuleVisible, setChangeDisplayNameModuleVisble] =
+    useState(false);
+  const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] =
+    useState(false);
 
   const user = auth().currentUser;
 
@@ -229,9 +225,7 @@ export function Settings({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={{ paddingLeft: 10  }}
-    keyboardShouldPersistTaps="handled"
-    >
+    <ScrollView style={{ paddingLeft: 10 }} keyboardShouldPersistTaps="handled">
       <Text style={styles.modalButtonText}>Signed in as:</Text>
 
       <Text>{user && user.email}</Text>

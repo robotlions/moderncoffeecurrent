@@ -11,9 +11,6 @@ export function HomeScreen({ route, navigation }) {
   const user = auth().currentUser;
   const [methodList, setMethodList] = useState({});
 
-  
-
-
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -22,10 +19,8 @@ export function HomeScreen({ route, navigation }) {
         .on("value", (snapshot) => {
           if (isActive) {
             if (!snapshot.exists()) {
-              createDatabaseEntries()
-            }
-            else
-             {
+              createDatabaseEntries();
+            } else {
               setMethodList(snapshot.val());
             }
           }
@@ -36,14 +31,15 @@ export function HomeScreen({ route, navigation }) {
     }, [user])
   );
 
-
   function createDatabaseEntries() {
     database()
       .ref(`/users/${auth().currentUser.uid}/methods/`)
       .once("value", (snapshot) => {
         if (!snapshot.exists()) {
           methodObjects.forEach((item) => {
-            database().ref(`/users/${auth().currentUser.uid}/methods/`).push(item);
+            database()
+              .ref(`/users/${auth().currentUser.uid}/methods/`)
+              .push(item);
           });
         }
       });
@@ -52,13 +48,13 @@ export function HomeScreen({ route, navigation }) {
       .once("value", (snapshot) => {
         if (!snapshot.exists()) {
           variableObjects.forEach((item) => {
-            database().ref(`/users/${auth().currentUser.uid}/variables/`).push(item);
+            database()
+              .ref(`/users/${auth().currentUser.uid}/variables/`)
+              .push(item);
           });
         }
       });
   }
-
-
 
   const favoritesDisplay = (
     <TouchableOpacity
@@ -93,7 +89,6 @@ export function HomeScreen({ route, navigation }) {
       <StatusBar translucent={true} backgroundColor="transparent" />
 
       <ScrollView style={styles.scrollViewStyle}>
-
         {favoritesDisplay}
         {methodDisplay}
         <TouchableOpacity

@@ -113,12 +113,11 @@ export const styles = StyleSheet.create({
     bottom: 5,
   },
 
-  inactiveButton:{
+  inactiveButton: {
     textAlign: "center",
     fontFamily: "Raleway-Bold",
     color: "gray",
     fontSize: 20,
-
   },
   input: {
     borderColor: "gray",
@@ -195,7 +194,7 @@ export const styles = StyleSheet.create({
     minHeight: winHeight * 0.06,
     justifyContent: "center",
     alignItems: "center",
-    paddingBottom: winHeight*0.01,
+    paddingBottom: winHeight * 0.01,
   },
 
   recipeModalText: {
@@ -245,8 +244,8 @@ export const styles = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     borderRadius: 10,
-    marginLeft:5,
-    marginRight:5
+    marginLeft: 5,
+    marginRight: 5,
   },
   variableText: {
     fontFamily: "Raleway-Medium",

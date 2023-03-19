@@ -26,10 +26,7 @@ export function NavStack() {
         options={{ headerShown: false }}
         component={HomeScreen}
       />
-       <Stack.Screen
-        name="Create Recipe"
-        component={CreateRecipe}
-      />
+      <Stack.Screen name="Create Recipe" component={CreateRecipe} />
       <Stack.Screen
         name="List Recipes"
         component={ListRecipes}
@@ -86,7 +83,7 @@ export function TabNav() {
           headerTitleStyle: { fontFamily: "Raleway-Bold" },
         }}
       />
-      
+
       <Tab.Screen
         name="Timer"
         component={StandaloneTimer}

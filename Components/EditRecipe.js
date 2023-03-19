@@ -261,6 +261,4 @@ export function EditRecipe({ route, navigation }) {
       </TouchableOpacity>
     </ScrollView>
   );
-
-  
 }

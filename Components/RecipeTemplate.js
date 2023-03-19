@@ -173,7 +173,6 @@ export function RecipeTemplate({ route, navigation }) {
     setLoading(!loading);
   }
 
-
   return (
     <DraggableFlatList
       keyboardShouldPersistTaps="handled"

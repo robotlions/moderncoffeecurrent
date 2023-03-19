@@ -53,7 +53,6 @@ export function CreateRecipe({ route, navigation }) {
   const [order, setOrder] = useState(0);
   const [variableList, setVariableList] = useState([]);
   const [editing, setEditing] = useState(true);
-  
 
   let dataObject = {};
 

@@ -12,63 +12,8 @@ import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 
-import DraggableFlatList, {
-  
-} from "react-native-draggable-flatlist";
+import DraggableFlatList from "react-native-draggable-flatlist";
 
-const NewVariableInput = (props) => {
-  database()
-    .ref(props.endpoint)
-    .once("value")
-    .then((snapshot) => {
-      setOrderCount(snapshot.numChildren() + 1);
-    });
-
-  const [thisState, setThisState] = useState("");
-  const [orderCount, setOrderCount] = useState(0);
-
-  return (
-    <>
-      <TextInput
-        style={[
-          styles.input,
-          {
-            width: "100%",
-            paddingLeft: 10,
-            backgroundColor: "white",
-            borderColor: "white",
-          },
-        ]}
-        placeholder="Input new variable"
-        value={thisState}
-        onChangeText={setThisState}
-      ></TextInput>
-      {thisState != "" && (
-        <TouchableOpacity
-          style={{ paddingBottom: 10, paddingTop: 10 }}
-          onPress={() => {
-            props.pushNewVariable(
-              { variableValue: "", order: orderCount },
-              `${props.endpoint}/${thisState}/`,
-              props.navigation
-            ),
-              setThisState(""),
-              props.setLoading(true);
-          }}
-        >
-          <Text
-            style={[
-              styles.modalButtonText,
-              { textAlign: "center", fontSize: 20 },
-            ]}
-          >
-            Save New Variable
-          </Text>
-        </TouchableOpacity>
-      )}
-    </>
-  );
-};
 
 export function EditSingleRecipeTemplate({ route, navigation }) {
   const user = auth().currentUser;
@@ -79,7 +24,6 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
   });
   const [method, setMethod] = useState(route.params.loadedRecipe.method);
   const [data, setData] = useState([]);
- 
 
   useFocusEffect(
     useCallback(() => {
@@ -193,8 +137,6 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
         disabled={isActive}
       >
         <View style={{ flex: 1, justifyContent: "center" }}>
-          
-
           <View style={styles.variableEntry}>
             <Text
               style={{
@@ -223,10 +165,7 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
     );
   };
 
-  function pushNewVariable(dataObject, endpoint, navigation) {
-    database().ref(endpoint).set(dataObject), alert("Added!");
-    // setUpdate(!update);
-  }
+  
 
   function deleteAlert(endpoint) {
     Alert.alert(

@@ -5,13 +5,12 @@ import {
   Text,
   TextInput,
   View,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
-
 
 export function DisplayRecipe({ route, navigation }) {
   const loadedID = route.params.loadedID;
@@ -22,47 +21,44 @@ export function DisplayRecipe({ route, navigation }) {
   const [activeEdit, setActiveEdit] = useState(null);
   const [editValue, setEditValue] = useState("");
 
+  useEffect(() => {
+    let loading = true;
+    if (loading === true) {
+      database()
+        .ref(`/users/${user.uid}/methods/`)
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            setLoadedMethods(snapshot.val());
+          } else {
+            console.log("No data available");
+          }
+        })
 
+        .catch((error) => {
+          console.error(error);
+        });
 
-  useEffect(()=>{
-    
-      let loading = true;
-      if (loading === true) {
-        database()
-          .ref(`/users/${user.uid}/methods/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              setLoadedMethods(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
-          })
+      database()
+        .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            setLoadedRecipe(snapshot.val());
+          } else {
+            console.log("No data available");
+          }
+        })
 
-          .catch((error) => {
-            console.error(error);
-          });
-        
-        database()
-          .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              setLoadedRecipe(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
-          })
+        .catch((error) => {
+          console.error(error);
+        });
 
-          .catch((error) => {
-            console.error(error);
-          });
-      
       return () => {
         loading = false;
-      }
-  }},[editing]
-  );
+      };
+    }
+  }, [editing]);
 
   function addRemoveStar() {
     loadedRecipe.favorite == true
@@ -115,7 +111,7 @@ export function DisplayRecipe({ route, navigation }) {
             onChangeText={setEditValue}
             placeholder={key}
           />
-          
+
           <TouchableOpacity onPress={() => unSelect(key, value)}>
             <Text
               style={{
@@ -175,59 +171,53 @@ export function DisplayRecipe({ route, navigation }) {
   }
 
   return (
-    
-      <ScrollView keyboardShouldPersistTaps="handled">
-        <Text
-          style={[styles.entryHeadline, {textAlign:"center"}]}
-        >
-          {route.params.loadedRecipe["Recipe Name"].variableValue}
-        </Text>
-        {editDisplay}
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate("Edit", {
-                loadedID: loadedID,
-                loadedRecipe: loadedRecipe,
-              })
-            }
-          >
-            <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
-              Edit Recipe
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() =>
-              deleteAlert(
-                `/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`
-              )
-            }
-          >
-            <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
-              Delete Recipe
-            </Text>
-          </TouchableOpacity>
-        </View>
-
+    <ScrollView keyboardShouldPersistTaps="handled">
+      <Text style={[styles.entryHeadline, { textAlign: "center" }]}>
+        {route.params.loadedRecipe["Recipe Name"].variableValue}
+      </Text>
+      {editDisplay}
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-around",
+        }}
+      >
         <TouchableOpacity
-          style={{ marginTop: 10, marginBottom: 10 }}
-          onPress={() => addRemoveStar()}
+          onPress={() =>
+            navigation.navigate("Edit", {
+              loadedID: loadedID,
+              loadedRecipe: loadedRecipe,
+            })
+          }
         >
           <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
-            {loadedRecipe.favorite == true
-              ? "Remove from Favorites"
-              : "Add to Favorites"}
+            Edit Recipe
           </Text>
         </TouchableOpacity>
-      </ScrollView>
+        <TouchableOpacity
+          onPress={() =>
+            deleteAlert(
+              `/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`
+            )
+          }
+        >
+          <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
+            Delete Recipe
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-      
-    
+      <TouchableOpacity
+        style={{ marginTop: 10, marginBottom: 10 }}
+        onPress={() => addRemoveStar()}
+      >
+        <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
+          {loadedRecipe.favorite == true
+            ? "Remove from Favorites"
+            : "Add to Favorites"}
+        </Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
