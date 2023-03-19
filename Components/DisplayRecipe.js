@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -23,12 +24,71 @@ export function DisplayRecipe({ route, navigation }) {
   const [editValue, setEditValue] = useState("");
   const [favoriteStatus, setFavoriteStatus] = useState("loading");
   const [updated, setUpdated] = useState(false);
+  const [screenLoaded, setScreenLoaded] = useState(false);
+
+  // useFocusEffect(
+  // useCallback(() => {
+  //   let loading = true;
+  //   if (loading === true) {
+  //     database()
+  //       .ref(`/users/${user.uid}/methods/`)
+  //       .once("value")
+  //       .then((snapshot) => {
+  //         if (snapshot.exists()) {
+  //           setLoadedMethods(snapshot.val());
+  //         } else {
+  //           console.log("No data available");
+  //         }
+  //       })
+
+  //       .catch((error) => {
+  //         console.error(error);
+  //       });
+
+  //     database()
+  //       .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
+  //       .once("value")
+  //       .then((snapshot) => {
+  //         if (snapshot.exists()) {
+  //           setLoadedRecipe(snapshot.val());
+  //         } else {
+  //           console.log("No data available");
+  //         }
+  //       })
+
+  //      database()
+  //       .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/favorite`)
+  //       .once("value")
+  //       .then((snapshot) => snapshot.val()===true ? setFavoriteStatus("Remove from favorites") : setFavoriteStatus("Add to favorites"))
+
+  //       .catch((error) => {
+  //         console.error(error);
+  //       }
+  //       );
+
+  //       setScreenLoading(false);
+
+  //     return () => {
+  //       loading = false;
+  //     };
+  //   }
+  // }, [editing, updated]));
 
   useFocusEffect(
-  useCallback(() => {
-    let loading = true;
-    if (loading === true) {
-      database()
+    useCallback(() => {
+      let loading = true;
+      if (loading === true) {
+        fetchAndLoadData();
+      }
+      return () => {
+        loading = false;
+      };
+    }, [editing, updated])
+  );
+
+  async function fetchAndLoadData() {
+    try {
+      await database()
         .ref(`/users/${user.uid}/methods/`)
         .once("value")
         .then((snapshot) => {
@@ -43,7 +103,7 @@ export function DisplayRecipe({ route, navigation }) {
           console.error(error);
         });
 
-      database()
+      await database()
         .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
         .once("value")
         .then((snapshot) => {
@@ -52,44 +112,37 @@ export function DisplayRecipe({ route, navigation }) {
           } else {
             console.log("No data available");
           }
-        })
-
-        database()
-        .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/favorite`)
-        .once("value")
-        .then((snapshot) => snapshot.val()===true ? setFavoriteStatus("Remove from favorites") : setFavoriteStatus("Add to favorites"))
-
-        
-
-      
-
-        .catch((error) => {
-          console.error(error);
         });
 
-
-      return () => {
-        loading = false;
-      };
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setScreenLoaded(true);
     }
-  }, [editing, updated]));
-
-
-
-  
+  }
 
   async function addRemoveStar() {
     loadedRecipe.favorite == true
       ? (loadedRecipe.favorite = false)
       : (loadedRecipe.favorite = true);
-   await database()
+    await database()
       .ref(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)
       .update({
         favorite: loadedRecipe.favorite,
       });
-   return  alert(loadedRecipe.favorite == true ? "Added to favorites" : "Removed from favorites"),
-   setFavoriteStatus(loadedRecipe.favorite==true? "Remove from favorites" : "Add to favorites"),
-   setUpdated(!updated);
+    return (
+      alert(
+        loadedRecipe.favorite == true
+          ? "Added to favorites"
+          : "Removed from favorites"
+      ),
+      setFavoriteStatus(
+        loadedRecipe.favorite == true
+          ? "Remove from favorites"
+          : "Add to favorites"
+      ),
+      setUpdated(!updated)
+    );
     // navigation.goBack();
   }
 
@@ -190,56 +243,62 @@ export function DisplayRecipe({ route, navigation }) {
       .then(() => navigation.goBack());
   }
 
-
-  return (
-    <ScrollView keyboardShouldPersistTaps="handled">
-      <Text style={[styles.entryHeadline, { textAlign: "center" }]}>
-        {route.params.loadedRecipe["Recipe Name"].variableValue}
-      </Text>
-      {editDisplay}
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-around",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Edit", {
-              loadedID: loadedID,
-              loadedRecipe: loadedRecipe,
-            })
-          }
-        >
-          <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
-            Edit Recipe
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            deleteAlert(
-              `/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`
-            )
-          }
-        >
-          <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
-            Delete Recipe
-          </Text>
-        </TouchableOpacity>
+  if (screenLoaded === false) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator />
       </View>
-
-      <TouchableOpacity
-        style={{ marginTop: 10, marginBottom: 10 }}
-        onPress={() => addRemoveStar()}
-      >
-        <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
-        {/* {loadedRecipe.favorite == true
-            ? "Remove from Favorites"
-            : "Add to Favorites"} */}
-            {favoriteStatus}
+    );
+  } else {
+    return (
+      <ScrollView keyboardShouldPersistTaps="handled">
+        <Text style={[styles.entryHeadline, { textAlign: "center" }]}>
+          {route.params.loadedRecipe["Recipe Name"].variableValue}
         </Text>
-      </TouchableOpacity>
-    </ScrollView>
-  );
+        {editDisplay}
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Edit", {
+                loadedID: loadedID,
+                loadedRecipe: loadedRecipe,
+              })
+            }
+          >
+            <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
+              Edit Recipe
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              deleteAlert(
+                `/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`
+              )
+            }
+          >
+            <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
+              Delete Recipe
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={{ marginTop: 10, marginBottom: 10 }}
+          onPress={() => addRemoveStar()}
+        >
+          <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
+            {loadedRecipe.favorite == true
+            ? "Remove from Favorites"
+            : "Add to Favorites"}
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    );
+  }
 }
