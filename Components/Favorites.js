@@ -1,4 +1,11 @@
-import { Text, TouchableOpacity, ScrollView, Image } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+  View
+} from "react-native";
 import { useCallback, useState } from "react";
 import { styles } from "./Styles";
 import favoriteIcon from "../assets/images/favoriteIcon.png";
@@ -8,6 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 export function Favorites({ route, navigation }) {
   const [loadedData, setLoadedData] = useState([]);
+  const [screenLoaded, setScreenLoaded] = useState(false);
 
   const user = auth().currentUser;
 
@@ -19,35 +27,41 @@ export function Favorites({ route, navigation }) {
     });
   }
 
-  function getData() {
-    database()
-      .ref(`/users/${user.uid}/recipes/`)
-      .once("value")
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          let favArray = [];
-          snapshot.forEach((item) => {
-            favArray.push(item.val());
-          });
-          setLoadedData(favArray);
-        } else {
-          console.log("No data available");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
   useFocusEffect(
     useCallback(() => {
       let loading = true;
       if (loading === true) {
-        getData();
+        fetchAndLoadData();
         loading = false;
       }
     }, [])
   );
+
+  async function fetchAndLoadData() {
+    try {
+      await database()
+        .ref(`/users/${user.uid}/recipes/`)
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            let favArray = [];
+            snapshot.forEach((item) => {
+              favArray.push(item.val());
+            });
+            setLoadedData(favArray);
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setScreenLoaded(true);
+    }
+  }
 
   function doRandom(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
@@ -78,5 +92,13 @@ export function Favorites({ route, navigation }) {
       ))
   );
 
-  return <ScrollView>{displayData}</ScrollView>;
+  if (screenLoaded === false) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  } else {
+    return <ScrollView>{displayData}</ScrollView>;
+  }
 }

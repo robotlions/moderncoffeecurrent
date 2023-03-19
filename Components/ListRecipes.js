@@ -5,6 +5,7 @@ import {
   Image,
   Alert,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { useCallback, useState } from "react";
 import { styles } from "./Styles";
@@ -16,6 +17,7 @@ import { useFocusEffect } from "@react-navigation/native";
 export function ListRecipes({ route, navigation }) {
   const [loadedData, setLoadedData] = useState([]);
   const [updated, setUpdated] = useState(false);
+  const [screenLoaded, setScreenLoaded] = useState(false);
 
   const user = auth().currentUser;
 
@@ -27,30 +29,39 @@ export function ListRecipes({ route, navigation }) {
     });
   }
 
+
   useFocusEffect(
     useCallback(() => {
       setLoadedData([]);
       let loading = true;
       if (loading === true) {
-        database()
-          .ref(`/users/${user.uid}/recipes/${route.params.filter}/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              setLoadedData(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        fetchAndLoadData();
         return () => {
           loading = false;
         };
       }
     }, [updated])
   );
+
+  async function fetchAndLoadData() {
+    try {
+      await database()
+        .ref(`/users/${user.uid}/recipes/${route.params.filter}/`)
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            setLoadedData(snapshot.val());
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } finally {
+      setScreenLoaded(true);
+    }
+  }
 
   const DisplayData = (props) => {
     if (route.params.filter != "Recent" && route.params.filter != "Favorites") {
@@ -165,13 +176,16 @@ export function ListRecipes({ route, navigation }) {
           onPress: () => deleteAlert(item),
           style: "cancel",
         },
-      
-      {
-        text: item[1].favorite == true ? "Remove from favorites" : `Add to Favorites`,
-        onPress: () => addRemoveStar(item),
-        style: "cancel",
-      },
-    ],
+
+        {
+          text:
+            item[1].favorite == true
+              ? "Remove from favorites"
+              : `Add to Favorites`,
+          onPress: () => addRemoveStar(item),
+          style: "cancel",
+        },
+      ],
       {
         cancelable: true,
       }
@@ -179,16 +193,18 @@ export function ListRecipes({ route, navigation }) {
   }
 
   async function addRemoveStar(item) {
-      let fav = item[1].favorite == true ? false : true
+    let fav = item[1].favorite == true ? false : true;
+    try {
       await database()
         .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
-        .update(
-          {
-            favorite: fav
-          }
-        );
-      return setUpdated(!updated);
+        .update({
+          favorite: fav,
+        });
+    } finally {
+      alert("Updated!");
+      setUpdated(!updated);
     }
+  }
 
   function deleteAlert(item) {
     Alert.alert(
@@ -216,27 +232,22 @@ export function ListRecipes({ route, navigation }) {
       .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
       .remove()
       .then(() => setUpdated(!updated));
-    // reset();
-    // .then(() => navigation.goBack());
+    
   }
 
-  function addRemoveStar(item) {
-    let fav = item[1].favorite == true ? false : true;
-    database()
-      .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
-      .update({
-        favorite: fav,
-      });
-    setUpdated(!updated);
-  }
-
-  return (
-    <>
-      <ScrollView>
-        <DisplayData />
-      </ScrollView>
-      {route.params.filter != "Favorites" &&
-        route.params.filter != "Recent" && (
+  if (screenLoaded === false) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  } else {
+    return (
+      <>
+        <ScrollView>
+          <DisplayData />
+        </ScrollView>
+        {route.params.filter != "Favorites" && route.params.filter != "Recent" && (
           <TouchableOpacity
             onPress={() => navigation.navigate("Create Recipe", methodCheck)}
             style={styles.addItemTouchable}
@@ -246,6 +257,7 @@ export function ListRecipes({ route, navigation }) {
             </Text>
           </TouchableOpacity>
         )}
-    </>
-  );
+      </>
+    );
+  }
 }

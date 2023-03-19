@@ -22,57 +22,8 @@ export function DisplayRecipe({ route, navigation }) {
   const [editing, setEditing] = useState(false);
   const [activeEdit, setActiveEdit] = useState(null);
   const [editValue, setEditValue] = useState("");
-  const [favoriteStatus, setFavoriteStatus] = useState("loading");
   const [updated, setUpdated] = useState(false);
   const [screenLoaded, setScreenLoaded] = useState(false);
-
-  // useFocusEffect(
-  // useCallback(() => {
-  //   let loading = true;
-  //   if (loading === true) {
-  //     database()
-  //       .ref(`/users/${user.uid}/methods/`)
-  //       .once("value")
-  //       .then((snapshot) => {
-  //         if (snapshot.exists()) {
-  //           setLoadedMethods(snapshot.val());
-  //         } else {
-  //           console.log("No data available");
-  //         }
-  //       })
-
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-
-  //     database()
-  //       .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
-  //       .once("value")
-  //       .then((snapshot) => {
-  //         if (snapshot.exists()) {
-  //           setLoadedRecipe(snapshot.val());
-  //         } else {
-  //           console.log("No data available");
-  //         }
-  //       })
-
-  //      database()
-  //       .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/favorite`)
-  //       .once("value")
-  //       .then((snapshot) => snapshot.val()===true ? setFavoriteStatus("Remove from favorites") : setFavoriteStatus("Add to favorites"))
-
-  //       .catch((error) => {
-  //         console.error(error);
-  //       }
-  //       );
-
-  //       setScreenLoading(false);
-
-  //     return () => {
-  //       loading = false;
-  //     };
-  //   }
-  // }, [editing, updated]));
 
   useFocusEffect(
     useCallback(() => {
@@ -98,7 +49,6 @@ export function DisplayRecipe({ route, navigation }) {
             console.log("No data available");
           }
         })
-
         .catch((error) => {
           console.error(error);
         });
@@ -112,8 +62,10 @@ export function DisplayRecipe({ route, navigation }) {
           } else {
             console.log("No data available");
           }
+        })
+        .catch((error) => {
+          console.error(error);
         });
-
     } catch (e) {
       console.warn(e);
     } finally {
@@ -125,25 +77,22 @@ export function DisplayRecipe({ route, navigation }) {
     loadedRecipe.favorite == true
       ? (loadedRecipe.favorite = false)
       : (loadedRecipe.favorite = true);
-    await database()
-      .ref(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)
-      .update({
-        favorite: loadedRecipe.favorite,
-      });
-    return (
+    try {
+      await database()
+        .ref(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)
+        .update({
+          favorite: loadedRecipe.favorite,
+        });
+    } catch (e) {
+      console.warn(e);
+    } finally {
       alert(
         loadedRecipe.favorite == true
           ? "Added to favorites"
           : "Removed from favorites"
       ),
-      setFavoriteStatus(
-        loadedRecipe.favorite == true
-          ? "Remove from favorites"
-          : "Add to favorites"
-      ),
-      setUpdated(!updated)
-    );
-    // navigation.goBack();
+        setUpdated(!updated);
+    }
   }
 
   function selectVariable(key, value) {
@@ -294,8 +243,8 @@ export function DisplayRecipe({ route, navigation }) {
         >
           <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
             {loadedRecipe.favorite == true
-            ? "Remove from Favorites"
-            : "Add to Favorites"}
+              ? "Remove from Favorites"
+              : "Add to Favorites"}
           </Text>
         </TouchableOpacity>
       </ScrollView>
