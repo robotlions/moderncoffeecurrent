@@ -113,6 +113,10 @@ export const styles = StyleSheet.create({
     bottom: 5,
   },
 
+  imageBackground:{
+    maxHeight:winHeight*.25,
+  },
+
   inactiveButton: {
     textAlign: "center",
     fontFamily: "Raleway-Bold",
@@ -142,14 +146,14 @@ export const styles = StyleSheet.create({
 
   mainTitleText: {
     fontFamily: "Corben-Bold",
-    fontSize: 45,
-    lineHeight: 65,
+    fontSize: scale*18,
+    lineHeight: scale*25,
     textAlign: "center",
     color: "#fd7908",
     textShadowColor: "white",
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 1,
-    marginTop: 50,
+    paddingTop: winHeight*.04,
   },
   modalButton: {
     height: 50,
