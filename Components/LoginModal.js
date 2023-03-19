@@ -1,12 +1,12 @@
 import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
 import { useState, useRef } from "react";
 import { styles } from "./Styles";
-import auth from "@react-native-firebase/auth";
 import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
+import auth from "@react-native-firebase/auth";
 
 
 
@@ -35,7 +35,7 @@ export const LoginModal = (props) => {
   const passwordRef = useRef();
   const password2Ref = useRef();
 
-
+  
 
   function createUser() {
     if (email === "" || password === "") {

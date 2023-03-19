@@ -99,7 +99,6 @@ export const styles = StyleSheet.create({
     fontFamily: "Raleway-Medium",
     color: "white",
     paddingLeft: 5,
-    // fontStyle: "italic",
   },
   entryMethod: {
     fontFamily: "Raleway-Black",

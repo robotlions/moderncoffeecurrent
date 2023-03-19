@@ -11,16 +11,13 @@ import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
-import { Timer } from "./Timer";
-import { scale } from "./Styles";
-import { useFocusEffect } from "@react-navigation/native";
+
 
 export function DisplayRecipe({ route, navigation }) {
   const loadedID = route.params.loadedID;
   const [loadedRecipe, setLoadedRecipe] = useState({});
   const [loadedMethods, setLoadedMethods] = useState("");
   const [loadedMethod, setLoadedMethod] = useState(route.params.loadedMethod);
-  const [data, setData] = useState([]);
   const [editing, setEditing] = useState(false);
   const [activeEdit, setActiveEdit] = useState(null);
   const [editValue, setEditValue] = useState("");

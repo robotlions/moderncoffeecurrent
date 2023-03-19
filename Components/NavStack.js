@@ -58,15 +58,10 @@ export function TabNav() {
   return (
     <Tab.Navigator
       screenOptions={{
-        // tabBarStyle:{backgroundColor: "rgba(253,121,8,.8)", paddingTop: 3},
         tabBarStyle: { backgroundColor: "white", paddingTop: 3 },
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: "rgb(159, 50, 1)",
-        // tabBarActiveTintColor: "rgb(253, 121, 8)",
-
         tabBarInactiveTintColor: "rgba(159, 50, 1,.4)",
-        // tabBarInactiveTintColor: "rgba(253, 121, 8,.4)",
-
         headerShown: false,
         tabBarLabelStyle: { fontSize: 12, fontFamily: "Raleway-Bold" },
       }}
@@ -91,28 +86,7 @@ export function TabNav() {
           headerTitleStyle: { fontFamily: "Raleway-Bold" },
         }}
       />
-      {/* <Tab.Screen
-        name="Create Recipe"
-        component={CreateRecipe}
-        options={{
-          // tabBarStyle: { display: "none" },
-          tabBarIcon: (props) => {
-            return (
-              <Image
-                style={{
-                  tintColor: props.color,
-                  height: 30,
-                  width: 30,
-                }}
-                source={require("../assets/images/addIcon.png")}
-              />
-            );
-          },
-
-          title: "Create Recipe",
-          headerTitleStyle: { fontFamily: "Raleway-Bold" },
-        }}
-      /> */}
+      
       <Tab.Screen
         name="Timer"
         component={StandaloneTimer}

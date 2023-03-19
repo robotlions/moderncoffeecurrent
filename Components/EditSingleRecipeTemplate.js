@@ -11,7 +11,6 @@ import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
-import updownIcon from "../assets/images/updownIcon.png";
 
 import DraggableFlatList, {
   

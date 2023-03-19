@@ -40,7 +40,7 @@ export function HomeScreen({ route, navigation }) {
   function createDatabaseEntries() {
     database()
       .ref(`/users/${auth().currentUser.uid}/methods/`)
-      .on("value", (snapshot) => {
+      .once("value", (snapshot) => {
         if (!snapshot.exists()) {
           methodObjects.forEach((item) => {
             database().ref(`/users/${auth().currentUser.uid}/methods/`).push(item);
@@ -49,7 +49,7 @@ export function HomeScreen({ route, navigation }) {
       });
     database()
       .ref(`/users/${auth().currentUser.uid}/variables/`)
-      .on("value", (snapshot) => {
+      .once("value", (snapshot) => {
         if (!snapshot.exists()) {
           variableObjects.forEach((item) => {
             database().ref(`/users/${auth().currentUser.uid}/variables/`).push(item);

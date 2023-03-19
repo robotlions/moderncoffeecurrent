@@ -53,8 +53,7 @@ export function CreateRecipe({ route, navigation }) {
   const [order, setOrder] = useState(0);
   const [variableList, setVariableList] = useState([]);
   const [editing, setEditing] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [bgColor, setBGColor] = useState("");
+  
 
   let dataObject = {};
 
@@ -69,7 +68,7 @@ export function CreateRecipe({ route, navigation }) {
 
       database()
         .ref(`/users/${user.uid}/methods/`)
-        .on("value", (snapshot) => {
+        .once("value", (snapshot) => {
           if (isActive) {
             if (snapshot.exists()) {
               setLoadedMethods(snapshot.val());
