@@ -119,7 +119,7 @@ export function CreateRecipe({ route, navigation }) {
     } catch (e) {
       console.warn(e);
     } finally {
-      setScreenLoaded(true);
+      setTimeout(()=>{ setScreenLoaded(true)},2000);
     }
   }
 
@@ -254,7 +254,7 @@ export function CreateRecipe({ route, navigation }) {
   if (screenLoaded === false) {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator />
+        <ActivityIndicator size="large"/>
       </View>
     );
   }
