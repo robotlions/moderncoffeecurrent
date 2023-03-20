@@ -5,12 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
-
 import DraggableFlatList from "react-native-draggable-flatlist";
 
 const NewMethodInput = (props) => {
@@ -91,7 +91,13 @@ const NewMethodInput = (props) => {
 };
 
 function pushNewVariable(dataObject, endpoint, navigation) {
-  database().ref(endpoint).push(dataObject), alert("Added!");
+  database().ref(endpoint).push(dataObject),
+    Alert.alert(
+      "modern coffee",
+      `Brew method "${dataObject.methodName}" added.`,
+      [{ text: "ok", style: "cancel" }],
+      { cancelable: true }
+    );
 }
 
 export function BrewMethods({ route, navigation }) {
@@ -102,6 +108,7 @@ export function BrewMethods({ route, navigation }) {
   const [editing, setEditing] = useState(false);
   const [activeEdit, setActiveEdit] = useState(null);
   const [data, setData] = useState([]);
+  const [screenLoaded, setScreenLoaded] = useState(false);
 
   useEffect(() => {
     let initialData = Object.entries(loadedMethods)
@@ -118,27 +125,33 @@ export function BrewMethods({ route, navigation }) {
     setData(initialData);
   }, [loadedMethods]);
 
-  function getData() {
-    database()
-      .ref(`/users/${user.uid}/methods/`)
-      .once("value")
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setLoadedMethods(snapshot.val());
-        } else {
-          setLoadedMethods({});
-          console.log("No data available");
-        }
-      })
+  async function fetchAndLoadData() {
+    try {
+      database()
+        .ref(`/users/${user.uid}/methods/`)
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            setLoadedMethods(snapshot.val());
+          } else {
+            setLoadedMethods({});
+            console.log("No data available");
+          }
+        })
 
-      .catch((error) => {
-        console.error(error);
-      });
+        .catch((error) => {
+          console.error(error);
+        });
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setScreenLoaded(true);
+    }
   }
 
   useEffect(() => {
     if (loading === true) {
-      getData();
+      fetchAndLoadData();
       setLoading(false);
     }
   });
@@ -174,7 +187,12 @@ export function BrewMethods({ route, navigation }) {
       .once("value", (snapshot) => {
         if (snapshot.exists()) {
           if (Object.keys(snapshot.val()).length <= 1) {
-            alert("The app can't function without brew methods. Resetting!");
+            Alert.alert(
+              "modern coffee",
+              "The app can't function without brew methods. Resetting!",
+              [{ text: "Okay. I tried.", style: "cancel" }],
+              { cancelable: true }
+            );
             database().ref(endpoint).remove();
             navigation.navigate("HomeScreen");
           } else {
@@ -184,7 +202,6 @@ export function BrewMethods({ route, navigation }) {
         reset();
       });
   }
-
 
   function editMethodName(methodName) {
     setEditInput(methodName);
@@ -276,33 +293,42 @@ export function BrewMethods({ route, navigation }) {
     );
   };
 
-  return (
-    <DraggableFlatList
-      keyboardShouldPersistTaps="handled"
-      data={data}
-      onDragEnd={({ data }) => {
-        setData(data), setIndices(data);
-      }}
-      keyExtractor={(item) => item.key}
-      renderItem={renderItem}
-      ListHeaderComponent={() => (
-        <Text
-          style={[
-            styles.entryHeadline,
-            { textAlign: "center", marginBottom: 5 },
-          ]}
-        >
-          Drag to reorder
-        </Text>
-      )}
-      ListFooterComponent={() => (
-        <NewMethodInput
-          endpoint={`/users/${user.uid}/methods/`}
-          user={user}
-          navigation={navigation}
-          setLoading={setLoading}
-        />
-      )}
-    />
-  );
+  if (screenLoaded === false) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+  if (screenLoaded === true) {
+    return (
+      <DraggableFlatList
+        keyboardShouldPersistTaps="handled"
+        data={data}
+        onDragEnd={({ data }) => {
+          setData(data), setIndices(data);
+        }}
+        keyExtractor={(item) => item.key}
+        renderItem={renderItem}
+        ListHeaderComponent={() => (
+          <Text
+            style={[
+              styles.entryHeadline,
+              { textAlign: "center", marginBottom: 5 },
+            ]}
+          >
+            Drag to reorder
+          </Text>
+        )}
+        ListFooterComponent={() => (
+          <NewMethodInput
+            endpoint={`/users/${user.uid}/methods/`}
+            user={user}
+            navigation={navigation}
+            setLoading={setLoading}
+          />
+        )}
+      />
+    );
+  }
 }

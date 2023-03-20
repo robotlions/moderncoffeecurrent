@@ -86,11 +86,12 @@ export function DisplayRecipe({ route, navigation }) {
     } catch (e) {
       console.warn(e);
     } finally {
-      alert(
-        loadedRecipe.favorite == true
-          ? "Added to favorites"
-          : "Removed from favorites"
-      ),
+      Alert.alert(
+        `${loadedRecipe["Recipe Name"].variableValue}`,
+        loadedRecipe.favorite===false ? "Removed from favorites." : "Added to favorites.",
+          [{ text: "Ok", style: "cancel" }],
+          { cancelable: true }
+        ),
         setUpdated(!updated);
     }
   }

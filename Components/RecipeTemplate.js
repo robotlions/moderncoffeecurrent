@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -76,6 +77,7 @@ export function RecipeTemplate({ route, navigation }) {
   const [loadedVariables, setLoadedVariables] = useState({});
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [screenLoaded, setScreenLoaded] = useState(false);
 
   useEffect(() => {
     let initialData = Object.entries(loadedVariables)
@@ -96,7 +98,17 @@ export function RecipeTemplate({ route, navigation }) {
     useCallback(() => {
       let active = true;
       if (active == true) {
-        database()
+        fetchAndLoadData()
+      }
+      return () => {
+        active = false;
+      };
+    }, [loading])
+  );
+
+  async function fetchAndLoadData(){
+    try{
+      await database()
           .ref(`/users/${user.uid}/variables/`)
           .once("value")
           .then((snapshot) => {
@@ -104,12 +116,14 @@ export function RecipeTemplate({ route, navigation }) {
               setLoadedVariables(snapshot.val());
             }
           });
-      }
-      return () => {
-        active = false;
-      };
-    }, [loading])
-  );
+    }
+    catch (e){
+      console.warn(e);
+    }
+    finally{
+      setScreenLoaded(true)
+    }
+  }
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
@@ -173,6 +187,13 @@ export function RecipeTemplate({ route, navigation }) {
     setLoading(!loading);
   }
 
+
+if(screenLoaded===false){
+  return(
+    <View style={{ flex: 1, justifyContent: "center" }}><ActivityIndicator/></View>
+  )
+}
+if(screenLoaded===true){
   return (
     <DraggableFlatList
       keyboardShouldPersistTaps="handled"
@@ -203,5 +224,5 @@ export function RecipeTemplate({ route, navigation }) {
         />
       )}
     />
-  );
+  )};
 }

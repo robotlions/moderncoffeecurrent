@@ -29,7 +29,6 @@ export function ListRecipes({ route, navigation }) {
     });
   }
 
-
   useFocusEffect(
     useCallback(() => {
       setLoadedData([]);
@@ -201,7 +200,12 @@ export function ListRecipes({ route, navigation }) {
           favorite: fav,
         });
     } finally {
-      alert("Updated!");
+      Alert.alert(
+      `${item[1]["Recipe Name"].variableValue}`,
+        fav===false ? "Removed from favorites." : "Added to favorites.",
+        [{ text: "Ok", style: "cancel" }],
+        { cancelable: true }
+      );
       setUpdated(!updated);
     }
   }
@@ -232,7 +236,6 @@ export function ListRecipes({ route, navigation }) {
       .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
       .remove()
       .then(() => setUpdated(!updated));
-    
   }
 
   if (screenLoaded === false) {
@@ -247,16 +250,17 @@ export function ListRecipes({ route, navigation }) {
         <ScrollView>
           <DisplayData />
         </ScrollView>
-        {route.params.filter != "Favorites" && route.params.filter != "Recent" && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Create Recipe", methodCheck)}
-            style={styles.addItemTouchable}
-          >
-            <Text style={[styles.categoryText, { color: "white" }]}>
-              Create {route.params.filter} Recipe
-            </Text>
-          </TouchableOpacity>
-        )}
+        {route.params.filter != "Favorites" &&
+          route.params.filter != "Recent" && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Create Recipe", methodCheck)}
+              style={styles.addItemTouchable}
+            >
+              <Text style={[styles.categoryText, { color: "white" }]}>
+                Create {route.params.filter} Recipe
+              </Text>
+            </TouchableOpacity>
+          )}
       </>
     );
   }
