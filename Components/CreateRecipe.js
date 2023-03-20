@@ -5,6 +5,8 @@ import {
   Alert,
   BackHandler,
   TouchableOpacity,
+  ActivityIndicator,
+  View,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -53,64 +55,73 @@ export function CreateRecipe({ route, navigation }) {
   const [order, setOrder] = useState(0);
   const [variableList, setVariableList] = useState([]);
   const [editing, setEditing] = useState(true);
+  const [screenLoaded, setScreenLoaded] = useState(false);
 
   let dataObject = {};
 
   useFocusEffect(
     useCallback(() => {
-      let varArray = [];
       let isActive = true;
       if (isActive) {
         dataObject = {};
         setMethod(route.params ? route.params.method : "");
       }
+      fetchAndLoadData();
 
-      database()
-        .ref(`/users/${user.uid}/methods/`)
-        .once("value", (snapshot) => {
-          if (isActive) {
-            if (snapshot.exists()) {
-              setLoadedMethods(snapshot.val());
-            } else {
-              setLoadedMethods({});
-            }
-          }
-        });
-      database()
-        .ref(`/users/${user.uid}/variables/`)
-        .once("value")
-        .then((snapshot) => {
-          if (isActive) {
-            if (snapshot.exists()) {
-              snapshot.forEach((baby) => {
-                varArray.push(baby.val());
-              });
-              setVariableList(varArray);
-            } else {
-              variableObjects.forEach((item) => {
-                database().ref(`/users/${user.uid}/variables/`).push(item);
-              });
-              setTimeout(() => {
-                database()
-                  .ref(`/users/${user.uid}/variables/`)
-                  .once("value")
-                  .then((snapshot) => {
-                    snapshot.forEach((baby) => {
-                      varArray.push(baby.val());
-                    });
-                    setVariableList(varArray);
-                  });
-              }, 1000);
-            }
-          } else {
-            console.log("No data available");
-          }
-        });
       return () => {
         isActive = false;
       };
     }, [])
   );
+
+  async function fetchAndLoadData() {
+    let varArray = [];
+
+    try {
+      await database()
+        .ref(`/users/${user.uid}/methods/`)
+        .once("value", (snapshot) => {
+          if (snapshot.exists()) {
+            setLoadedMethods(snapshot.val());
+          } else {
+            setLoadedMethods({});
+          }
+        });
+      await database()
+        .ref(`/users/${user.uid}/variables/`)
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            snapshot.forEach((baby) => {
+              varArray.push(baby.val());
+            });
+            setVariableList(varArray);
+          } else {
+            variableObjects.forEach((item) => {
+              database().ref(`/users/${user.uid}/variables/`).push(item);
+            });
+            setTimeout(() => {
+              database()
+                .ref(`/users/${user.uid}/variables/`)
+                .once("value")
+                .then((snapshot) => {
+                  snapshot.forEach((baby) => {
+                    varArray.push(baby.val());
+                  });
+                  setVariableList(varArray);
+                });
+            }, 1000);
+          }
+          //  else {
+          //   console.log("No data available");
+          // }
+        });
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      setScreenLoaded(true);
+    }
+  }
 
   //this useEffect listens for a change to {method}, then reads the database node of that method
   //then sets a variable in state: Order, which is 1 higher than the number of entries in that
@@ -220,54 +231,78 @@ export function CreateRecipe({ route, navigation }) {
     return colorPalette[colorPick];
   }
 
-  function pushNewEntry() {
+  async function pushNewEntry() {
     dataObject.backgroundColor = getColor();
     dataObject.method = method;
     dataObject.order = order;
-    database()
-      .ref(`/users/${user.uid}/recipes/${method}`)
-      .push()
-      .set(dataObject);
-    alert("Added!");
-    navigation.goBack();
+    try {
+      await database()
+        .ref(`/users/${user.uid}/recipes/${method}`)
+        .push()
+        .set(dataObject);
+    } catch (e) {
+      console.warn(e);
+    } finally {
+      Alert.alert(
+        "modern coffee",
+        `New recipe "${dataObject["Recipe Name"].variableValue}" added to ${dataObject.method} method.`
+      ),
+        navigation.navigate("HomeScreen");
+    }
   }
 
-  return (
-    <ScrollView
-      keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ alignItems: "center" }}
-    >
-      {pickerDisplay}
-      {inputDisplay}
-      <TouchableOpacity
-        onPress={() =>
-          method == "" ? alert("Please choose brew method") : pushNewEntry()
-        }
+  if (screenLoaded === false) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+  if (screenLoaded === true) {
+    return (
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ alignItems: "center" }}
       >
-        <Text
-          style={[
-            styles.modalButtonText,
-            { marginTop: 10, marginBottom: 10, fontSize: 25 },
-          ]}
+        {pickerDisplay}
+        {inputDisplay}
+        <TouchableOpacity
+          onPress={() =>
+            method == ""
+              ? Alert.alert(
+                  "modern coffee",
+                  "Please choose brew method",
+                  [{ text: "Ok", style: "cancel" }],
+                  { cancelable: true }
+                )
+              : pushNewEntry()
+          }
         >
-          Save Recipe
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          BackHandler.removeEventListener("hardwareBackPress"),
-            navigation.goBack();
-        }}
-      >
-        <Text
-          style={[
-            styles.modalButtonText,
-            { marginTop: 10, marginBottom: 10, fontSize: 25 },
-          ]}
+          <Text
+            style={[
+              styles.modalButtonText,
+              { marginTop: 10, marginBottom: 10, fontSize: 25 },
+            ]}
+          >
+            Save Recipe
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            BackHandler.removeEventListener("hardwareBackPress"),
+              navigation.goBack();
+          }}
         >
-          Cancel
-        </Text>
-      </TouchableOpacity>
-    </ScrollView>
-  );
+          <Text
+            style={[
+              styles.modalButtonText,
+              { marginTop: 10, marginBottom: 10, fontSize: 25 },
+            ]}
+          >
+            Cancel
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
+    );
+  }
 }
