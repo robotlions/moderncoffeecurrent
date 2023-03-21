@@ -21,6 +21,7 @@ export function ListRecipes({ route, navigation }) {
 
   const user = auth().currentUser;
 
+
   function selectRecipe(item) {
     navigation.navigate("Display Recipe", {
       loadedMethod: item[1].method,
@@ -57,10 +58,15 @@ export function ListRecipes({ route, navigation }) {
         .catch((error) => {
           console.error(error);
         });
-    } finally {
+    }
+    catch (e){
+      console.warn(e)
+    }
+    finally {
       setScreenLoaded(true);
     }
   }
+  
 
   const DisplayData = (props) => {
     if (route.params.filter != "Recent" && route.params.filter != "Favorites") {

@@ -59,6 +59,7 @@ export function CreateRecipe({ route, navigation }) {
 
   let dataObject = {};
 
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -112,14 +113,11 @@ export function CreateRecipe({ route, navigation }) {
                 });
             }, 1000);
           }
-          //  else {
-          //   console.log("No data available");
-          // }
         });
     } catch (e) {
       console.warn(e);
     } finally {
-      setTimeout(()=>{ setScreenLoaded(true)},2000);
+      setScreenLoaded(true);
     }
   }
 
@@ -182,6 +180,33 @@ export function CreateRecipe({ route, navigation }) {
         return () => backHandler.remove();
       }
     }, [])
+  );
+
+  
+  useEffect(
+    () =>
+      navigation.addListener('beforeRemove', (e) => {
+        if (!editing) {
+          return;
+        }
+
+        e.preventDefault();
+
+        Alert.alert(
+          'Discard changes?',
+          'You have unsaved changes. Are you sure to discard them and leave the screen?',
+          [
+            { text: "Keep working", style: 'cancel', onPress: () => {} },
+            {
+              text: 'Discard',
+              style: 'destructive',
+              
+              onPress: () => navigation.dispatch(e.data.action),
+            },
+          ]
+        );
+      }),
+    [navigation, editing]
   );
 
   const pickerDisplay = (
@@ -254,7 +279,7 @@ export function CreateRecipe({ route, navigation }) {
   if (screenLoaded === false) {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator size="large"/>
+        <ActivityIndicator size="large" />
       </View>
     );
   }
