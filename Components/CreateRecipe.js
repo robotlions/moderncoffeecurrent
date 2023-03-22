@@ -15,6 +15,9 @@ import auth from "@react-native-firebase/auth";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
+import * as Network from "expo-network";
+
+
 
 function InputWindow(props) {
   useFocusEffect(
@@ -56,8 +59,25 @@ export function CreateRecipe({ route, navigation }) {
   const [variableList, setVariableList] = useState([]);
   const [editing, setEditing] = useState(true);
   const [screenLoaded, setScreenLoaded] = useState(false);
+  const [networkConnected, setNetworkConnected] = useState(true);
 
   let dataObject = {};
+
+  useEffect(()=>{
+    let loading=true
+    if (loading===true){
+      
+    getNetInfo()
+    }
+    return () =>{
+      loading = false;
+    }
+  }, []);
+
+  async function getNetInfo(){
+  await Network.getNetworkStateAsync().then((results)=>setNetworkConnected(results.isConnected))
+
+  }
 
 
   useFocusEffect(
@@ -186,7 +206,7 @@ export function CreateRecipe({ route, navigation }) {
   useEffect(
     () =>
       navigation.addListener('beforeRemove', (e) => {
-        if (!editing) {
+        if (editing===false) {
           return;
         }
 
@@ -257,10 +277,20 @@ export function CreateRecipe({ route, navigation }) {
   }
 
   async function pushNewEntry() {
+    setEditing(false);
+    getNetInfo();
     dataObject.backgroundColor = getColor();
     dataObject.method = method;
     dataObject.order = order;
+    
     try {
+      if(networkConnected===false){
+        Alert.alert(
+          "modern coffee",
+          `This device is offline. We'll save your new recipe, "${dataObject["Recipe Name"].variableValue}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`
+        ),
+          navigation.navigate("HomeScreen");
+      }
       await database()
         .ref(`/users/${user.uid}/recipes/${method}`)
         .push()
@@ -274,6 +304,7 @@ export function CreateRecipe({ route, navigation }) {
       ),
         navigation.navigate("HomeScreen");
     }
+   
   }
 
   if (screenLoaded === false) {
