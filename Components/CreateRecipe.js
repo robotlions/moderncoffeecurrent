@@ -17,8 +17,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
 import * as Network from "expo-network";
 
-
-
 function InputWindow(props) {
   useFocusEffect(
     useCallback(() => {
@@ -63,22 +61,21 @@ export function CreateRecipe({ route, navigation }) {
 
   let dataObject = {};
 
-  useEffect(()=>{
-    let loading=true
-    if (loading===true){
-      
-    getNetInfo()
+  useEffect(() => {
+    let loading = true;
+    if (loading === true) {
+      getNetInfo();
     }
-    return () =>{
+    return () => {
       loading = false;
-    }
+    };
   }, []);
 
-  async function getNetInfo(){
-  await Network.getNetworkStateAsync().then((results)=>setNetworkConnected(results.isConnected))
-
+  async function getNetInfo() {
+    await Network.getNetworkStateAsync().then((results) =>
+      setNetworkConnected(results.isConnected)
+    );
   }
-
 
   useFocusEffect(
     useCallback(() => {
@@ -164,63 +161,23 @@ export function CreateRecipe({ route, navigation }) {
       />
     ));
 
-  useFocusEffect(
-    useCallback(() => {
-      if (editing === true) {
-        const backAction = () => {
-          Alert.alert(
-            "You have unsaved changes.",
-            "Would you like to discard this recipe or keep working on it?",
-            [
-              {
-                text: "Keep working",
-                onPress: () => null,
-                style: "cancel",
-              },
-              {
-                text: "Discard",
-                onPress: () => {
-                  BackHandler.removeEventListener(
-                    "bardwareBackPress",
-                    backAction
-                  ),
-                    navigation.goBack();
-                },
-              },
-            ]
-          );
-          return true;
-        };
-
-        const backHandler = BackHandler.addEventListener(
-          "hardwareBackPress",
-          backAction
-        );
-
-        return () => backHandler.remove();
-      }
-    }, [])
-  );
-
-  
   useEffect(
     () =>
-      navigation.addListener('beforeRemove', (e) => {
-        if (editing===false) {
+      navigation.addListener("beforeRemove", (e) => {
+        if (editing === false) {
           return;
         }
 
         e.preventDefault();
 
         Alert.alert(
-          'Discard changes?',
-          'You have unsaved changes. Are you sure to discard them and leave the screen?',
+          "Discard changes?",
+          "You have unsaved changes. Are you sure to discard them and leave the screen?",
           [
-            { text: "Keep working", style: 'cancel', onPress: () => {} },
+            { text: "Keep working", style: "cancel", onPress: () => {} },
             {
-              text: 'Discard',
-              style: 'destructive',
-              
+              text: "Discard",
+              style: "destructive",
               onPress: () => navigation.dispatch(e.data.action),
             },
           ]
@@ -277,14 +234,14 @@ export function CreateRecipe({ route, navigation }) {
   }
 
   async function pushNewEntry() {
-    setEditing(false);
-    getNetInfo();
+    // getNetInfo();
     dataObject.backgroundColor = getColor();
     dataObject.method = method;
     dataObject.order = order;
-    
+
     try {
-      if(networkConnected===false){
+      setEditing(false);
+      if (networkConnected === false) {
         Alert.alert(
           "modern coffee",
           `This device is offline. We'll save your new recipe, "${dataObject["Recipe Name"].variableValue}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`
@@ -301,10 +258,9 @@ export function CreateRecipe({ route, navigation }) {
       Alert.alert(
         "modern coffee",
         `New recipe "${dataObject["Recipe Name"].variableValue}" added to ${dataObject.method} method.`
-      ),
-        navigation.navigate("HomeScreen");
+      );
+      navigation.navigate("HomeScreen");
     }
-   
   }
 
   if (screenLoaded === false) {
