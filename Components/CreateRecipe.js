@@ -17,37 +17,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
 import NetInfo from '@react-native-community/netinfo';
 
-function InputWindow(props) {
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
-      if (isActive) {
-        setVarState("");
-      }
-      return () => {
-        isActive = false;
-      };
-    }, [])
-  );
 
-  useEffect(() => {
-    props.dataObject[props.item.variableName] = {
-      variableValue: varState,
-      order: props.item.order,
-    };
-  });
-
-  const [varState, setVarState] = useState("");
-
-  return (
-    <TextInput
-      style={styles.input}
-      placeholder={props.item.variableName}
-      value={varState}
-      onChangeText={setVarState}
-    />
-  );
-}
 
 export function CreateRecipe({ route, navigation }) {
   const user = auth().currentUser;
@@ -55,11 +25,48 @@ export function CreateRecipe({ route, navigation }) {
   const [loadedMethods, setLoadedMethods] = useState({});
   const [order, setOrder] = useState(0);
   const [variableList, setVariableList] = useState([]);
-  const [editing, setEditing] = useState(true);
+  const [editing, setEditing] = useState(false);
   const [screenLoaded, setScreenLoaded] = useState(false);
   const [networkConnected, setNetworkConnected] = useState(true);
 
   let dataObject = {};
+
+
+
+
+
+  function InputWindow(props) {
+    useFocusEffect(
+      useCallback(() => {
+        let isActive = true;
+        if (isActive) {
+          setVarState("");
+        }
+        return () => {
+          isActive = false;
+        };
+      }, [])
+    );
+  
+    useEffect(() => {
+      props.dataObject[props.item.variableName] = {
+        variableValue: varState,
+        order: props.item.order,
+      };
+    });
+  
+    const [varState, setVarState] = useState("");
+  
+    return (
+      <TextInput
+        style={styles.input}
+        placeholder={props.item.variableName}
+        value={varState}
+        onChangeText={setVarState}
+        onTextInput={()=>setEditing(true)}
+      />
+    );
+  }
 
   
 
