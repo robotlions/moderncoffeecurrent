@@ -15,7 +15,7 @@ import auth from "@react-native-firebase/auth";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
-import * as Network from "expo-network";
+import NetInfo from '@react-native-community/netinfo';
 
 function InputWindow(props) {
   useFocusEffect(
@@ -61,21 +61,17 @@ export function CreateRecipe({ route, navigation }) {
 
   let dataObject = {};
 
-  useEffect(() => {
-    let loading = true;
-    if (loading === true) {
-      getNetInfo();
-    }
-    return () => {
-      loading = false;
-    };
-  }, []);
+  
 
-  async function getNetInfo() {
-    await Network.getNetworkStateAsync().then((results) =>
-      setNetworkConnected(results.isConnected)
-    );
-  }
+  useEffect(()=>{
+    const unsubscribe = NetInfo.addEventListener(state => {
+      // console.log("Connection type", state.type);
+      setNetworkConnected(state.isConnected);
+  
+    })
+  return unsubscribe;
+  },[]);
+
 
   useFocusEffect(
     useCallback(() => {
@@ -234,7 +230,6 @@ export function CreateRecipe({ route, navigation }) {
   }
 
   async function pushNewEntry() {
-    // getNetInfo();
     dataObject.backgroundColor = getColor();
     dataObject.method = method;
     dataObject.order = order;
@@ -244,9 +239,9 @@ export function CreateRecipe({ route, navigation }) {
       if (networkConnected === false) {
         Alert.alert(
           "modern coffee",
-          `This device is offline. We'll save your new recipe, "${dataObject["Recipe Name"].variableValue}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`
-        ),
-          navigation.navigate("HomeScreen");
+          `This device is offline. We'll save your new recipe, "${dataObject["Recipe Name"].variableValue}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`,
+        [{text: "okay", onPress: ()=> navigation.navigate("HomeScreen")} ]);
+          // navigation.navigate("HomeScreen");
       }
       await database()
         .ref(`/users/${user.uid}/recipes/${method}`)

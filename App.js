@@ -12,6 +12,7 @@ import { LoginModal } from "./Components/LoginModal";
 import splashImage from "./assets/images/splash.png";
 import auth from "@react-native-firebase/auth";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import NetInfo from '@react-native-community/netinfo';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -20,6 +21,16 @@ export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+
+
+//   useEffect(()=>{
+//   const unsubscribe = NetInfo.addEventListener(state => {
+//     console.log("Connection type", state.type);
+//     console.log("Is connected?", state.isConnected);
+
+//   })
+// return unsubscribe;
+// },[]);
 
   function onAuthStateChanged(user) {
     setUser(user);
