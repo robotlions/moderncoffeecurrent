@@ -12,93 +12,10 @@ import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import DraggableFlatList from "react-native-draggable-flatlist";
+import NetInfo from "@react-native-community/netinfo";
 
-const NewMethodInput = (props) => {
-  const [thisState, setThisState] = useState("");
-  const [orderCount, setOrderCount] = useState(0);
-  const [bgColor, setBGColor] = useState(0);
-  const [loading, setLoading] = useState(true);
 
-  database()
-    .ref(props.endpoint)
-    .once("value")
-    .then((snapshot) => {
-      setOrderCount(snapshot.numChildren() + 1);
-    });
 
-  const colorPalette = {
-    1: "#A67C83",
-    2: "#7A5546",
-    3: "#5B3118",
-    4: "#734729",
-    5: "#AB3625",
-    6: "#935230",
-    7: "#9E6D5C",
-    8: "#C99074",
-    9: "#B68576",
-    10: "#B98D8B",
-    11: "#D1A59E",
-  };
-
-  function doRandom(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  if (loading === true) {
-    let colorPick = doRandom(1, 11);
-    setBGColor(colorPalette[colorPick]);
-    setLoading(false);
-  }
-
-  return (
-    <KeyboardAvoidingView>
-      <TextInput
-        style={[styles.input, { width: "100%", textAlign: "center" }]}
-        placeholder="Input new brewing method"
-        value={thisState}
-        onChangeText={setThisState}
-      ></TextInput>
-      {thisState != "" ? (
-        <TouchableOpacity
-          onPress={() => {
-            pushNewVariable(
-              {
-                methodName: thisState,
-                order: orderCount,
-                backgroundColor: bgColor,
-              },
-              props.endpoint,
-              props.navigation
-            ),
-              setThisState(""),
-              props.setLoading(true);
-          }}
-        >
-          <Text
-            style={[
-              styles.modalButtonText,
-              { textAlign: "center", paddingBottom: 20 },
-            ]}
-          >
-            Save New Method
-          </Text>
-        </TouchableOpacity>
-      ) : (
-        <Text style={[styles.inactiveButton, { paddingBottom: 20 }]}></Text>
-      )}
-    </KeyboardAvoidingView>
-  );
-};
-
-function pushNewVariable(dataObject, endpoint, navigation) {
-  database().ref(endpoint).push(dataObject),
-    Alert.alert(
-      "modern coffee",
-      `Brew method "${dataObject.methodName}" added.`,
-      [{ text: "ok", style: "cancel" }],
-      { cancelable: true }
-    );
-}
 
 export function BrewMethods({ route, navigation }) {
   const user = auth().currentUser;
@@ -109,6 +26,14 @@ export function BrewMethods({ route, navigation }) {
   const [activeEdit, setActiveEdit] = useState(null);
   const [data, setData] = useState([]);
   const [screenLoaded, setScreenLoaded] = useState(false);
+  const [networkConnected, setNetworkConnected] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setNetworkConnected(state.isConnected);
+    });
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     let initialData = Object.entries(loadedMethods)
@@ -155,6 +80,108 @@ export function BrewMethods({ route, navigation }) {
       setLoading(false);
     }
   });
+
+  const NewMethodInput = (props) => {
+    const [thisState, setThisState] = useState("");
+    const [orderCount, setOrderCount] = useState(0);
+    const [bgColor, setBGColor] = useState(0);
+    const [loading, setLoading] = useState(true);
+  
+    database()
+      .ref(props.endpoint)
+      .once("value")
+      .then((snapshot) => {
+        setOrderCount(snapshot.numChildren() + 1);
+      });
+  
+    const colorPalette = {
+      1: "#A67C83",
+      2: "#7A5546",
+      3: "#5B3118",
+      4: "#734729",
+      5: "#AB3625",
+      6: "#935230",
+      7: "#9E6D5C",
+      8: "#C99074",
+      9: "#B68576",
+      10: "#B98D8B",
+      11: "#D1A59E",
+    };
+  
+    function doRandom(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+  
+    if (loading === true) {
+      let colorPick = doRandom(1, 11);
+      setBGColor(colorPalette[colorPick]);
+      setLoading(false);
+    }
+  
+    return (
+      <KeyboardAvoidingView>
+        <TextInput
+          style={[styles.input, { width: "100%", textAlign: "center" }]}
+          placeholder="Input new brewing method"
+          value={thisState}
+          onChangeText={setThisState}
+        ></TextInput>
+        {thisState != "" ? (
+          <TouchableOpacity
+            onPress={() => {
+              pushNewVariable(
+                {
+                  methodName: thisState,
+                  order: orderCount,
+                  backgroundColor: bgColor,
+                },
+                props.endpoint,
+                props.navigation
+              ),
+                setThisState(""),
+                props.setLoading(true);
+            }}
+          >
+            <Text
+              style={[
+                styles.modalButtonText,
+                { textAlign: "center", paddingBottom: 20 },
+              ]}
+            >
+              Save New Method
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <Text style={[styles.inactiveButton, { paddingBottom: 20 }]}></Text>
+        )}
+      </KeyboardAvoidingView>
+    );
+  };
+  
+  async function pushNewVariable(dataObject, endpoint, navigation) {
+    try{
+      if (networkConnected === false) {
+        Alert.alert(
+          "modern coffee",
+          `This device is offline. We'll save your new brew method, "${dataObject.methodName}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`,
+          [{ text: "okay", style: "cancel" }]
+        );
+      }
+      await database().ref(endpoint).push(dataObject);
+      
+    }
+    catch (e){
+      console.warn(e);
+    }
+    finally{
+      Alert.alert(
+        "modern coffee",
+        `Brew method "${dataObject.methodName}" added.`,
+        [{ text: "ok", style: "cancel" }],
+        { cancelable: true }
+      );
+    }
+  }
 
   function reset() {
     setLoading(true);
