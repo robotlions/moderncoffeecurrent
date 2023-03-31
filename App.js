@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import { useState, useEffect, useCallback } from "react";
 import * as React from "react";
-import { Text, ImageBackground, View, Image } from "react-native";
+import { Text, ImageBackground, View, Image, TouchableOpacity, Alert } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TabNav } from "./Components/NavStack";
 import * as Font from "expo-font";
@@ -21,6 +21,18 @@ export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+  const [networkConnected, setNetworkConnected] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      setNetworkConnected(state.isConnected);
+    });
+    return unsubscribe;
+  }, []);
+
+  function showNetAlert(){
+Alert.alert("modern coffee","This device is offline. We'll save your changes locally then sync your data to your account when you're back online. This can take some time after reconnecting.")
+  }
 
 
 //   useEffect(()=>{
@@ -105,6 +117,7 @@ export default function App() {
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>
           </ImageBackground>
+          {networkConnected===false && <TouchableOpacity style={styles.netWarningWindow} onPress={()=>showNetAlert()}><Text style={styles.netWarningText}>No network connection. Tap for information.</Text></TouchableOpacity>}
           <TabNav />
         </NavigationContainer>
       </GestureHandlerRootView>

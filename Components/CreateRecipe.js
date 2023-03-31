@@ -15,7 +15,39 @@ import auth from "@react-native-firebase/auth";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
+
+function InputWindow(props) {
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      if (isActive) {
+        setVarState("");
+      }
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  useEffect(() => {
+    props.dataObject[props.item.variableName] = {
+      variableValue: varState,
+      order: props.item.order,
+    };
+  });
+
+  const [varState, setVarState] = useState("");
+
+  return (
+    <TextInput
+      style={styles.input}
+      placeholder={props.item.variableName}
+      value={varState}
+      onChangeText={setVarState}
+    />
+  );
+}
 
 export function CreateRecipe({ route, navigation }) {
   const user = auth().currentUser;
@@ -23,55 +55,23 @@ export function CreateRecipe({ route, navigation }) {
   const [loadedMethods, setLoadedMethods] = useState({});
   const [order, setOrder] = useState(0);
   const [variableList, setVariableList] = useState([]);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(true);
   const [screenLoaded, setScreenLoaded] = useState(false);
   const [networkConnected, setNetworkConnected] = useState(true);
 
   let dataObject = {};
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
+  
+
+  useEffect(()=>{
+    const unsubscribe = NetInfo.addEventListener(state => {
+      // console.log("Connection type", state.type);
       setNetworkConnected(state.isConnected);
-    });
-    return unsubscribe;
-  }, []);
+  
+    })
+  return unsubscribe;
+  },[]);
 
-  //this useEffect listens for a change to {method}, then reads the database node of that method
-  //then sets a variable in state: Order, which is 1 higher than the number of entries in that
-  //node
-  useEffect(() => {
-    database()
-      .ref(`/users/${user.uid}/recipes/${method}`)
-      .once("value")
-      .then((snapshot) => {
-        setOrder(snapshot.numChildren() + 1);
-      });
-  }, [method]);
-
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        if (editing === false) {
-          return;
-        }
-
-        e.preventDefault();
-
-        Alert.alert(
-          "Discard changes?",
-          "You have unsaved changes. Are you sure to discard them and leave the screen?",
-          [
-            { text: "Keep working", style: "cancel", onPress: () => {} },
-            {
-              text: "Discard",
-              style: "destructive",
-              onPress: () => navigation.dispatch(e.data.action),
-            },
-          ]
-        );
-      }),
-    [navigation, editing]
-  );
 
   useFocusEffect(
     useCallback(() => {
@@ -87,39 +87,6 @@ export function CreateRecipe({ route, navigation }) {
       };
     }, [])
   );
-
-  function InputWindow(props) {
-    useFocusEffect(
-      useCallback(() => {
-        let isActive = true;
-        if (isActive) {
-          setVarState("");
-        }
-        return () => {
-          isActive = false;
-        };
-      }, [])
-    );
-
-    useEffect(() => {
-      props.dataObject[props.item.variableName] = {
-        variableValue: varState,
-        order: props.item.order,
-      };
-    });
-
-    const [varState, setVarState] = useState("");
-
-    return (
-      <TextInput
-        style={styles.input}
-        placeholder={props.item.variableName}
-        value={varState}
-        onChangeText={setVarState}
-        onTextInput={() => setEditing(true)}
-      />
-    );
-  }
 
   async function fetchAndLoadData() {
     let varArray = [];
@@ -167,7 +134,17 @@ export function CreateRecipe({ route, navigation }) {
     }
   }
 
-  
+  //this useEffect listens for a change to {method}, then reads the database node of that method
+  //then sets a variable in state: Order, which is 1 higher than the number of entries in that
+  //node
+  useEffect(() => {
+    database()
+      .ref(`/users/${user.uid}/recipes/${method}`)
+      .once("value")
+      .then((snapshot) => {
+        setOrder(snapshot.numChildren() + 1);
+      });
+  }, [method]);
 
   const pickerMethodList = Object.values(loadedMethods)
     .sort((a, b) => a.order - b.order)
@@ -179,6 +156,31 @@ export function CreateRecipe({ route, navigation }) {
         value={item.methodName}
       />
     ));
+
+  useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        if (editing === false) {
+          return;
+        }
+
+        e.preventDefault();
+
+        Alert.alert(
+          "Discard changes?",
+          "You have unsaved changes. Are you sure to discard them and leave the screen?",
+          [
+            { text: "Keep working", style: "cancel", onPress: () => {} },
+            {
+              text: "Discard",
+              style: "destructive",
+              onPress: () => navigation.dispatch(e.data.action),
+            },
+          ]
+        );
+      }),
+    [navigation, editing]
+  );
 
   const pickerDisplay = (
     <Picker
@@ -238,8 +240,8 @@ export function CreateRecipe({ route, navigation }) {
         Alert.alert(
           "modern coffee",
           `This device is offline. We'll save your new recipe, "${dataObject["Recipe Name"].variableValue}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`,
-          [{ text: "okay", onPress: () => navigation.navigate("HomeScreen") }]
-        );
+        [{text: "okay", onPress: ()=> navigation.navigate("HomeScreen")} ]);
+          // navigation.navigate("HomeScreen");
       }
       await database()
         .ref(`/users/${user.uid}/recipes/${method}`)

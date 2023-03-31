@@ -187,6 +187,14 @@ export const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
+  netWarningText:{
+    fontSize: 15,
+  },
+
+  netWarningWindow:{
+   marginLeft: 10,
+  },
+
   picker: {
     width: "90%",
   },

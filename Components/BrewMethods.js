@@ -159,24 +159,10 @@ export function BrewMethods({ route, navigation }) {
   };
   
   async function pushNewVariable(dataObject, endpoint, navigation) {
-    try{
-      if (networkConnected === false) {
-        
-        Alert.alert(
-          "modern coffee",
-          `This device is offline. We'll save your new brew method, "${dataObject.methodName}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`,
-          [{ text: "okay", style: "cancel" }]
-        );
-      };
-      await database()
+    database()
       .ref(endpoint)
       .push(dataObject);
       
-    }
-    catch (e){
-      console.warn(e);
-    }
-    finally{
       
       Alert.alert(
         "modern coffee",
@@ -185,7 +171,7 @@ export function BrewMethods({ route, navigation }) {
         { cancelable: true }
       )
     }
-  }
+  
 
   function reset() {
     setLoading(true);

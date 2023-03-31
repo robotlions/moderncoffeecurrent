@@ -73,19 +73,16 @@ export function DisplayRecipe({ route, navigation }) {
     }
   }
 
-  async function addRemoveStar() {
+  function addRemoveStar() {
     loadedRecipe.favorite == true
       ? (loadedRecipe.favorite = false)
       : (loadedRecipe.favorite = true);
-    try {
-      await database()
+    database()
         .ref(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)
         .update({
           favorite: loadedRecipe.favorite,
-        });
-    } catch (e) {
-      console.warn(e);
-    } finally {
+        })
+        
       Alert.alert(
         `${loadedRecipe["Recipe Name"].variableValue}`,
         loadedRecipe.favorite===false ? "Removed from favorites." : "Added to favorites.",
@@ -94,7 +91,7 @@ export function DisplayRecipe({ route, navigation }) {
         ),
         setUpdated(!updated);
     }
-  }
+  
 
   function selectVariable(key, value) {
     setEditing(true);
