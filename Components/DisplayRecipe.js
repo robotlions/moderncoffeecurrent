@@ -186,8 +186,8 @@ export function DisplayRecipe({ route, navigation }) {
   function deleteSelected(endpoint) {
     database()
       .ref(endpoint)
-      .remove()
-      .then(() => navigation.goBack());
+      .remove();
+      navigation.goBack();
   }
 
   if (screenLoaded === false) {
