@@ -188,11 +188,20 @@ export const styles = StyleSheet.create({
   },
 
   netWarningText:{
+    fontWeight: "bold",
     fontSize: 15,
+    backgroundColor: "gray",
+    color: "white",
+    paddingLeft: 7,
+    borderRadius: 5,
+    alignSelf:"flex-start",
+    height: 30,
+    verticalAlign:"middle"
   },
 
   netWarningWindow:{
    marginLeft: 10,
+   marginTop: 5,
   },
 
   picker: {
