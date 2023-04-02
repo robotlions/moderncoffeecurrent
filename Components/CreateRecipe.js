@@ -146,6 +146,44 @@ export function CreateRecipe({ route, navigation }) {
       });
   }, [method]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (editing === true) {
+        const backAction = () => {
+          Alert.alert(
+            "You have unsaved changes.",
+            "Would you like to discard this recipe or keep working on it?",
+            [
+              {
+                text: "Keep working",
+                onPress: () => null,
+                style: "cancel",
+              },
+              {
+                text: "Discard",
+                onPress: () => {
+                  BackHandler.removeEventListener(
+                    "bardwareBackPress",
+                    backAction
+                  ),
+                    navigation.goBack();
+                },
+              },
+            ]
+          );
+          return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
+
+        return () => backHandler.remove();
+      }
+    }, [])
+  );
+
   const pickerMethodList = Object.values(loadedMethods)
     .sort((a, b) => a.order - b.order)
     .filter((item) => item != "Favorites" && item != "Recent")
@@ -157,30 +195,30 @@ export function CreateRecipe({ route, navigation }) {
       />
     ));
 
-  useEffect(
-    () =>
-      navigation.addListener("beforeRemove", (e) => {
-        if (editing === false) {
-          return;
-        }
+  // useEffect(
+  //   () =>
+  //     navigation.addListener("beforeRemove", (e) => {
+  //       if (editing === false) {
+  //         return;
+  //       }
 
-        e.preventDefault();
+  //       e.preventDefault();
 
-        Alert.alert(
-          "Discard changes?",
-          "You have unsaved changes. Are you sure to discard them and leave the screen?",
-          [
-            { text: "Keep working", style: "cancel", onPress: () => {} },
-            {
-              text: "Discard",
-              style: "destructive",
-              onPress: () => navigation.dispatch(e.data.action),
-            },
-          ]
-        );
-      }),
-    [navigation, editing]
-  );
+  //       Alert.alert(
+  //         "Discard changes?",
+  //         "You have unsaved changes. Are you sure to discard them and leave the screen?",
+  //         [
+  //           { text: "Keep working", style: "cancel", onPress: () => {} },
+  //           {
+  //             text: "Discard",
+  //             style: "destructive",
+  //             onPress: () => navigation.dispatch(e.data.action),
+  //           },
+  //         ]
+  //       );
+  //     }),
+  //   [navigation, editing]
+  // );
 
   const pickerDisplay = (
     <Picker
@@ -229,34 +267,25 @@ export function CreateRecipe({ route, navigation }) {
     return colorPalette[colorPick];
   }
 
-  async function pushNewEntry() {
+  function pushNewEntry() {
     dataObject.backgroundColor = getColor();
     dataObject.method = method;
     dataObject.order = order;
 
-    try {
+    
       setEditing(false);
-      if (networkConnected === false) {
-        Alert.alert(
-          "modern coffee",
-          `This device is offline. We'll save your new recipe, "${dataObject["Recipe Name"].variableValue}," locally and automatically update your cloud data when you're connected again. This can take a while after reconnecting.`,
-        [{text: "okay", onPress: ()=> navigation.navigate("HomeScreen")} ]);
-          // navigation.navigate("HomeScreen");
-      }
-      await database()
+     database()
         .ref(`/users/${user.uid}/recipes/${method}`)
         .push()
         .set(dataObject);
-    } catch (e) {
-      console.warn(e);
-    } finally {
+   
       Alert.alert(
         "modern coffee",
         `New recipe "${dataObject["Recipe Name"].variableValue}" added to ${dataObject.method} method.`
       );
       navigation.navigate("HomeScreen");
     }
-  }
+  
 
   if (screenLoaded === false) {
     return (

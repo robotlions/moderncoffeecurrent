@@ -26,7 +26,7 @@ export function NavStack() {
         options={{ headerShown: false }}
         component={HomeScreen}
       />
-      <Stack.Screen name="Create Recipe" component={CreateRecipe} />
+      <Stack.Screen name="Create Recipe" options={{ headerShown: false }} component={CreateRecipe} />
       <Stack.Screen
         name="List Recipes"
         component={ListRecipes}
