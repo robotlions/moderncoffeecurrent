@@ -15,7 +15,7 @@ import auth from "@react-native-firebase/auth";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
-import NetInfo from '@react-native-community/netinfo';
+import NetInfo from "@react-native-community/netinfo";
 
 function InputWindow(props) {
   useFocusEffect(
@@ -57,20 +57,8 @@ export function CreateRecipe({ route, navigation }) {
   const [variableList, setVariableList] = useState([]);
   const [editing, setEditing] = useState(true);
   const [screenLoaded, setScreenLoaded] = useState(false);
-  const [networkConnected, setNetworkConnected] = useState(true);
 
   let dataObject = {};
-
-  
-
-  useEffect(()=>{
-    const unsubscribe = NetInfo.addEventListener(state => {
-      // console.log("Connection type", state.type);
-      setNetworkConnected(state.isConnected);
-  
-    })
-  return unsubscribe;
-  },[]);
 
 
   useFocusEffect(
@@ -195,31 +183,6 @@ export function CreateRecipe({ route, navigation }) {
       />
     ));
 
-  // useEffect(
-  //   () =>
-  //     navigation.addListener("beforeRemove", (e) => {
-  //       if (editing === false) {
-  //         return;
-  //       }
-
-  //       e.preventDefault();
-
-  //       Alert.alert(
-  //         "Discard changes?",
-  //         "You have unsaved changes. Are you sure to discard them and leave the screen?",
-  //         [
-  //           { text: "Keep working", style: "cancel", onPress: () => {} },
-  //           {
-  //             text: "Discard",
-  //             style: "destructive",
-  //             onPress: () => navigation.dispatch(e.data.action),
-  //           },
-  //         ]
-  //       );
-  //     }),
-  //   [navigation, editing]
-  // );
-
   const pickerDisplay = (
     <Picker
       style={styles.picker}
@@ -271,21 +234,18 @@ export function CreateRecipe({ route, navigation }) {
     dataObject.backgroundColor = getColor();
     dataObject.method = method;
     dataObject.order = order;
+    setEditing(false);
+    database()
+      .ref(`/users/${user.uid}/recipes/${method}`)
+      .push()
+      .set(dataObject);
 
-    
-      setEditing(false);
-     database()
-        .ref(`/users/${user.uid}/recipes/${method}`)
-        .push()
-        .set(dataObject);
-   
-      Alert.alert(
-        "modern coffee",
-        `New recipe "${dataObject["Recipe Name"].variableValue}" added to ${dataObject.method} method.`
-      );
-      navigation.navigate("HomeScreen");
-    }
-  
+    Alert.alert(
+      "modern coffee",
+      `New recipe "${dataObject["Recipe Name"].variableValue}" added to ${dataObject.method} method.`
+    );
+    navigation.navigate("HomeScreen");
+  }
 
   if (screenLoaded === false) {
     return (

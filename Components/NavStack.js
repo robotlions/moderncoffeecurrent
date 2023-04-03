@@ -12,11 +12,21 @@ import { RecipeTemplate } from "./RecipeTemplate";
 import { EditSingleRecipeTemplate } from "./EditSingleRecipeTemplate";
 import { StandaloneTimer } from "./StandaloneTimer";
 import { Image } from "react-native";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { useLayoutEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-export function NavStack() {
+export function NavStack({navigation, route}) {
+  useLayoutEffect(() => {
+    const routeName = getFocusedRouteNameFromRoute(route);
+    if (routeName === "Create Recipe"){
+      navigation.setOptions({tabBarStyle: {display: 'none'}});
+    }else {
+      navigation.setOptions({tabBarStyle: {display: 'flex'}});
+    }
+}, [navigation, route]);
   return (
     <Stack.Navigator
       screenOptions={{ headerTitleStyle: { fontFamily: "Raleway-Bold" } }}
@@ -26,7 +36,11 @@ export function NavStack() {
         options={{ headerShown: false }}
         component={HomeScreen}
       />
-      <Stack.Screen name="Create Recipe" options={{ headerShown: false }} component={CreateRecipe} />
+      <Stack.Screen
+        name="Create Recipe"
+        options={{ headerShown: false }}
+        component={CreateRecipe}
+      />
       <Stack.Screen
         name="List Recipes"
         component={ListRecipes}
