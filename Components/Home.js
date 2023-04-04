@@ -14,6 +14,22 @@ export function HomeScreen({ route, navigation }) {
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
+      if(user.uid){
+      const account = auth().currentUser
+      const accountObject = {
+        uid: account.uid,
+        email: account.email,
+        displayName: account.displayName,
+        providerId: account.providerId,
+        emailVerified: account.emailVerified,
+        phoneNumber: account.phoneNumber,
+        photoURL: account.photoURL,
+        providerType: account.providerData[0].providerId
+      }
+      database()
+              .ref(`/users/${auth().currentUser.uid}/account/`)
+              .set(accountObject);
+    }
       database()
         .ref(`/users/${user.uid}/methods/`)
         .on("value", (snapshot) => {
@@ -28,7 +44,7 @@ export function HomeScreen({ route, navigation }) {
       return () => {
         isActive = false;
       };
-    }, [user])
+}, [user])
   );
 
   function createDatabaseEntries() {
@@ -54,6 +70,7 @@ export function HomeScreen({ route, navigation }) {
           });
         }
       });
+      
   }
 
   const favoritesDisplay = (

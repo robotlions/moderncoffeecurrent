@@ -7,6 +7,8 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
+import database from "@react-native-firebase/database";
+
 
 GoogleSignin.configure({
   webClientId:
@@ -42,6 +44,7 @@ export const LoginModal = (props) => {
         .then((userCredential) => {
           const user = userCredential.user;
           auth().currentUser.sendEmailVerification();
+          
           alert(
             "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
           );
