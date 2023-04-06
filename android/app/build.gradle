@@ -123,8 +123,8 @@ android {
         applicationId 'com.robotlions.moderncoffee'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 20
-        versionName "0.8.040123.1"
+        versionCode 21
+        versionName "0.81.040623.1"
     }
 
     splits {
