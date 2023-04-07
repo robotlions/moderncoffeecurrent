@@ -12,6 +12,7 @@ import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import DraggableFlatList from "react-native-draggable-flatlist";
+import CheckBox from "@react-native-community/checkbox";
 
 const NewMethodInput = (props) => {
   const [thisState, setThisState] = useState("");
@@ -66,6 +67,8 @@ const NewMethodInput = (props) => {
                 methodName: thisState,
                 order: orderCount,
                 backgroundColor: bgColor,
+                visible: true,
+                userAdded: true,
               },
               props.endpoint,
               props.navigation
@@ -119,6 +122,8 @@ export function BrewMethods({ route, navigation }) {
           key: `item-${index}`,
           label: item[1].methodName,
           order: item[1].order,
+          userAdded: item[1].userAdded,
+          visible: item[1].visible,
           height: 100,
         };
       });
@@ -227,8 +232,16 @@ export function BrewMethods({ route, navigation }) {
     });
   }
 
+  function updateVisible(item, newValue) {
+    database()
+      .ref(`/users/${user.uid}/methods/${item.id}/`)
+      .update({ visible: newValue });
+  }
+
   const renderItem = ({ item, drag, isActive }) => {
-    return (
+    const [toggleCheckBox, setToggleCheckBox] = useState(item.visible);
+
+    return item.userAdded === true ? (
       <TouchableOpacity onLongPress={drag} disabled={isActive}>
         <View style={styles.variableEntry}>
           {editing === true && activeEdit === item.label ? (
@@ -290,8 +303,54 @@ export function BrewMethods({ route, navigation }) {
           </Text>
         </View>
       </TouchableOpacity>
+    ) : (
+      <TouchableOpacity onLongPress={drag} disabled={isActive}>
+        <View style={styles.variableEntry}>
+          <Text style={styles.variableText}>{item.label}</Text>
+          {/* <View style={{ flexDirection: "row" }}>
+            <Text
+              style={[
+                styles.buttonTextStyle,
+                { color: "#fd7907", verticalAlign: "middle", marginRight: 5 },
+              ]}
+            >
+              Show method?
+            </Text> */}
+            <CheckBox
+              disabled={false}
+              tintColors={{ true: "#fd7908" }}
+              value={toggleCheckBox}
+              onValueChange={(newValue) => {
+                setToggleCheckBox(newValue);
+                updateVisible(item, newValue);
+              }}
+            />
+          {/* </View> */}
+        </View>
+      </TouchableOpacity>
     );
   };
+
+  // const renderItem = ({ item, drag, isActive }) => {
+  //   const [toggleCheckBox, setToggleCheckBox] = useState(true);
+
+  //   return (
+  //     <TouchableOpacity onLongPress={drag} disabled={isActive}>
+  //       <View style={styles.variableEntry}>
+  //         <Text style={styles.variableText}>{item.label}</Text>
+
+  //         <CheckBox
+  //           disabled={false}
+  //           value={toggleCheckBox}
+  //           onValueChange={(newValue) => {
+  //             setToggleCheckBox(newValue);
+  //             updateVisible(item, newValue);
+  //           }}
+  //         />
+  //       </View>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   if (screenLoaded === false) {
     return (
@@ -310,7 +369,7 @@ export function BrewMethods({ route, navigation }) {
         }}
         keyExtractor={(item) => item.key}
         renderItem={renderItem}
-        ListHeaderComponent={() => (
+        ListHeaderComponent={() => (<View>
           <Text
             style={[
               styles.entryHeadline,
@@ -319,6 +378,8 @@ export function BrewMethods({ route, navigation }) {
           >
             Drag to reorder
           </Text>
+          <Text style={[styles.buttonTextStyle, {textAlign: "center", alignSelf:"flex-end", marginRight: 5, color:"#f47908"}]}>Uncheck{"\n"}to hide</Text>
+          </View>
         )}
         ListFooterComponent={() => (
           <NewMethodInput

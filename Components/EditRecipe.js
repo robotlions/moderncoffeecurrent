@@ -197,7 +197,7 @@ export function EditRecipe({ route, navigation }) {
 
   const pickerMethodList = Object.values(loadedMethods)
     .sort((a, b) => a.order - b.order)
-    .filter((item) => item != "Favorites" && item != "Recent")
+    .filter((item) => item != "Favorites" && item != "Recent" && item.visible===true)
     .map((item, index) => (
       <Picker.Item
         key={index}

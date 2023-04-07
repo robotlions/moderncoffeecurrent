@@ -84,6 +84,7 @@ export function HomeScreen({ route, navigation }) {
 
   const methodDisplay = Object.values(methodList)
     .sort((a, b) => a.order - b.order)
+    .filter((item=>item.visible===true))
     .map((item, index) => (
       <TouchableOpacity
         key={index}
