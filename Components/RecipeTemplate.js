@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -14,6 +14,8 @@ import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 
 import DraggableFlatList from "react-native-draggable-flatlist";
+import CheckBox from "@react-native-community/checkbox";
+
 
 const NewVariableInput = (props) => {
   database()
@@ -48,7 +50,12 @@ const NewVariableInput = (props) => {
           style={{ paddingBottom: 10, paddingTop: 10 }}
           onPress={() => {
             props.pushNewVariable(
-              { variableName: thisState, order: orderCount },
+              {
+                variableName: thisState,
+                order: orderCount,
+                userAdded: true,
+                visible: true,
+              },
               props.endpoint,
               props.navigation
             ),
@@ -89,6 +96,8 @@ export function RecipeTemplate({ route, navigation }) {
           label: item[1].variableName,
           order: item[1].order,
           height: 100,
+          userAdded: item[1].userAdded,
+          visible: item[1].visible,
         };
       });
     setData(initialData);
@@ -98,7 +107,7 @@ export function RecipeTemplate({ route, navigation }) {
     useCallback(() => {
       let active = true;
       if (active == true) {
-        fetchAndLoadData()
+        fetchAndLoadData();
       }
       return () => {
         active = false;
@@ -106,32 +115,39 @@ export function RecipeTemplate({ route, navigation }) {
     }, [loading])
   );
 
-  async function fetchAndLoadData(){
-    try{
+  async function fetchAndLoadData() {
+    try {
       await database()
-          .ref(`/users/${user.uid}/variables/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              setLoadedVariables(snapshot.val());
-            }
-          });
-    }
-    catch (e){
+        .ref(`/users/${user.uid}/variables/`)
+        .once("value")
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            setLoadedVariables(snapshot.val());
+          }
+        });
+    } catch (e) {
       console.warn(e);
-    }
-    finally{
-      setScreenLoaded(true)
+    } finally {
+      setScreenLoaded(true);
     }
   }
 
+  function updateVisible(item, newValue) {
+    database()
+      .ref(`/users/${user.uid}/variables/${item.id}/`)
+      .update({ visible: newValue });
+  }
+
   const renderItem = ({ item, drag, isActive }) => {
+    const [toggleCheckBox, setToggleCheckBox] = useState(item.visible);
+
     return (
       <TouchableOpacity onLongPress={drag} disabled={isActive}>
         <View style={{ flex: 1 }}>
           <View style={styles.variableEntry}>
             <Text style={styles.variableText}>{item.label}</Text>
             {item.label != "Recipe Name" && item.label != "Description" && (
+              item.userAdded===true ?
               <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() =>
@@ -140,6 +156,16 @@ export function RecipeTemplate({ route, navigation }) {
               >
                 <Text style={styles.deleteButton}>Delete</Text>
               </TouchableOpacity>
+              :
+              <CheckBox
+              disabled={false}
+              tintColors={{ true: "#fd7908" }}
+              value={toggleCheckBox}
+              onValueChange={(newValue) => {
+                setToggleCheckBox(newValue);
+                updateVisible(item, newValue);
+              }}
+            />
             )}
           </View>
         </View>
@@ -187,42 +213,46 @@ export function RecipeTemplate({ route, navigation }) {
     setLoading(!loading);
   }
 
-
-if(screenLoaded===false){
-  return(
-    <View style={{ flex: 1, justifyContent: "center" }}><ActivityIndicator/></View>
-  )
-}
-if(screenLoaded===true){
-  return (
-    <DraggableFlatList
-      keyboardShouldPersistTaps="handled"
-      data={data}
-      onDragEnd={({ data }) => {
-        setData(data), setIndices(data);
-      }}
-      keyExtractor={(item) => item.key}
-      renderItem={renderItem}
-      ListHeaderComponent={() => (
-        <Text
-          style={[
-            styles.entryHeadline,
-            { textAlign: "center", marginBottom: 5 },
-          ]}
-        >
-          Drag to reorder
-        </Text>
-      )}
-      ListFooterComponent={() => (
-        <NewVariableInput
-          pushNewVariable={pushNewVariable}
-          endpoint={`/users/${user.uid}/variables/`}
-          user={user}
-          navigation={navigation}
-          setLoading={setLoading}
-          loading={loading}
-        />
-      )}
-    />
-  )};
+  if (screenLoaded === false) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center" }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+  if (screenLoaded === true) {
+    return (
+      <DraggableFlatList
+        keyboardShouldPersistTaps="handled"
+        data={data}
+        onDragEnd={({ data }) => {
+          setData(data), setIndices(data);
+        }}
+        keyExtractor={(item) => item.key}
+        renderItem={renderItem}
+        ListHeaderComponent={() => (<View>
+          <Text
+            style={[
+              styles.entryHeadline,
+              { textAlign: "center", marginBottom: 5 },
+            ]}
+          >
+            Drag to reorder
+          </Text>
+          <Text style={[styles.buttonTextStyle, {textAlign: "center", alignSelf:"flex-end", marginRight: 5, color:"#f47908"}]}>Uncheck{"\n"}to hide</Text>
+          </View>
+        )}
+        ListFooterComponent={() => (
+          <NewVariableInput
+            pushNewVariable={pushNewVariable}
+            endpoint={`/users/${user.uid}/variables/`}
+            user={user}
+            navigation={navigation}
+            setLoading={setLoading}
+            loading={loading}
+          />
+        )}
+      />
+    );
+  }
 }

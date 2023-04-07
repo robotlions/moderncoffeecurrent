@@ -203,6 +203,7 @@ export function CreateRecipe({ route, navigation }) {
 
   const inputDisplay = variableList
     .sort((a, b) => a.order - b.order)
+    .filter((item)=>item.visible===true)
     .map((item, index) => (
       <InputWindow key={index} dataObject={dataObject} item={item} />
     ));

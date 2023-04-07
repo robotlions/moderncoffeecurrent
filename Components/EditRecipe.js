@@ -145,7 +145,8 @@ export function EditRecipe({ route, navigation }) {
         key != "order" &&
         key != "method" &&
         key != "favorite" &&
-        key != "backgroundColor"
+        key != "backgroundColor" &&
+        value.visible===true
     )
     .map(([key, value], index) => (
       <View
