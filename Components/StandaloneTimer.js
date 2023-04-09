@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
 import stopicon from "../assets/images/stopicon.png";
 import playicon from "../assets/images/playicon.png";
 import pauseicon from "../assets/images/pauseicon.png";
 import { useKeepAwake } from "expo-keep-awake";
+import { Picker } from "@react-native-picker/picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alarmObjects } from "../Data/Models";
 
 export function StandaloneTimer({ route, navigation }) {
   useKeepAwake();
@@ -25,9 +28,76 @@ export function StandaloneTimer({ route, navigation }) {
   const [paused, setPaused] = useState(true);
   const [minPlace, setMinPlace] = useState("Minutes");
   const [secPlace, setSecPlace] = useState("Seconds");
+  const [alarmArray, setAlarmArray] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedAlarm, setSelectedAlarm] = useState("alarm.wav");
+  const [selectedAlarmName, setSelectedAlarmName] = useState("");
 
   var Sound = require("react-native-sound");
-  var alarmSound = new Sound("alarm.mp3");
+  var alarmSound = new Sound(selectedAlarm);
+
+  useEffect(()=>{
+    alarmSound = new Sound(selectedAlarm)
+    console.log(selectedAlarm)
+  },[selectedAlarm]);
+
+  useEffect(() => {
+    if (loading === true) {
+      checkLocalStorageForAlarmName();
+      setLoading(false);
+    }
+  });
+
+ 
+
+  async function checkLocalStorageForAlarmName() {
+    try {
+      await AsyncStorage.getItem("modern_coffee_alarm_name").then((value) => {
+        let obj = alarmObjects.find((o) => o.alarmName === value);
+
+        if (value !== null) {
+          setSelectedAlarmName(value);
+          setSelectedAlarm(obj.url);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  const pickerAlarmList = alarmObjects.map((item, index) => (
+    <Picker.Item key={index} label={item.alarmName} value={item.alarmName} />
+  ));
+
+  const pickerDisplay = (
+    <Picker
+      style={styles.picker}
+      selectedValue={selectedAlarmName}
+      onValueChange={(itemValue, itemIndex) => {
+        setSelectedAlarmName(itemValue);
+        saveAlarmSound(itemValue);
+      }}
+    >
+      <Picker.Item
+        color="gray"
+        enabled={false}
+        label="Select Alarm Sound"
+        value=""
+      />
+      {pickerAlarmList}
+    </Picker>
+  );
+
+  async function saveAlarmSound(soundName) {
+    let obj = alarmObjects.find((o) => o.alarmName === soundName);
+    try {
+      await AsyncStorage.setItem("modern_coffee_alarm_name", soundName);
+    } catch (e) {
+      // saving error
+    } finally {
+      setSelectedAlarm(obj.url);
+    }
+  }
 
   function playSound() {
     alarmSound.setNumberOfLoops(3);
@@ -39,6 +109,7 @@ export function StandaloneTimer({ route, navigation }) {
       }
     });
   }
+
 
   function timerDoneAlert() {
     Alert.alert(
@@ -113,7 +184,7 @@ export function StandaloneTimer({ route, navigation }) {
       setInputMinutes("");
     }
 
-    if (minutes == 0 && seconds == 0) {
+    if (minutes == 0 && seconds == 0 && inputSeconds==0 && inputMinutes ==0) {
       alert("Please set the timer first");
     } else {
       setTimerCounting(!timerCounting);
@@ -186,6 +257,7 @@ export function StandaloneTimer({ route, navigation }) {
             />
           </TouchableOpacity>
         </Text>
+        {pickerDisplay}
       </View>
     </View>
   );
