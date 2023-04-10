@@ -16,6 +16,7 @@ import { useKeepAwake } from "expo-keep-awake";
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alarmObjects } from "../Data/Models";
+import RadioGroup from "react-native-radio-buttons-group";
 
 export function StandaloneTimer({ route, navigation }) {
   useKeepAwake();
@@ -31,15 +32,17 @@ export function StandaloneTimer({ route, navigation }) {
   const [alarmArray, setAlarmArray] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAlarm, setSelectedAlarm] = useState("alarm.wav");
-  const [selectedAlarmName, setSelectedAlarmName] = useState("");
+  const [selectedAlarmName, setSelectedAlarmName] = useState(
+    "Digital Clock Alarm Buzzer"
+  );
+  const [alarmModalVisible, setAlarmModalVisible] = useState(false);
 
   var Sound = require("react-native-sound");
   var alarmSound = new Sound(selectedAlarm);
 
-  useEffect(()=>{
-    alarmSound = new Sound(selectedAlarm)
-    console.log(selectedAlarm)
-  },[selectedAlarm]);
+  useEffect(() => {
+    alarmSound = new Sound(selectedAlarm);
+  }, [selectedAlarm]);
 
   useEffect(() => {
     if (loading === true) {
@@ -47,8 +50,6 @@ export function StandaloneTimer({ route, navigation }) {
       setLoading(false);
     }
   });
-
- 
 
   async function checkLocalStorageForAlarmName() {
     try {
@@ -88,6 +89,43 @@ export function StandaloneTimer({ route, navigation }) {
     </Picker>
   );
 
+  
+
+  const [radioButtons, setRadioButtons] = useState([
+    {
+      id: "1", // acts as primary key, should be unique and non-empty string
+      label: "Digital Clock Alarm Buzzer",
+      value: "digitalclockalarmbuzzer.wav",
+    },
+    {
+      id: "2",
+      label: "Warning Alarm Buzzer",
+      value: "warningalarmbuzzer.wav",
+    },
+    {
+      id: "3",
+      label: "Alarm Digital Clock Beep",
+      value: "alarmdigitalclockbeep.wav",
+    },
+    {
+      id: "4",
+      label: "Classic Winner Alarm",
+      value: "classicwinneralarm.wav",
+    },
+    {
+      id: "5",
+      label: "Morning Clock Alarm",
+      value: "morningclockalarm.wav",
+    },
+  ]);
+
+  function onPressRadioButton(radioButtonsArray) {
+    let obj = radioButtonsArray.find((o) => o.selected===true);
+    saveAlarmSound(obj.label)
+  }
+
+
+
   async function saveAlarmSound(soundName) {
     let obj = alarmObjects.find((o) => o.alarmName === soundName);
     try {
@@ -99,6 +137,22 @@ export function StandaloneTimer({ route, navigation }) {
     }
   }
 
+  const alarmSelectModal = (
+  
+    <Modal
+    visible={alarmModalVisible}
+    transparent={true}
+    animationType="slide"
+    onRequestClose={() => setAlarmModalVisible(false)}
+  >
+    <View style={styles.modalView}>
+  <RadioGroup radioButtons={radioButtons} onPress={onPressRadioButton} />
+  <TouchableOpacity onPress={()=>setAlarmModalVisible(false)}><Text>Save</Text></TouchableOpacity>
+  
+  </View>
+    </Modal>
+    );
+
   function playSound() {
     alarmSound.setNumberOfLoops(3);
     alarmSound.play((success) => {
@@ -109,7 +163,6 @@ export function StandaloneTimer({ route, navigation }) {
       }
     });
   }
-
 
   function timerDoneAlert() {
     Alert.alert(
@@ -184,7 +237,12 @@ export function StandaloneTimer({ route, navigation }) {
       setInputMinutes("");
     }
 
-    if (minutes == 0 && seconds == 0 && inputSeconds==0 && inputMinutes ==0) {
+    if (
+      minutes == 0 &&
+      seconds == 0 &&
+      inputSeconds == 0 &&
+      inputMinutes == 0
+    ) {
       alert("Please set the timer first");
     } else {
       setTimerCounting(!timerCounting);
@@ -257,7 +315,8 @@ export function StandaloneTimer({ route, navigation }) {
             />
           </TouchableOpacity>
         </Text>
-        {pickerDisplay}
+        {alarmSelectModal}
+        <TouchableOpacity onPress={()=>setAlarmModalVisible(!alarmModalVisible)}><Text>Change Alarm</Text></TouchableOpacity>
       </View>
     </View>
   );
