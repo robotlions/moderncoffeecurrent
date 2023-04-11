@@ -177,7 +177,6 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 15,
     elevation: 5,
-    marginBottom: 75,
   },
 
   navIcons: {

@@ -5,12 +5,16 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
+  Modal
 } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { alarmObjects } from "../Data/Models";
+import { CheckBox, RadioButton, RadioGroup } from "react-native-radio-check";
 
 export function Settings({ route, navigation }) {
   const [password, setPassword] = useState("");
@@ -24,8 +28,38 @@ export function Settings({ route, navigation }) {
     useState(false);
   const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] =
     useState(false);
+    const [loading, setLoading] = useState(true);
+  const [selectedAlarm, setSelectedAlarm] = useState("alarm.wav");
+  const [alarmModalVisible, setAlarmModalVisible] = useState(false);
+  const [checkedIndex, setCheckedIndex] = useState(0);
+  const [demoSound, setDemoSound] = useState("");
+
 
   const user = auth().currentUser;
+
+  var Sound = require("react-native-sound");
+
+  useEffect(() => {
+    if (loading === true) {
+      checkLocalStorageForAlarmName();
+      setLoading(false);
+    }
+  });
+
+  async function checkLocalStorageForAlarmName() {
+    try {
+      await AsyncStorage.getItem("modern_coffee_alarm_name").then((value) => {
+        let obj = alarmObjects.find((o) => o.url === value);
+
+        if (value !== null) {
+          setSelectedAlarm(value);
+          setCheckedIndex(obj.indexValue);
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   const changePasswordModule = (
     <View>
@@ -228,6 +262,108 @@ export function Settings({ route, navigation }) {
       });
   }
 
+  function playDemoSound(value) {
+    setDemoSound(value);
+    const demoAlarm = new Sound(value, undefined, (error) => {
+      if (error) {
+        console.log(error);
+      } else {
+        demoAlarm.play(() => {
+          // Release when it's done so we're not using up resources
+          demoAlarm.release();
+        });
+        setTimeout(() => {
+          demoAlarm.stop();
+        }, 2000);
+      }
+    });
+  }
+
+  const radioMenu = (
+    <RadioGroup
+      style={{ flexDirection: "column", marginTop: 10, alignItems:"center" }}
+      checkedId={checkedIndex}
+      textStyle={{ marginLeft: 5 }}
+      icon={{
+        normal: require("../assets/images/radioOff.png"),
+        checked: require("../assets/images/radioOn.png"),
+      }}
+      iconStyle={{ height: 30, width: 30, tintColor: "#fd7908" }}
+      onChecked={(id, value) => playDemoSound(value)}
+    >
+      <RadioButton
+        text="Digital Clock Alarm Buzzer"
+        value="digitalclockalarmbuzzer.wav"
+      />
+      <RadioButton text="Warning Alarm Buzzer" value="warningalarmbuzzer.wav" />
+      <RadioButton
+        text="Alarm Digital Clock Beep"
+        value="alarmdigitalclockbeep.wav"
+      />
+      <RadioButton text="Classic Winner Alarm" value="classicwinneralarm.wav" />
+      <RadioButton text="Morning Clock Alarm" value="morningclockalarm.wav" />
+    </RadioGroup>
+  );
+
+  async function saveAlarmSound() {
+    try {
+      let obj = alarmObjects.find((o) => o.url === demoSound);
+
+      await AsyncStorage.setItem("modern_coffee_alarm_name", demoSound);
+    } catch (e) {
+      // saving error
+    } finally {
+      setSelectedAlarm(demoSound);
+      setCheckedIndex(obj.indexValue);
+
+      console.log(demoSound);
+    }
+  }
+
+  const alarmSelectModal = (
+    <Modal
+      visible={alarmModalVisible}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={() => setAlarmModalVisible(false)}
+    >
+      <View
+        style={{
+          paddingTop: 60,
+          minHeight: "100%",
+          backgroundColor: "rgba(52, 52, 52, 0.7)",
+        }}
+      >
+        <View style={styles.modalView}>
+          {radioMenu}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+              marginTop: 30,
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                setAlarmModalVisible(false), saveAlarmSound();
+              }}
+            >
+              <Text style={styles.modalButtonText}>Save</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setAlarmModalVisible(false);
+              }}
+            >
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+
   return (
     <ScrollView style={{ paddingLeft: 10 }} keyboardShouldPersistTaps="handled">
       <Text style={styles.modalButtonText}>Signed in as:</Text>
@@ -252,6 +388,14 @@ export function Settings({ route, navigation }) {
       >
         <Text style={styles.modalButtonText}>Customize Recipe Template</Text>
       </TouchableOpacity>
+      <TouchableOpacity
+        style={ styles.settingsTouchable}
+        onPress={() => setAlarmModalVisible(!alarmModalVisible)}
+      >
+        <Text style={styles.modalButtonText}>Change Alarm Sound</Text>
+      </TouchableOpacity>
+
+
       <Text>{"\n"}</Text>
       <Text style={{ fontFamily: "Raleway-Medium" }}>Account</Text>
 
@@ -279,10 +423,11 @@ export function Settings({ route, navigation }) {
 
       <Text style={styles.modalButtonText}>About</Text>
       <Text style={{ fontFamily: "Raleway-Medium" }}>
-        Modern Coffee ver. 0.81.040623.2{"\n"}
-        March 2023{"\n"}© 2023 by Robot Lions{"\n"}
+        Modern Coffee ver. 0.85.041123.1{"\n"}
+        April 2023{"\n"}© 2023 by Robot Lions{"\n"}
         Contact and feedback: info@robotlions.com
       </Text>
+      {alarmSelectModal}
     </ScrollView>
   );
 }
