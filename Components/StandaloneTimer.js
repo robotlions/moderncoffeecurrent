@@ -38,6 +38,7 @@ export function StandaloneTimer({ route, navigation }) {
   );
   const [alarmModalVisible, setAlarmModalVisible] = useState(false);
   const [checkedIndex, setCheckedIndex] = useState(0);
+  const [demoSound, setDemoSound] = useState("");
 
   var Sound = require("react-native-sound");
   var alarmSound = new Sound(selectedAlarm);
@@ -57,10 +58,11 @@ export function StandaloneTimer({ route, navigation }) {
   async function checkLocalStorageForAlarmName() {
     try {
       await AsyncStorage.getItem("modern_coffee_alarm_name").then((value) => {
-        let obj = alarmObjects.find((o) => o.alarmName === value);
+        let obj = alarmObjects.find((o) => o.url === value);
 
         if (value !== null) {
-          setSelectedAlarmName(value);
+          setSelectedAlarm(value);
+          setCheckedIndex(obj.indexValue);
         }
       });
     } catch (e) {
@@ -69,13 +71,13 @@ export function StandaloneTimer({ route, navigation }) {
   }
 
   function playDemoSound(value){
+    setDemoSound(value)
     const demoAlarm = new Sound(value,
     undefined,
     error => {
       if (error) {
         console.log(error)
       } else {
-        console.log("Playing sound");
         demoAlarm.play(() => {
           // Release when it's done so we're not using up resources
           demoAlarm.release();
@@ -127,14 +129,15 @@ export function StandaloneTimer({ route, navigation }) {
   
 
 
-  async function saveAlarmSound(soundName) {
-    let obj = alarmObjects.find((o) => o.alarmName === soundName);
+  async function saveAlarmSound() {
+    
     try {
-      await AsyncStorage.setItem("modern_coffee_alarm_name", soundName);
+      await AsyncStorage.setItem("modern_coffee_alarm_name", demoSound);
     } catch (e) {
       // saving error
     } finally {
-      setSelectedAlarm(obj.url);
+      setSelectedAlarm(demoSound);
+      console.log(demoSound)
     }
   }
 
@@ -145,11 +148,14 @@ export function StandaloneTimer({ route, navigation }) {
     transparent={true}
     animationType="slide"
     onRequestClose={() => setAlarmModalVisible(false)}
+
   >
     <View style={styles.modalView}>
   {radioMenu}
 
-  <TouchableOpacity onPress={()=>setAlarmModalVisible(false)}><Text>Save</Text></TouchableOpacity>
+  <TouchableOpacity onPress={()=>{setAlarmModalVisible(false),saveAlarmSound()}}><Text>Save</Text></TouchableOpacity>
+  
+  <TouchableOpacity onPress={()=>{setAlarmModalVisible(false)}}><Text>Close</Text></TouchableOpacity>
   </View>
     </Modal>
     );

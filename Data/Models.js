@@ -119,10 +119,11 @@ export const alarmObjects = [
   {
     alarmName: "Digital Clock Alarm Buzzer",
     url: "digitalclockalarmbuzzer.wav",
+    indexValue: 0
   },
-  { alarmName: "Warning Alarm Buzzer", url: "warningalarmbuzzer.wav" },
-  { alarmName: "Alarm Digital Clock Beep", url: "alarmdigitalclockbeep.wav" },
-  { alarmName: "Classic Winner Alarm", url: "classicwinneralarm.wav" },
+  { alarmName: "Warning Alarm Buzzer", url: "warningalarmbuzzer.wav",indexValue: 1 },
+  { alarmName: "Alarm Digital Clock Beep", url: "alarmdigitalclockbeep.wav",indexValue: 2 },
+  { alarmName: "Classic Winner Alarm", url: "classicwinneralarm.wav",indexValue: 3 },
   {alarmName: "Morning Clock Alarm",
-url: "morningclockalarm.wav"},
+url: "morningclockalarm.wav",indexValue: 4},
 ];
