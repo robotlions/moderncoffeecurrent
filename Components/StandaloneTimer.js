@@ -13,10 +13,11 @@ import stopicon from "../assets/images/stopicon.png";
 import playicon from "../assets/images/playicon.png";
 import pauseicon from "../assets/images/pauseicon.png";
 import { useKeepAwake } from "expo-keep-awake";
-import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alarmObjects } from "../Data/Models";
-import RadioGroup from "react-native-radio-buttons-group";
+import { CheckBox, RadioButton, RadioGroup } from "react-native-radio-check"
+
+
 
 export function StandaloneTimer({ route, navigation }) {
   useKeepAwake();
@@ -36,12 +37,14 @@ export function StandaloneTimer({ route, navigation }) {
     "Digital Clock Alarm Buzzer"
   );
   const [alarmModalVisible, setAlarmModalVisible] = useState(false);
+  const [checkedIndex, setCheckedIndex] = useState(0);
 
   var Sound = require("react-native-sound");
   var alarmSound = new Sound(selectedAlarm);
 
+
   useEffect(() => {
-    alarmSound = new Sound(selectedAlarm);
+    alarmSound = new Sound(selectedAlarm)
   }, [selectedAlarm]);
 
   useEffect(() => {
@@ -58,7 +61,6 @@ export function StandaloneTimer({ route, navigation }) {
 
         if (value !== null) {
           setSelectedAlarmName(value);
-          setSelectedAlarm(obj.url);
         }
       });
     } catch (e) {
@@ -66,64 +68,63 @@ export function StandaloneTimer({ route, navigation }) {
     }
   }
 
-  const pickerAlarmList = alarmObjects.map((item, index) => (
-    <Picker.Item key={index} label={item.alarmName} value={item.alarmName} />
-  ));
+  function playDemoSound(value){
+    const demoAlarm = new Sound(value,
+    undefined,
+    error => {
+      if (error) {
+        console.log(error)
+      } else {
+        console.log("Playing sound");
+        demoAlarm.play(() => {
+          // Release when it's done so we're not using up resources
+          demoAlarm.release();
+        })
+        setTimeout(()=>{demoAlarm.stop()},2000);
+      }
+    });
+}
+  
 
-  const pickerDisplay = (
-    <Picker
-      style={styles.picker}
-      selectedValue={selectedAlarmName}
-      onValueChange={(itemValue, itemIndex) => {
-        setSelectedAlarmName(itemValue);
-        saveAlarmSound(itemValue);
-      }}
-    >
-      <Picker.Item
-        color="gray"
-        enabled={false}
-        label="Select Alarm Sound"
-        value=""
-      />
-      {pickerAlarmList}
-    </Picker>
-  );
 
   
 
-  const [radioButtons, setRadioButtons] = useState([
-    {
-      id: "1", // acts as primary key, should be unique and non-empty string
-      label: "Digital Clock Alarm Buzzer",
-      value: "digitalclockalarmbuzzer.wav",
-    },
-    {
-      id: "2",
-      label: "Warning Alarm Buzzer",
-      value: "warningalarmbuzzer.wav",
-    },
-    {
-      id: "3",
-      label: "Alarm Digital Clock Beep",
-      value: "alarmdigitalclockbeep.wav",
-    },
-    {
-      id: "4",
-      label: "Classic Winner Alarm",
-      value: "classicwinneralarm.wav",
-    },
-    {
-      id: "5",
-      label: "Morning Clock Alarm",
-      value: "morningclockalarm.wav",
-    },
-  ]);
+  const radioMenu = (
 
-  function onPressRadioButton(radioButtonsArray) {
-    let obj = radioButtonsArray.find((o) => o.selected===true);
-    saveAlarmSound(obj.label)
-  }
+    <RadioGroup
+  style={{ flexDirection: 'column', marginTop: 10 }}
+  checkedId={checkedIndex}
+  textStyle={{ marginLeft: 5 }}
+  icon={{
+    normal: require('../assets/images/radioOff.png'),
+    checked: require("../assets/images/radioOn.png"),
+    
+  }}
+  iconStyle={{height:30, width:30, tintColor: "#fd7908"}}
+  onChecked={(id, value) => 
+    playDemoSound(value)
+  }>
+  <RadioButton
+    text="Digital Clock Alarm Buzzer"
+    value="digitalclockalarmbuzzer.wav" />
+  <RadioButton
+    text="Warning Alarm Buzzer"
+    value="warningalarmbuzzer.wav" />
+    <RadioButton
+    text="Alarm Digital Clock Beep"
+    value="alarmdigitalclockbeep.wav" />
+     <RadioButton
+    text="Classic Winner Alarm"
+    value="classicwinneralarm.wav" />
+     <RadioButton
+    text="Morning Clock Alarm"
+    value="morningclockalarm.wav" />
+</RadioGroup>
+  )
 
+
+
+  
 
 
   async function saveAlarmSound(soundName) {
@@ -146,9 +147,9 @@ export function StandaloneTimer({ route, navigation }) {
     onRequestClose={() => setAlarmModalVisible(false)}
   >
     <View style={styles.modalView}>
-  <RadioGroup radioButtons={radioButtons} onPress={onPressRadioButton} />
+  {radioMenu}
+
   <TouchableOpacity onPress={()=>setAlarmModalVisible(false)}><Text>Save</Text></TouchableOpacity>
-  
   </View>
     </Modal>
     );
