@@ -306,8 +306,9 @@ export function Settings({ route, navigation }) {
   );
 
   async function saveAlarmSound() {
+    let obj = alarmObjects.find((o) => o.url === demoSound);
+
     try {
-      let obj = alarmObjects.find((o) => o.url === demoSound);
 
       await AsyncStorage.setItem("modern_coffee_alarm_name", demoSound);
     } catch (e) {
@@ -348,16 +349,10 @@ export function Settings({ route, navigation }) {
                 setAlarmModalVisible(false), saveAlarmSound();
               }}
             >
-              <Text style={styles.modalButtonText}>Save</Text>
+              <Text style={styles.modalButtonText}>Done</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={() => {
-                setAlarmModalVisible(false);
-              }}
-            >
-              <Text style={styles.modalButtonText}>Close</Text>
-            </TouchableOpacity>
+            
           </View>
         </View>
       </View>

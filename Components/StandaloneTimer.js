@@ -16,6 +16,7 @@ import { useKeepAwake } from "expo-keep-awake";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alarmObjects } from "../Data/Models";
 import { CheckBox, RadioButton, RadioGroup } from "react-native-radio-check";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function StandaloneTimer({ route, navigation }) {
   useKeepAwake();
@@ -41,12 +42,14 @@ export function StandaloneTimer({ route, navigation }) {
     alarmSound = new Sound(selectedAlarm);
   }, [selectedAlarm]);
 
-  useEffect(() => {
-    if (loading === true) {
+  useFocusEffect(
+    useCallback(() => {
+   
       checkLocalStorageForAlarmName();
-      setLoading(false);
-    }
-  });
+     
+      console.log("focus effect")
+    
+    },[navigation]));
 
   async function checkLocalStorageForAlarmName() {
     try {
