@@ -126,9 +126,9 @@ export const styles = StyleSheet.create({
   input: {
     borderColor: "gray",
     borderWidth: 0.5,
-    height: 40,
     width: "90%",
     padding: 5,
+    paddingTop: 10,
     backgroundColor: "white",
     marginBottom: 5,
   },

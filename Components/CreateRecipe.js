@@ -39,12 +39,17 @@ function InputWindow(props) {
 
   const [varState, setVarState] = useState("");
 
+  let lineCheck = props.item.variableName==="Notes" || props.item.variableName==="Instructions" ? 3 : 1
+
   return (
     <TextInput
       style={styles.input}
       placeholder={props.item.variableName}
       value={varState}
       onChangeText={setVarState}
+      multiline={true}
+      numberOfLines={lineCheck}
+      textAlignVertical="top"
     />
   );
 }

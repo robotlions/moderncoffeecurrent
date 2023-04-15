@@ -2,7 +2,7 @@ export const variableObjects = [
   { variableName: "Recipe Name", order: 1, visible: true, userAdded: false },
   { variableName: "Description", order: 2, visible: true, userAdded: false },
   {
-    variableName: "Brewing Equipment",
+    variableName: "Brewer",
     order: 3,
     visible: true,
     userAdded: false,
@@ -32,7 +32,9 @@ export const variableObjects = [
     visible: true,
     userAdded: false,
   },
-  { variableName: "Notes", order: 19, visible: true, userAdded: false },
+  { variableName: "Instructions", order: 19, visible: true, userAdded: false },
+
+  { variableName: "Notes", order: 20, visible: true, userAdded: false },
 ];
 
 export const methodObjects = [
@@ -119,11 +121,26 @@ export const alarmObjects = [
   {
     alarmName: "Digital Clock Alarm Buzzer",
     url: "digitalclockalarmbuzzer.wav",
-    indexValue: 0
+    indexValue: 0,
   },
-  { alarmName: "Warning Alarm Buzzer", url: "warningalarmbuzzer.wav",indexValue: 1 },
-  { alarmName: "Alarm Digital Clock Beep", url: "alarmdigitalclockbeep.wav",indexValue: 2 },
-  { alarmName: "Classic Winner Alarm", url: "classicwinneralarm.wav",indexValue: 3 },
-  {alarmName: "Morning Clock Alarm",
-url: "morningclockalarm.wav",indexValue: 4},
+  {
+    alarmName: "Warning Alarm Buzzer",
+    url: "warningalarmbuzzer.wav",
+    indexValue: 1,
+  },
+  {
+    alarmName: "Alarm Digital Clock Beep",
+    url: "alarmdigitalclockbeep.wav",
+    indexValue: 2,
+  },
+  {
+    alarmName: "Classic Winner Alarm",
+    url: "classicwinneralarm.wav",
+    indexValue: 3,
+  },
+  {
+    alarmName: "Morning Clock Alarm",
+    url: "morningclockalarm.wav",
+    indexValue: 4,
+  },
 ];
