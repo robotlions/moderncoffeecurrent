@@ -8,11 +8,10 @@ import {
   Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
-import { styles } from "./Styles";
+import { styles, scale } from "./Styles";
 import stopicon from "../assets/images/stopicon.png";
 import playicon from "../assets/images/playicon.png";
 import pauseicon from "../assets/images/pauseicon.png";
-import { scale } from "./Styles";
 import { useKeepAwake } from "expo-keep-awake";
 
 export const Timer = (props) => {
@@ -125,7 +124,7 @@ export const Timer = (props) => {
   const minutesInput = (
     <TextInput
       keyboardType="numeric"
-      style={[styles.input, { width: "30%", textAlign: "center" }]}
+      style={[styles.input, { width: "30%", textAlign: "center"}]}
       value={inputMinutes}
       onChangeText={setInputMinutes}
       onEndEditing={() => {

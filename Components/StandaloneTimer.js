@@ -264,7 +264,7 @@ export function StandaloneTimer({ route, navigation }) {
   const minutesInput = (
     <TextInput
       keyboardType="numeric"
-      style={[styles.input, { width: "30%", textAlign: "center" }]}
+      style={[styles.timerInput, { width: "30%", textAlign: "center"}]}
       value={inputMinutes}
       onChangeText={setInputMinutes}
       onEndEditing={() => {
@@ -279,7 +279,7 @@ export function StandaloneTimer({ route, navigation }) {
   const secondsInput = (
     <TextInput
       keyboardType="numeric"
-      style={[styles.input, { width: "30%", textAlign: "center" }]}
+      style={[styles.timerInput, { width: "30%", textAlign: "center"}]}
       value={inputSeconds}
       onChangeText={setInputSeconds}
       onEndEditing={() => {
@@ -305,7 +305,9 @@ export function StandaloneTimer({ route, navigation }) {
           {seconds < 10 ? `0${seconds}` : seconds}
         </Text>
         {!timerCounting && (
-          <View style={{ flex: 1, flexDirection: "row", marginBottom: "15%" }}>
+          <View 
+          style={{flexDirection: "row", marginBottom: "15%" }}
+          >
             {minutesInput}
             {secondsInput}
           </View>

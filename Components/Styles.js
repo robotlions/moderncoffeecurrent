@@ -240,6 +240,15 @@ export const styles = StyleSheet.create({
     opacity: 0.9,
   },
 
+  timerInput: {
+    borderColor: "gray",
+    borderWidth: 0.5,
+    width: "90%",
+    padding: 5,
+    backgroundColor: "white",
+    marginBottom: 5,
+  },
+
   timerView: {
     justifyContent: "center",
 
