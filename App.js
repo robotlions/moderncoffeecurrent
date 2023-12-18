@@ -30,19 +30,10 @@ export default function App() {
     return unsubscribe;
   }, []);
 
-  function showNetAlert(){
-Alert.alert("modern coffee","This device is offline. We'll save your changes locally then sync your data to your account when you're back online. This can take some time after reconnecting.")
+  function showNetAlert() {
+    Alert.alert("modern coffee", "This device is offline. We'll save your changes locally then sync your data to your account when you're back online. This can take some time after reconnecting.")
   }
 
-
-//   useEffect(()=>{
-//   const unsubscribe = NetInfo.addEventListener(state => {
-//     console.log("Connection type", state.type);
-//     console.log("Is connected?", state.isConnected);
-
-//   })
-// return unsubscribe;
-// },[]);
 
   function onAuthStateChanged(user) {
     setUser(user);
@@ -98,7 +89,7 @@ Alert.alert("modern coffee","This device is offline. We'll save your changes loc
   if (!user) {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}
-      onLayout={onLayoutRootView}
+        onLayout={onLayoutRootView}
       >
         <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
         <LoginModal />
@@ -106,18 +97,18 @@ Alert.alert("modern coffee","This device is offline. We'll save your changes loc
     );
   } else {
     return (
-      <GestureHandlerRootView 
-      onLayout={onLayoutRootView}
-      style={{ flex: 1 }}>
+      <GestureHandlerRootView
+        onLayout={onLayoutRootView}
+        style={{ flex: 1 }}>
         <NavigationContainer>
           <ImageBackground
             resizeMode="cover"
-            style={ styles.imageBackground}
+            style={styles.imageBackground}
             source={vintageCoffee}
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>
           </ImageBackground>
-          {networkConnected===false && <TouchableOpacity style={styles.netWarningWindow} onPress={()=>showNetAlert()}><Text style={styles.netWarningText}>No network connection. Tap for information.</Text></TouchableOpacity>}
+          {networkConnected === false && <TouchableOpacity style={styles.netWarningWindow} onPress={() => showNetAlert()}><Text style={styles.netWarningText}>No network connection. Tap for information.</Text></TouchableOpacity>}
           <TabNav />
         </NavigationContainer>
       </GestureHandlerRootView>
