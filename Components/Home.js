@@ -31,7 +31,7 @@ export function HomeScreen({ route, navigation }) {
               .set(accountObject);
     }
       database()
-        .ref(`/users/${user.uid}/methods/`)
+        .ref(`/users/${auth().currentUser.uid}/methods/`)
         .on("value", (snapshot) => {
           if (isActive) {
             if (!snapshot.exists()) {
