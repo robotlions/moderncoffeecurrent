@@ -274,7 +274,7 @@ export const LoginModal = (props) => {
       <Modal animationType="slide" transparent={true}>
         <View
           style={{
-            paddingTop: 100,
+            paddingTop: "50%",
             height: "100%",
             backgroundColor: "rgba(52, 52, 52, 0.7)",
           }}
