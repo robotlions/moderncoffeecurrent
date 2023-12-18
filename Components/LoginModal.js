@@ -29,6 +29,7 @@ export const LoginModal = (props) => {
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [recoverPasswordModalVisible, setRecoverPasswordModalVisible] =
     useState(false);
+    const [emailLoginModalVisible, setEmailLoginModalVisible] = useState(false);
   const passwordRef = useRef();
   const password2Ref = useRef();
 
@@ -93,6 +94,9 @@ export const LoginModal = (props) => {
   }
 
   function triggerEmailReset() {
+    if(email == "" || email ==" "){
+      return(alert("Please enter a valid email address."))
+    }
     auth()
       .sendPasswordResetEmail(email)
       .then(() => {
@@ -145,6 +149,65 @@ export const LoginModal = (props) => {
         </View>
       </Modal>
     );
+  }
+
+  if (emailLoginModalVisible == true){
+    return(
+      <Modal animationType="slide" transparent={true}>
+        <View
+          style={{
+            paddingTop: 100,
+            height: "100%",
+            backgroundColor: "rgba(52, 52, 52, 0.7)",
+          }}
+        >
+          <View style={[styles.modalView, { alignItems: "center" }]}>
+            <TextInput
+              style={styles.inputLogin}
+              value={email}
+              onChangeText={setEmail}
+              returnKeyType="next"
+              placeholder="Email"
+              onSubmitEditing={() => passwordRef.current.focus()}
+              blurOnSubmit={false}
+            />
+
+            <TextInput
+              ref={passwordRef}
+              secureTextEntry={true}
+              style={styles.inputLogin}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Password"
+              onSubmitEditing={() => signIn()}
+            />
+            <TouchableOpacity
+              style={{ marginTop: 10, width: "89%" }}
+              onPress={() => signIn()}
+            >
+              <Text style={styles.buttonStandard}>Sign In</Text>
+            </TouchableOpacity>
+            
+
+            <TouchableOpacity onPress={() => [setEmailLoginModalVisible(false), setCreateModalVisible(true)]}>
+              <Text style={styles.modalButtonText}>Create Account</Text>
+            </TouchableOpacity>
+            <Text>or</Text>
+            <TouchableOpacity
+              onPress={() => setRecoverPasswordModalVisible(true)}
+            >
+              <Text style={styles.modalButtonText}>Recover Password</Text>
+            </TouchableOpacity>
+            <Text>or</Text>
+            <TouchableOpacity
+              onPress={() => setEmailLoginModalVisible(false)}
+            >
+              <Text style={styles.modalButtonText}>Back to Google Login</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    )
   }
 
   if (createModalVisible == true) {
@@ -217,47 +280,21 @@ export const LoginModal = (props) => {
           }}
         >
           <View style={[styles.modalView, { alignItems: "center" }]}>
-            <TextInput
-              style={styles.inputLogin}
-              value={email}
-              onChangeText={setEmail}
-              returnKeyType="next"
-              placeholder="Email"
-              onSubmitEditing={() => passwordRef.current.focus()}
-              blurOnSubmit={false}
-            />
-
-            <TextInput
-              ref={passwordRef}
-              secureTextEntry={true}
-              style={styles.inputLogin}
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Password"
-              onSubmitEditing={() => signIn()}
-            />
-            <TouchableOpacity
-              style={{ marginTop: 10, width: "89%" }}
-              onPress={() => signIn()}
-            >
-              <Text style={styles.buttonStandard}>Sign In</Text>
-            </TouchableOpacity>
-            <GoogleSigninButton
+          <GoogleSigninButton
               style={{ maxWidth: "100%", maxHeight: 70, marginBottom: 20 }}
               size={GoogleSigninButton.Size.Wide}
               color={GoogleSigninButton.Color.Dark}
               onPress={() => onGoogleButtonPress()}
             />
+            <Text style={styles.modalButtonText}>or</Text>
+            
+            
 
-            <TouchableOpacity onPress={() => setCreateModalVisible(true)}>
-              <Text style={styles.modalButtonText}>Create Account</Text>
+            <TouchableOpacity onPress={() => setEmailLoginModalVisible(true)}>
+              <Text style={[styles.buttonStandard, {paddingLeft:10, paddingRight:10, marginTop:20}]}>Sign in with email</Text>
             </TouchableOpacity>
-            <Text>or</Text>
-            <TouchableOpacity
-              onPress={() => setRecoverPasswordModalVisible(true)}
-            >
-              <Text style={styles.modalButtonText}>Recover Password</Text>
-            </TouchableOpacity>
+            
+           
           </View>
         </View>
       </Modal>
