@@ -46,6 +46,7 @@ export const LoginModal = (props) => {
           const user = userCredential.user;
           auth().currentUser.sendEmailVerification();
           
+          
           alert(
             "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
           );

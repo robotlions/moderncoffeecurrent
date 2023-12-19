@@ -95,7 +95,9 @@ export default function App() {
         <LoginModal />
       </View>
     );
-  } else {
+  } 
+  
+   else {
     return (
       <GestureHandlerRootView
         onLayout={onLayoutRootView}
