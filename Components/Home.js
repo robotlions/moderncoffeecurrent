@@ -24,7 +24,9 @@ export function HomeScreen({ route, navigation }) {
         emailVerified: account.emailVerified,
         phoneNumber: account.phoneNumber,
         photoURL: account.photoURL,
-        providerType: account.providerData[0].providerId
+        providerType: account.providerData[0].providerId,
+        createdOn: account.metadata.creationTime,
+        lastSignIn: account.metadata.lastSignInTime,
       }
       database()
               .ref(`/users/${auth().currentUser.uid}/account/`)
