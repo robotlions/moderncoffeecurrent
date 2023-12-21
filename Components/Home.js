@@ -1,19 +1,58 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { styles } from "./Styles";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { methodObjects, variableObjects } from "../Data/Models";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function HomeScreen({ route, navigation }) {
   const user = auth().currentUser;
   const [methodList, setMethodList] = useState({});
 
-  useFocusEffect(
-    useCallback(() => {
-      let isActive = true;
+  //   useFocusEffect(
+  //     useCallback(() => {
+  //       let isActive = true;
+  //       if(user.uid){
+  //       const account = auth().currentUser
+  //       const accountObject = {
+  //         uid: account.uid,
+  //         email: account.email,
+  //         displayName: account.displayName,
+  //         providerId: account.providerId,
+  //         emailVerified: account.emailVerified,
+  //         phoneNumber: account.phoneNumber,
+  //         photoURL: account.photoURL,
+  //         providerType: account.providerData[0].providerId,
+  //         createdOn: account.metadata.creationTime,
+  //         lastSignIn: account.metadata.lastSignInTime,
+  //       }
+  //       database()
+  //               .ref(`/users/${auth().currentUser.uid}/account/`)
+  //               .set(accountObject);
+  //     }
+  //       database()
+  //         .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //         .on("value", (snapshot) => {
+  //           if (isActive) {
+  //             if (!snapshot.exists()) {
+  //               createDatabaseEntries();
+  //             } else {
+  //               setMethodList(snapshot.val());
+  //             }
+  //           }
+  //         });
+  //       return () => {
+  //         isActive = false;
+  //       };
+  // }, [user])
+  //   );
+
+  useEffect(() => {
+// getFirstLoginData();
+    let isActive = true;
       if(user.uid){
       const account = auth().currentUser
       const accountObject = {
@@ -43,11 +82,45 @@ export function HomeScreen({ route, navigation }) {
             }
           }
         });
+       
       return () => {
         isActive = false;
       };
-}, [user])
-  );
+}, [user]);
+
+  //   useEffect(() => {
+  //       let isActive = true;
+        
+  //       database()
+  //         .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //         .on("value", (snapshot) => {
+  //           if (isActive) {
+             
+  //               setMethodList(snapshot.val());
+  //             }
+  //           }
+  //         );
+  //       return () => {
+  //         isActive = false;
+  //       };
+  // }, [navigation]);
+
+  async function getFirstLoginData(){
+    try{
+      const dataCheck = await AsyncStorage.getItem(`modernCoffee-${auth().currentUser.email}`);
+      if(dataCheck!==null){
+        console.log(dataCheck)
+      }
+      else{
+        console.log("working but not finding data?")
+      }
+    } catch (e){
+    console.log(e);
+    }
+
+}
+
+  
 
   function createDatabaseEntries() {
     database()
@@ -72,7 +145,6 @@ export function HomeScreen({ route, navigation }) {
           });
         }
       });
-      
   }
 
   const favoritesDisplay = (
@@ -86,7 +158,7 @@ export function HomeScreen({ route, navigation }) {
 
   const methodDisplay = Object.values(methodList)
     .sort((a, b) => a.order - b.order)
-    .filter((item=>item.visible===true))
+    .filter((item) => item.visible === true)
     .map((item, index) => (
       <TouchableOpacity
         key={index}

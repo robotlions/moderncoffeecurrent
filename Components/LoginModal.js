@@ -8,7 +8,8 @@ import {
 } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
-
+import { methodObjects, variableObjects } from "../Data/Models";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 GoogleSignin.configure({
   webClientId:
@@ -19,7 +20,9 @@ async function onGoogleButtonPress() {
   const { idToken } = await GoogleSignin.signIn();
   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
-  return auth().signInWithCredential(googleCredential);
+  return auth()
+    .signInWithCredential(googleCredential)
+    
 }
 
 export const LoginModal = (props) => {
@@ -29,7 +32,7 @@ export const LoginModal = (props) => {
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const [recoverPasswordModalVisible, setRecoverPasswordModalVisible] =
     useState(false);
-    const [emailLoginModalVisible, setEmailLoginModalVisible] = useState(false);
+  const [emailLoginModalVisible, setEmailLoginModalVisible] = useState(false);
   const passwordRef = useRef();
   const password2Ref = useRef();
 
@@ -45,8 +48,8 @@ export const LoginModal = (props) => {
         .then((userCredential) => {
           const user = userCredential.user;
           auth().currentUser.sendEmailVerification();
-          
-          
+          // createUserDatabaseEntry();
+          // setFirstLoginData();
           alert(
             "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
           );
@@ -71,12 +74,12 @@ export const LoginModal = (props) => {
   }
 
   function signIn() {
+
     if (email == "" || password == "") {
       return alert("Please enter email and password");
     }
     auth()
       .signInWithEmailAndPassword(email, password)
-
       .catch((error) => {
         console.log(error.code);
         const errorCode = error.code;
@@ -95,8 +98,8 @@ export const LoginModal = (props) => {
   }
 
   function triggerEmailReset() {
-    if(email == "" || email ==" "){
-      return(alert("Please enter a valid email address."))
+    if (email == "" || email == " ") {
+      return alert("Please enter a valid email address.");
     }
     auth()
       .sendPasswordResetEmail(email)
@@ -112,6 +115,97 @@ export const LoginModal = (props) => {
         alert(errorMessage);
       });
   }
+
+  function createUserDatabaseEntry() {
+    const account = auth().currentUser;
+    const accountObject = {
+      uid: account.uid,
+      email: account.email,
+      displayName: account.displayName,
+      providerId: account.providerId,
+      emailVerified: account.emailVerified,
+      phoneNumber: account.phoneNumber,
+      photoURL: account.photoURL,
+      providerType: account.providerData[0].providerId,
+      createdOn: account.metadata.creationTime,
+      lastSignIn: account.metadata.lastSignInTime,
+    };
+    database()
+      .ref(`/users/${auth().currentUser.uid}/account/`)
+      .set(accountObject);
+    database()
+      .ref(`/users/${auth().currentUser.uid}/methods/`)
+      .once("value", (snapshot) => {
+        if (!snapshot.exists()) {
+          methodObjects.forEach((item) => {
+            database()
+              .ref(`/users/${auth().currentUser.uid}/methods/`)
+              .push(item);
+          });
+        }
+      });
+    database()
+      .ref(`/users/${auth().currentUser.uid}/variables/`)
+      .once("value", (snapshot) => {
+        if (!snapshot.exists()) {
+          variableObjects.forEach((item) => {
+            database()
+              .ref(`/users/${auth().currentUser.uid}/variables/`)
+              .push(item);
+          });
+        }
+      });
+  }
+
+  async function setFirstLoginData() {
+    try {
+      await AsyncStorage.setItem(`modernCoffee-${auth().currentUser.email}`, 'true');
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
+  async function getFirstLoginData(){
+      try{
+        const dataCheck = await AsyncStorage.getItem('modernCoffeeFirstLogin');
+        if(dataCheck!==null){
+          console.log("data found!")
+        }
+        else{
+          console.log("working but not finding data?")
+        }
+      } catch (e){
+      console.log(e);
+      }
+
+  }
+
+  // function createDatabaseEntries() {
+  //   database()
+  //     .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //     .once("value", (snapshot) => {
+  //       if (!snapshot.exists()) {
+  //         methodObjects.forEach((item) => {
+  //           database()
+  //             .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //             .push(item);
+  //         });
+  //       }
+  //     });
+  //   database()
+  //     .ref(`/users/${auth().currentUser.uid}/variables/`)
+  //     .once("value", (snapshot) => {
+  //       if (!snapshot.exists()) {
+  //         variableObjects.forEach((item) => {
+  //           database()
+  //             .ref(`/users/${auth().currentUser.uid}/variables/`)
+  //             .push(item);
+  //         });
+  //       }
+  //     });
+  // }
+
+  
 
   if (recoverPasswordModalVisible == true) {
     return (
@@ -152,8 +246,8 @@ export const LoginModal = (props) => {
     );
   }
 
-  if (emailLoginModalVisible == true){
-    return(
+  if (emailLoginModalVisible == true) {
+    return (
       <Modal animationType="slide" transparent={true}>
         <View
           style={{
@@ -188,9 +282,13 @@ export const LoginModal = (props) => {
             >
               <Text style={styles.buttonStandard}>Sign In</Text>
             </TouchableOpacity>
-            
 
-            <TouchableOpacity onPress={() => [setEmailLoginModalVisible(false), setCreateModalVisible(true)]}>
+            <TouchableOpacity
+              onPress={() => [
+                setEmailLoginModalVisible(false),
+                setCreateModalVisible(true),
+              ]}
+            >
               <Text style={styles.modalButtonText}>Create Account</Text>
             </TouchableOpacity>
             <Text>or</Text>
@@ -200,15 +298,13 @@ export const LoginModal = (props) => {
               <Text style={styles.modalButtonText}>Recover Password</Text>
             </TouchableOpacity>
             <Text>or</Text>
-            <TouchableOpacity
-              onPress={() => setEmailLoginModalVisible(false)}
-            >
+            <TouchableOpacity onPress={() => setEmailLoginModalVisible(false)}>
               <Text style={styles.modalButtonText}>Back to Google Login</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    )
+    );
   }
 
   if (createModalVisible == true) {
@@ -281,21 +377,24 @@ export const LoginModal = (props) => {
           }}
         >
           <View style={[styles.modalView, { alignItems: "center" }]}>
-          <GoogleSigninButton
+            <GoogleSigninButton
               style={{ maxWidth: "100%", maxHeight: 70, marginBottom: 20 }}
               size={GoogleSigninButton.Size.Wide}
               color={GoogleSigninButton.Color.Dark}
               onPress={() => onGoogleButtonPress()}
             />
             <Text style={styles.modalButtonText}>or</Text>
-            
-            
 
             <TouchableOpacity onPress={() => setEmailLoginModalVisible(true)}>
-              <Text style={[styles.buttonStandard, {paddingLeft:10, paddingRight:10, marginTop:20}]}>Sign in with email</Text>
+              <Text
+                style={[
+                  styles.buttonStandard,
+                  { paddingLeft: 10, paddingRight: 10, marginTop: 20 },
+                ]}
+              >
+                Sign in with email
+              </Text>
             </TouchableOpacity>
-            
-           
           </View>
         </View>
       </Modal>
