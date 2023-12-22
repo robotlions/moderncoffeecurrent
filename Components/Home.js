@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, ScrollView } from "react-native";
+import { Text, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { styles } from "./Styles";
 import { useState, useEffect } from "react";
@@ -6,10 +6,10 @@ import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 
 export function HomeScreen({ route, navigation }) {
-  const user = auth().currentUser;
   const [methodList, setMethodList] = useState({});
+  const [listLoaded, setListLoaded] = useState(false);
 
-  
+  const user = auth().currentUser;
 
     useEffect(()=>{
         if(user){
@@ -18,13 +18,13 @@ export function HomeScreen({ route, navigation }) {
           .on("value", (snapshot) => {
              console.log("updating from home screen")
                 setMethodList(snapshot.val());
+                setListLoaded(true);
               })
         }},[user])
 
 
   
-
-  
+       
 
   
 
@@ -37,7 +37,13 @@ export function HomeScreen({ route, navigation }) {
     </TouchableOpacity>
   );
 
-  const methodDisplay = Object.values(methodList)
+  const MethodDisplay = () => {
+    if(listLoaded===false){
+      return<ActivityIndicator/>
+    }
+    else{
+    return(
+    Object.values(methodList)
     .sort((a, b) => a.order - b.order)
     .filter((item) => item.visible === true)
     .map((item, index) => (
@@ -55,7 +61,8 @@ export function HomeScreen({ route, navigation }) {
       >
         <Text style={styles.categoryText}>{item.methodName}</Text>
       </TouchableOpacity>
-    ));
+    )))};
+      }
 
   return (
     <>
@@ -63,7 +70,7 @@ export function HomeScreen({ route, navigation }) {
 
       <ScrollView style={styles.scrollViewStyle}>
         {favoritesDisplay}
-        {methodDisplay}
+        <MethodDisplay />
         <TouchableOpacity
           style={styles.addItemTouchable}
           onPress={() => navigation.navigate("Create Recipe")}

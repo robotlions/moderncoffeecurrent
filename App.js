@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  ActivityIndicator
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TabNav } from "./Components/NavStack";
@@ -49,7 +50,7 @@ export default function App() {
     setUser(user);
     if (initializing) setInitializing(false);
   }
-
+useEffect(()=>{
   if (user) {
     database()
       .ref(`/users/${auth().currentUser.uid}/`)
@@ -60,6 +61,8 @@ export default function App() {
         }
       });
   }
+},[user])
+
   useEffect(() => {
     async function prepare() {
       try {
@@ -124,7 +127,7 @@ export default function App() {
         onLayout={onLayoutRootView}
       >
         <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
-        <Text>Buffeting!</Text>
+        <ActivityIndicator />
       </View>
     );
   } 
