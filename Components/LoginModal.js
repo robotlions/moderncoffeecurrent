@@ -20,10 +20,37 @@ async function onGoogleButtonPress() {
 
   return auth()
     .signInWithCredential(googleCredential)
-    .then((googleCredential) =>{if(googleCredential.additionalUserInfo.isNewUser){createNewUserDatabaseEntry()}})
+    .then((googleCredential) => {
+      if (googleCredential.additionalUserInfo.isNewUser) {
+        createNewUserDatabaseEntry();
+      }
+      else{
+        updateDatabaseLogin()
+      }
+    });
 }
 
-function createNewUserDatabaseEntry(){
+function updateDatabaseLogin(){
+
+const account = auth().currentUser;
+  const accountObject = {
+    uid: account.uid,
+    email: account.email,
+    displayName: account.displayName,
+    providerId: account.providerId,
+    emailVerified: account.emailVerified,
+    phoneNumber: account.phoneNumber,
+    photoURL: account.photoURL,
+    providerType: account.providerData[0].providerId,
+    createdOn: account.metadata.creationTime,
+    lastSignIn: account.metadata.lastSignInTime,
+  };
+  database()
+    .ref(`/users/${auth().currentUser.uid}/account/`)
+    .update(accountObject);
+}
+
+function createNewUserDatabaseEntry() {
   const account = auth().currentUser;
   const accountObject = {
     uid: account.uid,
@@ -62,7 +89,7 @@ function createNewUserDatabaseEntry(){
         });
       }
     });
-console.log("triggering useEffect in login modal")
+  console.log("triggering useEffect in login modal");
 }
 
 export const LoginModal = (props, navigation) => {
@@ -92,7 +119,9 @@ export const LoginModal = (props, navigation) => {
       auth()
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          if(userCredential.additionalUserInfo.isNewUser){createNewUserDatabaseEntry()};
+          if (userCredential.additionalUserInfo.isNewUser) {
+            createNewUserDatabaseEntry();
+          }
           auth().currentUser.sendEmailVerification();
           alert(
             "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
@@ -118,12 +147,12 @@ export const LoginModal = (props, navigation) => {
   }
 
   function signIn() {
-
     if (email == "" || password == "") {
       return alert("Please enter email and password");
     }
     auth()
       .signInWithEmailAndPassword(email, password)
+      .then(()=>{updateDatabaseLogin()})
       .catch((error) => {
         console.log(error.code);
         const errorCode = error.code;
@@ -160,95 +189,92 @@ export const LoginModal = (props, navigation) => {
       });
   }
 
+  //   useEffect(()=>{
+  //     const account = auth().currentUser;
+  //     if(user){
+  //     const accountObject = {
+  //       uid: account.uid,
+  //       email: account.email,
+  //       displayName: account.displayName,
+  //       providerId: account.providerId,
+  //       emailVerified: account.emailVerified,
+  //       phoneNumber: account.phoneNumber,
+  //       photoURL: account.photoURL,
+  //       providerType: account.providerData[0].providerId,
+  //       createdOn: account.metadata.creationTime,
+  //       lastSignIn: account.metadata.lastSignInTime,
+  //     };
+  //     database()
+  //       .ref(`/users/${auth().currentUser.uid}/account/`)
+  //       .set(accountObject);
+  //     database()
+  //       .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //       .once("value", (snapshot) => {
+  //         if (!snapshot.exists()) {
+  //           methodObjects.forEach((item) => {
+  //             database()
+  //               .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //               .push(item);
+  //           });
+  //         }
+  //       });
+  //     database()
+  //       .ref(`/users/${auth().currentUser.uid}/variables/`)
+  //       .once("value", (snapshot) => {
+  //         if (!snapshot.exists()) {
+  //           variableObjects.forEach((item) => {
+  //             database()
+  //               .ref(`/users/${auth().currentUser.uid}/variables/`)
+  //               .push(item);
+  //           });
+  //         }
+  //       });
+  //   console.log("triggering useEffect in login modal")
+  // }
 
+  // },[user]);
 
-//   useEffect(()=>{
-//     const account = auth().currentUser;
-//     if(user){
-//     const accountObject = {
-//       uid: account.uid,
-//       email: account.email,
-//       displayName: account.displayName,
-//       providerId: account.providerId,
-//       emailVerified: account.emailVerified,
-//       phoneNumber: account.phoneNumber,
-//       photoURL: account.photoURL,
-//       providerType: account.providerData[0].providerId,
-//       createdOn: account.metadata.creationTime,
-//       lastSignIn: account.metadata.lastSignInTime,
-//     };
-//     database()
-//       .ref(`/users/${auth().currentUser.uid}/account/`)
-//       .set(accountObject);
-//     database()
-//       .ref(`/users/${auth().currentUser.uid}/methods/`)
-//       .once("value", (snapshot) => {
-//         if (!snapshot.exists()) {
-//           methodObjects.forEach((item) => {
-//             database()
-//               .ref(`/users/${auth().currentUser.uid}/methods/`)
-//               .push(item);
-//           });
-//         }
-//       });
-//     database()
-//       .ref(`/users/${auth().currentUser.uid}/variables/`)
-//       .once("value", (snapshot) => {
-//         if (!snapshot.exists()) {
-//           variableObjects.forEach((item) => {
-//             database()
-//               .ref(`/users/${auth().currentUser.uid}/variables/`)
-//               .push(item);
-//           });
-//         }
-//       });
-//   console.log("triggering useEffect in login modal")
-// }
-
-// },[user]);
-
-function createNewUserDatabaseEntry(){
-  const account = auth().currentUser;
-  const accountObject = {
-    uid: account.uid,
-    email: account.email,
-    displayName: account.displayName,
-    providerId: account.providerId,
-    emailVerified: account.emailVerified,
-    phoneNumber: account.phoneNumber,
-    photoURL: account.photoURL,
-    providerType: account.providerData[0].providerId,
-    createdOn: account.metadata.creationTime,
-    lastSignIn: account.metadata.lastSignInTime,
-  };
-  database()
-    .ref(`/users/${auth().currentUser.uid}/account/`)
-    .set(accountObject);
-  database()
-    .ref(`/users/${auth().currentUser.uid}/methods/`)
-    .once("value", (snapshot) => {
-      if (!snapshot.exists()) {
-        methodObjects.forEach((item) => {
-          database()
-            .ref(`/users/${auth().currentUser.uid}/methods/`)
-            .push(item);
-        });
-      }
-    });
-  database()
-    .ref(`/users/${auth().currentUser.uid}/variables/`)
-    .once("value", (snapshot) => {
-      if (!snapshot.exists()) {
-        variableObjects.forEach((item) => {
-          database()
-            .ref(`/users/${auth().currentUser.uid}/variables/`)
-            .push(item);
-        });
-      }
-    });
-console.log("triggering useEffect in login modal")
-}
-  
+  function createNewUserDatabaseEntry() {
+    const account = auth().currentUser;
+    const accountObject = {
+      uid: account.uid,
+      email: account.email,
+      displayName: account.displayName,
+      providerId: account.providerId,
+      emailVerified: account.emailVerified,
+      phoneNumber: account.phoneNumber,
+      photoURL: account.photoURL,
+      providerType: account.providerData[0].providerId,
+      createdOn: account.metadata.creationTime,
+      lastSignIn: account.metadata.lastSignInTime,
+    };
+    database()
+      .ref(`/users/${auth().currentUser.uid}/account/`)
+      .set(accountObject);
+    database()
+      .ref(`/users/${auth().currentUser.uid}/methods/`)
+      .once("value", (snapshot) => {
+        if (!snapshot.exists()) {
+          methodObjects.forEach((item) => {
+            database()
+              .ref(`/users/${auth().currentUser.uid}/methods/`)
+              .push(item);
+          });
+        }
+      });
+    database()
+      .ref(`/users/${auth().currentUser.uid}/variables/`)
+      .once("value", (snapshot) => {
+        if (!snapshot.exists()) {
+          variableObjects.forEach((item) => {
+            database()
+              .ref(`/users/${auth().currentUser.uid}/variables/`)
+              .push(item);
+          });
+        }
+      });
+    console.log("triggering useEffect in login modal");
+  }
 
   if (recoverPasswordModalVisible == true) {
     return (
