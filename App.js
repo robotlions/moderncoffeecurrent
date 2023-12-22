@@ -1,7 +1,14 @@
 import "react-native-gesture-handler";
 import { useState, useEffect, useCallback } from "react";
 import * as React from "react";
-import { Text, ImageBackground, View, Image, TouchableOpacity, Alert } from "react-native";
+import {
+  Text,
+  ImageBackground,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TabNav } from "./Components/NavStack";
 import * as Font from "expo-font";
@@ -12,8 +19,8 @@ import { LoginModal } from "./Components/LoginModal";
 import splashImage from "./assets/images/splash.png";
 import auth from "@react-native-firebase/auth";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import NetInfo from '@react-native-community/netinfo';
-
+import NetInfo from "@react-native-community/netinfo";
+import database from "@react-native-firebase/database";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,6 +29,7 @@ export default function App() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
   const [networkConnected, setNetworkConnected] = useState(true);
+  const [databaseEntryIsPresent, setDatabaseEntryIsPresent] = useState(false);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -31,15 +39,27 @@ export default function App() {
   }, []);
 
   function showNetAlert() {
-    Alert.alert("modern coffee", "This device is offline. We'll save your changes locally then sync your data to your account when you're back online. This can take some time after reconnecting.")
+    Alert.alert(
+      "modern coffee",
+      "This device is offline. We'll save your changes locally then sync your data to your account when you're back online. This can take some time after reconnecting."
+    );
   }
-
 
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false);
   }
 
+  if (user) {
+    database()
+      .ref(`/users/${auth().currentUser.uid}/`)
+      .on("value", (snapshot) => {
+        if (snapshot.exists()) {
+          console.log("updating from app screen")
+          setDatabaseEntryIsPresent(true);
+        }
+      });
+  }
   useEffect(() => {
     async function prepare() {
       try {
@@ -61,8 +81,6 @@ export default function App() {
             uri: require("./assets/fonts/Corben-Regular.ttf"),
           },
         });
-
-        // await new Promise((resolve) => setTimeout(resolve, 2500));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -78,6 +96,7 @@ export default function App() {
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
+      //  setTimeout(()=>SplashScreen.hideAsync(), 3000);
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
@@ -88,20 +107,30 @@ export default function App() {
 
   if (!user) {
     return (
-      <View style={{ flex: 1, justifyContent: "center" }}
+      <View
+        style={{ flex: 1, justifyContent: "center" }}
         onLayout={onLayoutRootView}
       >
         <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
         <LoginModal />
       </View>
     );
-  } 
-  
-   else {
+  }
+
+  if (user && !databaseEntryIsPresent) {
     return (
-      <GestureHandlerRootView
+      <View
+        style={{ flex: 1, justifyContent: "center" }}
         onLayout={onLayoutRootView}
-        style={{ flex: 1 }}>
+      >
+        <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
+        <Text>Buffeting!</Text>
+      </View>
+    );
+  } 
+  else {
+    return (
+      <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>
         <NavigationContainer>
           <ImageBackground
             resizeMode="cover"
@@ -110,7 +139,16 @@ export default function App() {
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>
           </ImageBackground>
-          {networkConnected === false && <TouchableOpacity style={styles.netWarningWindow} onPress={() => showNetAlert()}><Text style={styles.netWarningText}>No network connection. Tap for information.</Text></TouchableOpacity>}
+          {networkConnected === false && (
+            <TouchableOpacity
+              style={styles.netWarningWindow}
+              onPress={() => showNetAlert()}
+            >
+              <Text style={styles.netWarningText}>
+                No network connection. Tap for information.
+              </Text>
+            </TouchableOpacity>
+          )}
           <TabNav />
         </NavigationContainer>
       </GestureHandlerRootView>

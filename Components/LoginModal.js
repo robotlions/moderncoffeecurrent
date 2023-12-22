@@ -1,15 +1,13 @@
 import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { styles } from "./Styles";
 import {
   GoogleSignin,
   GoogleSigninButton,
-  statusCodes,
 } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
 import { methodObjects, variableObjects } from "../Data/Models";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 GoogleSignin.configure({
   webClientId:
@@ -35,6 +33,12 @@ export const LoginModal = (props) => {
   const [emailLoginModalVisible, setEmailLoginModalVisible] = useState(false);
   const passwordRef = useRef();
   const password2Ref = useRef();
+  const [user, setUser] = useState(null);
+
+  function onAuthStateChanged(user) {
+    setUser(user);
+  }
+  const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
 
   function createUser() {
     if (email === "" || password === "") {
@@ -48,8 +52,6 @@ export const LoginModal = (props) => {
         .then((userCredential) => {
           const user = userCredential.user;
           auth().currentUser.sendEmailVerification();
-          // createUserDatabaseEntry();
-          // setFirstLoginData();
           alert(
             "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
           );
@@ -116,8 +118,11 @@ export const LoginModal = (props) => {
       });
   }
 
-  function createUserDatabaseEntry() {
+
+
+  useEffect(()=>{
     const account = auth().currentUser;
+    if(user){
     const accountObject = {
       uid: account.uid,
       email: account.email,
@@ -155,55 +160,9 @@ export const LoginModal = (props) => {
           });
         }
       });
-  }
+  console.log("triggering useEffect in login modal")
+}},[user]);
 
-  async function setFirstLoginData() {
-    try {
-      await AsyncStorage.setItem(`modernCoffee-${auth().currentUser.email}`, 'true');
-    } catch (e) {
-      console.log(e)
-    }
-  };
-
-  async function getFirstLoginData(){
-      try{
-        const dataCheck = await AsyncStorage.getItem('modernCoffeeFirstLogin');
-        if(dataCheck!==null){
-          console.log("data found!")
-        }
-        else{
-          console.log("working but not finding data?")
-        }
-      } catch (e){
-      console.log(e);
-      }
-
-  }
-
-  // function createDatabaseEntries() {
-  //   database()
-  //     .ref(`/users/${auth().currentUser.uid}/methods/`)
-  //     .once("value", (snapshot) => {
-  //       if (!snapshot.exists()) {
-  //         methodObjects.forEach((item) => {
-  //           database()
-  //             .ref(`/users/${auth().currentUser.uid}/methods/`)
-  //             .push(item);
-  //         });
-  //       }
-  //     });
-  //   database()
-  //     .ref(`/users/${auth().currentUser.uid}/variables/`)
-  //     .once("value", (snapshot) => {
-  //       if (!snapshot.exists()) {
-  //         variableObjects.forEach((item) => {
-  //           database()
-  //             .ref(`/users/${auth().currentUser.uid}/variables/`)
-  //             .push(item);
-  //         });
-  //       }
-  //     });
-  // }
 
   
 
