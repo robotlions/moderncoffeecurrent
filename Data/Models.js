@@ -1,3 +1,5 @@
+import iconimage from "../assets/images/icons/pourover200.png"
+
 export const variableObjects = [
   { variableName: "Recipe Name", order: 1, visible: true, userAdded: false },
   { variableName: "Description", order: 2, visible: true, userAdded: false },
@@ -37,6 +39,8 @@ export const variableObjects = [
   { variableName: "Notes", order: 20, visible: true, userAdded: false },
 ];
 
+
+
 export const methodObjects = [
   {
     methodName: "Pourover",
@@ -44,6 +48,7 @@ export const methodObjects = [
     backgroundColor: "#A67C83",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
   },
   {
     methodName: "French Press",
@@ -51,6 +56,10 @@ export const methodObjects = [
     backgroundColor: "#7A5546",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Drip",
@@ -58,6 +67,10 @@ export const methodObjects = [
     backgroundColor: "#9E6D5C",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Moka Pot",
@@ -65,6 +78,10 @@ export const methodObjects = [
     backgroundColor: "#5B3118",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Espresso",
@@ -72,6 +89,10 @@ export const methodObjects = [
     backgroundColor: "#734729",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "AeroPress",
@@ -79,6 +100,10 @@ export const methodObjects = [
     backgroundColor: "#AB3625",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Cold Brew",
@@ -86,6 +111,10 @@ export const methodObjects = [
     backgroundColor: "#935230",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Percolator",
@@ -93,6 +122,10 @@ export const methodObjects = [
     backgroundColor: "#9E6D5C",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Turkish",
@@ -100,6 +133,10 @@ export const methodObjects = [
     backgroundColor: "#C99074",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Cowboy",
@@ -107,6 +144,10 @@ export const methodObjects = [
     backgroundColor: "#B68576",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
+
   },
   {
     methodName: "Instant",
@@ -114,6 +155,9 @@ export const methodObjects = [
     backgroundColor: "#B98D8B",
     visible: true,
     userAdded: false,
+    iconUrl: require("../assets/images/icons/pourover200.png")
+
+
   },
 ];
 

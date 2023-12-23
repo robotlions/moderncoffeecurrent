@@ -69,10 +69,10 @@ export function TabNav() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: "white", paddingTop: 3 },
+        tabBarStyle: { backgroundColor: "white", paddingTop: 4 },
         tabBarHideOnKeyboard: true,
-        tabBarActiveTintColor: "rgb(159, 50, 1)",
-        tabBarInactiveTintColor: "rgba(159, 50, 1,.4)",
+        tabBarActiveTintColor: "rgb(253, 121, 8)",
+        tabBarInactiveTintColor: "rgba(253, 121, 8,.4)",
         headerShown: false,
         tabBarLabelStyle: { fontSize: 12, fontFamily: "Raleway-Bold" },
       }}

@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Modal, TouchableOpacity, Alert } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { styles } from "./Styles";
 import {
@@ -8,6 +8,7 @@ import {
 import auth from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
 import { methodObjects, variableObjects } from "../Data/Models";
+
 
 GoogleSignin.configure({
   webClientId:
@@ -92,6 +93,24 @@ function createNewUserDatabaseEntry() {
   console.log("triggering useEffect in login modal");
 }
 
+function emailSentAlert() {
+  Alert.alert(
+    `modern coffee`,
+    `Thank you for joining Modern Coffee! Please check your inbox for a verification email.`,
+    [
+      {
+        text: `Got it!`,
+        onPress: () => auth().signOut(),
+        style: "cancel",
+      },
+      
+    ],
+    {
+      cancelable: false,
+    }
+  );
+}
+
 export const LoginModal = (props, navigation) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -102,13 +121,7 @@ export const LoginModal = (props, navigation) => {
   const [emailLoginModalVisible, setEmailLoginModalVisible] = useState(false);
   const passwordRef = useRef();
   const password2Ref = useRef();
-  // const [user, setUser] = useState(null);
-
-  // function onAuthStateChanged(user) {
-  //   setUser(user);
-  // }
-  // const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-
+  
   function createUser() {
     if (email === "" || password === "") {
       return alert("Please provide email and password");
@@ -123,6 +136,7 @@ export const LoginModal = (props, navigation) => {
             createNewUserDatabaseEntry();
           }
           auth().currentUser.sendEmailVerification();
+          // emailSentAlert();
           alert(
             "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
           );
@@ -189,50 +203,7 @@ export const LoginModal = (props, navigation) => {
       });
   }
 
-  //   useEffect(()=>{
-  //     const account = auth().currentUser;
-  //     if(user){
-  //     const accountObject = {
-  //       uid: account.uid,
-  //       email: account.email,
-  //       displayName: account.displayName,
-  //       providerId: account.providerId,
-  //       emailVerified: account.emailVerified,
-  //       phoneNumber: account.phoneNumber,
-  //       photoURL: account.photoURL,
-  //       providerType: account.providerData[0].providerId,
-  //       createdOn: account.metadata.creationTime,
-  //       lastSignIn: account.metadata.lastSignInTime,
-  //     };
-  //     database()
-  //       .ref(`/users/${auth().currentUser.uid}/account/`)
-  //       .set(accountObject);
-  //     database()
-  //       .ref(`/users/${auth().currentUser.uid}/methods/`)
-  //       .once("value", (snapshot) => {
-  //         if (!snapshot.exists()) {
-  //           methodObjects.forEach((item) => {
-  //             database()
-  //               .ref(`/users/${auth().currentUser.uid}/methods/`)
-  //               .push(item);
-  //           });
-  //         }
-  //       });
-  //     database()
-  //       .ref(`/users/${auth().currentUser.uid}/variables/`)
-  //       .once("value", (snapshot) => {
-  //         if (!snapshot.exists()) {
-  //           variableObjects.forEach((item) => {
-  //             database()
-  //               .ref(`/users/${auth().currentUser.uid}/variables/`)
-  //               .push(item);
-  //           });
-  //         }
-  //       });
-  //   console.log("triggering useEffect in login modal")
-  // }
 
-  // },[user]);
 
   function createNewUserDatabaseEntry() {
     const account = auth().currentUser;

@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
     minHeight: winHeight * 0.07,
     justifyContent: "center",
     marginTop: 50,
+    width:"100%",
   },
 
   buttonStandard: {
@@ -40,16 +41,19 @@ export const styles = StyleSheet.create({
   },
   categoryTouchable: {
     marginTop: 20,
-    minHeight: winHeight * 0.1,
+    height: winHeight * 0.22,
+    width: winHeight * 0.22,
     justifyContent: "center",
     elevation: 2,
+    borderRadius: 20,
   },
 
   categoryText: {
     textAlign: "center",
     fontFamily: "Corben-Bold",
     fontSize: scale * 8,
-    paddingLeft: 5,
+    paddingLeft: 10,
+    paddingRight:10,
     color: "white",
     textShadowColor: "#39230E",
     textShadowOffset: { width: 1, height: 1 },
@@ -154,6 +158,13 @@ export const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 1,
     paddingTop: winHeight*.04,
+  },
+  methodIcon:{
+    position:"absolute",
+    bottom: 10,
+    right: 10,
+    width: winHeight*.05,
+    height: winHeight*.05,
   },
   modalButton: {
     height: 50,

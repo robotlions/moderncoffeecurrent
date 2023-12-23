@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import * as React from "react";
 import {
   Text,
@@ -8,7 +8,8 @@ import {
   Image,
   TouchableOpacity,
   Alert,
-  ActivityIndicator
+  ActivityIndicator,
+  TextInput
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TabNav } from "./Components/NavStack";
@@ -31,6 +32,11 @@ export default function App() {
   const [user, setUser] = useState();
   const [networkConnected, setNetworkConnected] = useState(true);
   const [databaseEntryIsPresent, setDatabaseEntryIsPresent] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const passwordRef = useRef();
+
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -52,6 +58,9 @@ export default function App() {
   }
 useEffect(()=>{
   if (user) {
+    // if(auth().currentUser.emailVerified===true){
+    //   setIsEmailVerified(true)
+    // }
     database()
       .ref(`/users/${auth().currentUser.uid}/`)
       .on("value", (snapshot) => {
@@ -97,6 +106,8 @@ useEffect(()=>{
     prepare();
   }, []);
 
+  
+
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       //  setTimeout(()=>SplashScreen.hideAsync(), 3000);
@@ -131,6 +142,17 @@ useEffect(()=>{
       </View>
     );
   } 
+
+  // if(user && isEmailVerified===false){
+  //   return(
+  //     <View
+  //       style={{ flex: 1, justifyContent: "center" }}
+  //       onLayout={onLayoutRootView}
+  //     >
+  //       <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
+  //     </View>
+  //   )
+  // }
   else {
     return (
       <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>
