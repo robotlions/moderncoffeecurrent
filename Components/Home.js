@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { methodObjects } from "../Data/Models";
+import favoriteIcon from "../assets/images/icons/favoriteIconWhite200x200.png";
 
 
 
@@ -15,16 +16,16 @@ export function HomeScreen({ route, navigation }) {
 
   const user = auth().currentUser;
 
-    // useEffect(()=>{
-    //     if(user){
-    //     database()
-    //       .ref(`/users/${auth().currentUser.uid}/methods/`)
-    //       .on("value", (snapshot) => {
-    //          console.log("updating from home screen")
-    //             setMethodList(snapshot.val());
-    //             setListLoaded(true);
-    //           })
-    //     }},[user])
+    useEffect(()=>{
+        if(user){
+        database()
+          .ref(`/users/${auth().currentUser.uid}/methods/`)
+          .on("value", (snapshot) => {
+             console.log("updating from home screen")
+                setMethodList(snapshot.val());
+                setListLoaded(true);
+              })
+        }},[user])
 
 
   
@@ -38,11 +39,13 @@ export function HomeScreen({ route, navigation }) {
       onPress={() => navigation.navigate("Favorites")}
     >
       <Text style={styles.categoryText}>Favorites</Text>
+      <Image style={styles.methodIcon} source={favoriteIcon} />
+
     </TouchableOpacity>
   );
 
   const MethodDisplay = () => {
-    if(listLoaded===true){
+    if(listLoaded===false){
       return<ActivityIndicator/>
     }
     else{
