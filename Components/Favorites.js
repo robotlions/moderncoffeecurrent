@@ -4,7 +4,8 @@ import {
   ScrollView,
   Image,
   ActivityIndicator,
-  View
+  View,
+  ImageBackground,
 } from "react-native";
 import { useCallback, useState } from "react";
 import { styles } from "./Styles";
@@ -12,6 +13,8 @@ import favoriteIcon from "../assets/images/favoriteIcon.png";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
+import appBanner from "../assets/images/banners/appBanner600x400.png";
+
 
 export function Favorites({ route, navigation }) {
   const [loadedData, setLoadedData] = useState([]);
@@ -99,6 +102,15 @@ export function Favorites({ route, navigation }) {
       </View>
     );
   } else {
-    return <ScrollView>{displayData}</ScrollView>;
+    return(<>
+    <ImageBackground
+            resizeMode="cover"
+            style={styles.imageBackground}
+            source={appBanner}
+          >
+            <Text style={styles.mainTitleText}>modern coffee</Text>
+          </ImageBackground>
+          <ScrollView>{displayData}</ScrollView></>
+    );
   }
 }

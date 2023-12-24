@@ -79,7 +79,7 @@ export function HomeScreen({ route, navigation }) {
       <StatusBar translucent={true} backgroundColor="transparent" />
       <ImageBackground
             resizeMode="cover"
-            style={styles.imageBackground}
+            style={styles.imageBackgroundHome}
             source={appBanner}
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>

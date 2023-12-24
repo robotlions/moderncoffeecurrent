@@ -259,7 +259,7 @@ export function ListRecipes({ route, navigation }) {
             style={styles.imageBackground}
             source={route.params.bannerUrl}
           >
-            <Text style={[styles.mainTitleText,{paddingLeft:"5%", paddingRight:"5%"}]}>{route.params.filter}</Text>
+            <Text style={styles.methodBannerText}>{route.params.filter}</Text>
           </ImageBackground>
         <ScrollView>
           <DisplayData />
