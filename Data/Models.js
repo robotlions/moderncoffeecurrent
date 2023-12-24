@@ -47,7 +47,8 @@ export const methodObjects = [
     backgroundColor: "#A67C83",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/pouroverIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/pouroverIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
   },
   {
     methodName: "French Press",
@@ -55,7 +56,9 @@ export const methodObjects = [
     backgroundColor: "#7A5546",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/frenchPressIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/frenchPressIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -66,7 +69,9 @@ export const methodObjects = [
     backgroundColor: "#9E6D5C",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/dripIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/dripIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -77,7 +82,9 @@ export const methodObjects = [
     backgroundColor: "#5B3118",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/mokaIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/mokaIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -88,7 +95,9 @@ export const methodObjects = [
     backgroundColor: "#734729",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/espressoIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/espressoIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -99,7 +108,9 @@ export const methodObjects = [
     backgroundColor: "#AB3625",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/aeropressIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/aeropressIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -110,7 +121,9 @@ export const methodObjects = [
     backgroundColor: "#935230",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/coldBrewIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/coldBrewIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -121,7 +134,9 @@ export const methodObjects = [
     backgroundColor: "#9E6D5C",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/percolatorIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/percolatorIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -132,7 +147,9 @@ export const methodObjects = [
     backgroundColor: "#C99074",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/turkishIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/turkishIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+
 
 
 
@@ -143,7 +160,9 @@ export const methodObjects = [
     backgroundColor: "#B68576",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/cowboyIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/cowboyIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    
 
 
 
@@ -154,7 +173,8 @@ export const methodObjects = [
     backgroundColor: "#B98D8B",
     visible: true,
     userAdded: false,
-    iconUrl: require("../assets/images/icons/instantIconWhite200x200.png")
+    iconUrl: require("../assets/images/icons/instantIconWhite200x200.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
 
 
   },

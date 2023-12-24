@@ -69,6 +69,8 @@ const NewMethodInput = (props) => {
                 backgroundColor: bgColor,
                 visible: true,
                 userAdded: true,
+                iconUrl: require("../assets/images/icons/favoriteIconWhite200x200.png"),
+                bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
               },
               props.endpoint,
               props.navigation

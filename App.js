@@ -16,6 +16,8 @@ import { TabNav } from "./Components/NavStack";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import vintageCoffee from "./assets/images/vintageCoffee11.jpg";
+import carafeBanner from "./assets/images/banners/dripBanner400x300.png";
+import appBanner from "./assets/images/banners/appBanner600x400.png";
 import { styles } from "./Components/Styles";
 import { LoginModal } from "./Components/LoginModal";
 import splashImage from "./assets/images/splash.png";
@@ -160,7 +162,7 @@ useEffect(()=>{
           <ImageBackground
             resizeMode="cover"
             style={styles.imageBackground}
-            source={vintageCoffee}
+            source={appBanner}
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>
           </ImageBackground>
