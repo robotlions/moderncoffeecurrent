@@ -44,7 +44,6 @@ export const styles = StyleSheet.create({
     height: winHeight * 0.22,
     width: winHeight * 0.22,
     justifyContent: "center",
-    elevation: 2,
     borderRadius: 20,
   },
 
@@ -57,7 +56,7 @@ export const styles = StyleSheet.create({
     color: "white",
     textShadowColor: "#39230E",
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    textShadowRadius: 1,
   },
   container: {
     flex: 1,
