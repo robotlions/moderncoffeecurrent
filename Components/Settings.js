@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   Alert,
   ScrollView,
-  Modal
+  Modal,
+  ImageBackground,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { styles } from "./Styles";
@@ -15,6 +16,8 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alarmObjects } from "../Data/Models";
 import { CheckBox, RadioButton, RadioGroup } from "react-native-radio-check";
+import appBanner from "../assets/images/banners/appBanner600x400.png";
+
 
 export function Settings({ route, navigation }) {
   const [password, setPassword] = useState("");
@@ -360,7 +363,16 @@ export function Settings({ route, navigation }) {
   );
 
   return (
+    <>
+     <ImageBackground
+            resizeMode="cover"
+            style={styles.imageBackground}
+            source={appBanner}
+          >
+            <Text style={styles.mainTitleText}>modern coffee</Text>
+          </ImageBackground>
     <ScrollView style={{ paddingLeft: 10 }} keyboardShouldPersistTaps="handled">
+     
       <Text style={styles.modalButtonText}>Signed in as:</Text>
 
       <Text>{user && user.email}</Text>
@@ -424,5 +436,6 @@ export function Settings({ route, navigation }) {
       </Text>
       {alarmSelectModal}
     </ScrollView>
+    </>
   );
 }

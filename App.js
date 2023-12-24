@@ -159,13 +159,13 @@ useEffect(()=>{
     return (
       <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>
         <NavigationContainer>
-          <ImageBackground
+          {/* <ImageBackground
             resizeMode="cover"
             style={styles.imageBackground}
             source={appBanner}
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>
-          </ImageBackground>
+          </ImageBackground> */}
           {networkConnected === false && (
             <TouchableOpacity
               style={styles.netWarningWindow}

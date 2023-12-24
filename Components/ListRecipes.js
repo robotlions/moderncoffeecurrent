@@ -6,6 +6,7 @@ import {
   Alert,
   View,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import { useCallback, useState } from "react";
 import { styles } from "./Styles";
@@ -253,6 +254,13 @@ export function ListRecipes({ route, navigation }) {
   } else {
     return (
       <>
+       <ImageBackground
+            resizeMode="cover"
+            style={styles.imageBackground}
+            source={route.params.bannerUrl}
+          >
+            <Text style={[styles.mainTitleText,{paddingLeft:"5%", paddingRight:"5%"}]}>{route.params.filter}</Text>
+          </ImageBackground>
         <ScrollView>
           <DisplayData />
         </ScrollView>

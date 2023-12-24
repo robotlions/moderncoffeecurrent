@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   View,
+  ImageBackground,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
@@ -16,6 +17,8 @@ import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
 import NetInfo from "@react-native-community/netinfo";
+import appBanner from "../assets/images/banners/appBanner600x400.png";
+
 
 function InputWindow(props) {
   useFocusEffect(
@@ -262,6 +265,14 @@ export function CreateRecipe({ route, navigation }) {
   }
   if (screenLoaded === true) {
     return (
+      <>
+      <ImageBackground
+            resizeMode="cover"
+            style={styles.imageBackground}
+            source={appBanner}
+          >
+            <Text style={styles.mainTitleText}>modern coffee</Text>
+          </ImageBackground>
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ alignItems: "center" }}
@@ -305,6 +316,7 @@ export function CreateRecipe({ route, navigation }) {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+      </>
     );
   }
 }

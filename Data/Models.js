@@ -48,7 +48,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/pouroverIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
   },
   {
     methodName: "French Press",
@@ -57,7 +57,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/frenchPressIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -70,7 +70,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/dripIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -83,7 +83,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/mokaIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -96,7 +96,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/espressoIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -109,7 +109,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/aeropressIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -122,7 +122,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/coldBrewIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -135,7 +135,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/percolatorIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -148,7 +148,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/turkishIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
 
@@ -161,7 +161,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/cowboyIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
     
 
 
@@ -174,7 +174,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/instantIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
+    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
 
 
   },

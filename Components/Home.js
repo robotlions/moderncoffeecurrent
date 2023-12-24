@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, ScrollView, ActivityIndicator, Image } from "react-native";
+import { Text, TouchableOpacity, ScrollView, ActivityIndicator, Image, ImageBackground } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { styles } from "./Styles";
 import { useState, useEffect } from "react";
@@ -6,6 +6,7 @@ import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { methodObjects } from "../Data/Models";
 import favoriteIcon from "../assets/images/icons/favoriteIconWhite200x200.png";
+import appBanner from "../assets/images/banners/appBanner600x400.png";
 
 
 
@@ -63,6 +64,7 @@ export function HomeScreen({ route, navigation }) {
         onPress={() =>
           navigation.navigate("List Recipes", {
             filter: String(item.methodName),
+            bannerUrl: item.bannerUrl,
           })
         }
       >
@@ -75,7 +77,13 @@ export function HomeScreen({ route, navigation }) {
   return (
     <>
       <StatusBar translucent={true} backgroundColor="transparent" />
-
+      <ImageBackground
+            resizeMode="cover"
+            style={styles.imageBackground}
+            source={appBanner}
+          >
+            <Text style={styles.mainTitleText}>modern coffee</Text>
+          </ImageBackground>
       <ScrollView style={styles.scrollViewStyle} contentContainerStyle={{flexDirection: "row", flexWrap:"wrap", justifyContent:"space-around"}}>
         {favoritesDisplay}
         <MethodDisplay />

@@ -118,6 +118,7 @@ export const styles = StyleSheet.create({
 
   imageBackground:{
     maxHeight:winHeight*.25,
+    minHeight:winHeight*.20,
   },
 
   inactiveButton: {
