@@ -13,7 +13,7 @@ import favoriteIcon from "../assets/images/favoriteIcon.png";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
-import appBanner from "../assets/images/banners/appBanner600x400.png";
+import favoritesBanner from "../assets/images/banners/favoritesBanner600x400.png";
 
 
 export function Favorites({ route, navigation }) {
@@ -103,14 +103,15 @@ export function Favorites({ route, navigation }) {
     );
   } else {
     return(<>
+    <ScrollView>
     <ImageBackground
             resizeMode="cover"
             style={styles.imageBackground}
-            source={appBanner}
+            source={favoritesBanner}
           >
-            <Text style={styles.mainTitleText}>modern coffee</Text>
+            <Text style={styles.mainTitleText}>Favorites</Text>
           </ImageBackground>
-          <ScrollView>{displayData}</ScrollView></>
+          {displayData}</ScrollView></>
     );
   }
 }

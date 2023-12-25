@@ -16,7 +16,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { alarmObjects } from "../Data/Models";
 import { CheckBox, RadioButton, RadioGroup } from "react-native-radio-check";
-import appBanner from "../assets/images/banners/appBanner600x400.png";
+import settingsBanner from "../assets/images/banners/settingsBanner600x400.png";
 
 
 export function Settings({ route, navigation }) {
@@ -364,15 +364,16 @@ export function Settings({ route, navigation }) {
 
   return (
     <>
+    <ScrollView keyboardShouldPersistTaps="handled">
+
      <ImageBackground
             resizeMode="cover"
             style={styles.imageBackground}
-            source={appBanner}
+            source={settingsBanner}
           >
-            <Text style={styles.mainTitleText}>modern coffee</Text>
+            <Text style={styles.mainTitleText}>Settings</Text>
           </ImageBackground>
-    <ScrollView style={{ paddingLeft: 10 }} keyboardShouldPersistTaps="handled">
-     
+     <View style={{paddingLeft:10}}>
       <Text style={styles.modalButtonText}>Signed in as:</Text>
 
       <Text>{user && user.email}</Text>
@@ -430,11 +431,12 @@ export function Settings({ route, navigation }) {
 
       <Text style={styles.modalButtonText}>About</Text>
       <Text style={{ fontFamily: "Raleway-Medium" }}>
-        Modern Coffee ver. 0.85.072023.3{"\n"}
+        Modern Coffee ver. 0.90.122523.2{"\n"}
         July 2023{"\n"}© 2023 by Robot Lions{"\n"}
         Contact and feedback: info@robotlions.com
       </Text>
       {alarmSelectModal}
+      </View>
     </ScrollView>
     </>
   );

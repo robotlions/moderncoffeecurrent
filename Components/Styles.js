@@ -119,17 +119,17 @@ export const styles = StyleSheet.create({
   imageBackground:{
     maxHeight:winHeight*.25,
     minHeight:winHeight*.20,
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginBottom: 20,
   },
 
   imageBackgroundHome:{
     maxHeight:winHeight*.35,
     minHeight:winHeight*.30,
-    flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    width: "100%",
   },
 
   inactiveButton: {
@@ -169,6 +169,8 @@ export const styles = StyleSheet.create({
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 1,
     paddingTop: winHeight*.05,
+    paddingLeft:10,
+    paddingRight:10,
   },
   methodBannerText: {
     fontFamily: "Corben-Bold",

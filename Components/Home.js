@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, ScrollView, ActivityIndicator, Image, ImageBackground } from "react-native";
+import { Text, TouchableOpacity, ScrollView, View, ActivityIndicator, Image, ImageBackground } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { styles } from "./Styles";
 import { useState, useEffect } from "react";
@@ -77,8 +77,12 @@ export function HomeScreen({ route, navigation }) {
       }
 
   return (
-    <>
+      
+      <ScrollView>
       <StatusBar translucent={true} backgroundColor="transparent" />
+      
+      <View style={{flexDirection: "row", flexWrap:"wrap", justifyContent:"space-around"}}>
+      
       <ImageBackground
             resizeMode="cover"
             style={styles.imageBackgroundHome}
@@ -86,7 +90,7 @@ export function HomeScreen({ route, navigation }) {
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>
           </ImageBackground>
-      <ScrollView style={styles.scrollViewStyle} contentContainerStyle={{flexDirection: "row", flexWrap:"wrap", justifyContent:"space-around"}}>
+        
         {favoritesDisplay}
         <MethodDisplay />
         <TouchableOpacity
@@ -97,7 +101,7 @@ export function HomeScreen({ route, navigation }) {
             Create Recipe
           </Text>
         </TouchableOpacity>
+        </View>
       </ScrollView>
-    </>
   );
 }

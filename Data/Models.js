@@ -109,7 +109,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/aeropressIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/dripBanner600x400.png"),
+    bannerUrl: require("../assets/images/banners/aeropressBanner600x400.png"),
 
 
 
@@ -206,4 +206,94 @@ export const alarmObjects = [
     url: "morningclockalarm.wav",
     indexValue: 4,
   },
+];
+export const defaultRecipeObjects = [
+  {
+    pourover: {
+        "Agitation": {
+          "order": 13,
+          "variableValue": "Nope"
+        },
+        "Amount": {
+          "order": 7,
+          "variableValue": "25g"
+        },
+        "Bloom": {
+          "order": 9,
+          "variableValue": "Nunya "
+        },
+        "Brewer": {
+          "order": 3,
+          "variableValue": "Large one"
+        },
+        "Coffee Brand": {
+          "order": 5,
+          "variableValue": "Perc"
+        },
+        "Description": {
+          "order": 2,
+          "variableValue": "Vroom vroom"
+        },
+        "Grind Size": {
+          "order": 8,
+          "variableValue": "9"
+        },
+        "Grinder": {
+          "order": 4,
+          "variableValue": "Fellow Ode"
+        },
+        "Instructions": {
+          "order": 19,
+          "variableValue": "You know what to do"
+        },
+        "Milk Amount": {
+          "order": 14,
+          "variableValue": "1tsp per cup"
+        },
+        "Milk Temp": {
+          "order": 15,
+          "variableValue": "Cold"
+        },
+        "Milk Type": {
+          "order": 16,
+          "variableValue": "Cream"
+        },
+        "Notes": {
+          "order": 20,
+          "variableValue": "Delicious!"
+        },
+        "Recipe Name": {
+          "order": 1,
+          "variableValue": "Weekday juice "
+        },
+        "Roast": {
+          "order": 6,
+          "variableValue": "Guatemala "
+        },
+        "Sweetener Amount": {
+          "order": 17,
+          "variableValue": "1 tablet per cup"
+        },
+        "Sweetener Type": {
+          "order": 18,
+          "variableValue": "Those little saccharin ones"
+        },
+        "Water Amount": {
+          "order": 10,
+          "variableValue": "Full 'er up!"
+        },
+        "Water Temp": {
+          "order": 11,
+          "variableValue": "Hot, hot, hot "
+        },
+        "Water Type": {
+          "order": 12,
+          "variableValue": "Tap"
+        },
+        "backgroundColor": "#B98D8B",
+        "favorite": true,
+        "method": "French Press",
+        "order": 1
+      }
+    }
 ];

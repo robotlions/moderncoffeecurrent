@@ -17,7 +17,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
 import NetInfo from "@react-native-community/netinfo";
-import appBanner from "../assets/images/banners/appBanner600x400.png";
+import createBanner from "../assets/images/banners/createBanner600x400.png";
 
 
 function InputWindow(props) {
@@ -269,9 +269,9 @@ export function CreateRecipe({ route, navigation }) {
       <ImageBackground
             resizeMode="cover"
             style={styles.imageBackground}
-            source={appBanner}
+            source={createBanner}
           >
-            <Text style={styles.mainTitleText}>modern coffee</Text>
+            <Text style={styles.mainTitleText}>Create Recipe</Text>
           </ImageBackground>
       <ScrollView
         keyboardShouldPersistTaps="handled"

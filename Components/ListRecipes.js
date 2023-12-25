@@ -254,6 +254,8 @@ export function ListRecipes({ route, navigation }) {
   } else {
     return (
       <>
+        <ScrollView>
+
        <ImageBackground
             resizeMode="cover"
             style={styles.imageBackground}
@@ -261,7 +263,6 @@ export function ListRecipes({ route, navigation }) {
           >
             <Text style={styles.methodBannerText}>{route.params.filter}</Text>
           </ImageBackground>
-        <ScrollView>
           <DisplayData />
         </ScrollView>
         {route.params.filter != "Favorites" &&
