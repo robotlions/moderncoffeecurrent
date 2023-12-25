@@ -135,11 +135,11 @@ export const LoginModal = (props, navigation) => {
           if (userCredential.additionalUserInfo.isNewUser) {
             createNewUserDatabaseEntry();
           }
-          auth().currentUser.sendEmailVerification();
+          // auth().currentUser.sendEmailVerification();
           // emailSentAlert();
-          alert(
-            "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
-          );
+          // alert(
+          //   "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
+          // );
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
