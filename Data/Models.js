@@ -174,7 +174,7 @@ export const methodObjects = [
     visible: true,
     userAdded: false,
     iconUrl: require("../assets/images/icons/instantIconWhite200x200.png"),
-    bannerUrl: require("../assets/images/banners/isntantBanner600x400.png"),
+    bannerUrl: require("../assets/images/banners/instantBanner600x400.png"),
 
 
   },

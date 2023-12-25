@@ -26,7 +26,9 @@ export function HomeScreen({ route, navigation }) {
                 setMethodList(snapshot.val());
                 setListLoaded(true);
               })
-        }},[user])
+        }
+      return () =>{setListLoaded(false),setMethodList(methodObjects),console.log("list unloaded")}
+      },[user])
 
 
   
@@ -51,7 +53,7 @@ export function HomeScreen({ route, navigation }) {
     }
     else{
     return(
-    Object.values(methodList)
+    methodList!=null && Object.values(methodList)
     .sort((a, b) => a.order - b.order)
     .filter((item) => item.visible === true)
     .map((item, index) => (
