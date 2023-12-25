@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
     borderRightWidth: 0,
     minHeight: winHeight * 0.07,
     justifyContent: "center",
-    marginTop: 50,
+    marginTop: 20,
     width:"100%",
   },
 
