@@ -7,7 +7,7 @@ import {
 } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
-import { methodObjects, variableObjects } from "../Data/Models";
+import { methodObjects, variableObjects, defaultRecipeObjects, testRecipeObject } from "../Data/Models";
 
 
 GoogleSignin.configure({
@@ -90,7 +90,11 @@ function createNewUserDatabaseEntry() {
         });
       }
     });
-  console.log("triggering useEffect in login modal");
+    defaultRecipeObjects.forEach((item)=>{
+      database()
+    .ref(`/users/${auth().currentUser.uid}/recipes/${item.method}`)
+      .push(item);
+    })
 }
 
 function emailSentAlert() {
@@ -205,47 +209,46 @@ export const LoginModal = (props, navigation) => {
 
 
 
-  function createNewUserDatabaseEntry() {
-    const account = auth().currentUser;
-    const accountObject = {
-      uid: account.uid,
-      email: account.email,
-      displayName: account.displayName,
-      providerId: account.providerId,
-      emailVerified: account.emailVerified,
-      phoneNumber: account.phoneNumber,
-      photoURL: account.photoURL,
-      providerType: account.providerData[0].providerId,
-      createdOn: account.metadata.creationTime,
-      lastSignIn: account.metadata.lastSignInTime,
-    };
-    database()
-      .ref(`/users/${auth().currentUser.uid}/account/`)
-      .set(accountObject);
-    database()
-      .ref(`/users/${auth().currentUser.uid}/methods/`)
-      .once("value", (snapshot) => {
-        if (!snapshot.exists()) {
-          methodObjects.forEach((item) => {
-            database()
-              .ref(`/users/${auth().currentUser.uid}/methods/`)
-              .push(item);
-          });
-        }
-      });
-    database()
-      .ref(`/users/${auth().currentUser.uid}/variables/`)
-      .once("value", (snapshot) => {
-        if (!snapshot.exists()) {
-          variableObjects.forEach((item) => {
-            database()
-              .ref(`/users/${auth().currentUser.uid}/variables/`)
-              .push(item);
-          });
-        }
-      });
-    console.log("triggering useEffect in login modal");
-  }
+  // function createNewUserDatabaseEntry() {
+  //   const account = auth().currentUser;
+  //   const accountObject = {
+  //     uid: account.uid,
+  //     email: account.email,
+  //     displayName: account.displayName,
+  //     providerId: account.providerId,
+  //     emailVerified: account.emailVerified,
+  //     phoneNumber: account.phoneNumber,
+  //     photoURL: account.photoURL,
+  //     providerType: account.providerData[0].providerId,
+  //     createdOn: account.metadata.creationTime,
+  //     lastSignIn: account.metadata.lastSignInTime,
+  //   };
+  //   database()
+  //     .ref(`/users/${auth().currentUser.uid}/account/`)
+  //     .set(accountObject);
+  //   database()
+  //     .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //     .once("value", (snapshot) => {
+  //       if (!snapshot.exists()) {
+  //         methodObjects.forEach((item) => {
+  //           database()
+  //             .ref(`/users/${auth().currentUser.uid}/methods/`)
+  //             .push(item);
+  //         });
+  //       }
+  //     });
+  //   database()
+  //     .ref(`/users/${auth().currentUser.uid}/variables/`)
+  //     .once("value", (snapshot) => {
+  //       if (!snapshot.exists()) {
+  //         variableObjects.forEach((item) => {
+  //           database()
+  //             .ref(`/users/${auth().currentUser.uid}/variables/`)
+  //             .push(item);
+  //         });
+  //       }
+  //     });
+  // }
 
   if (recoverPasswordModalVisible == true) {
     return (
