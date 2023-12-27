@@ -8,7 +8,8 @@ import {
   Modal,
   ImageBackground,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
@@ -23,31 +24,35 @@ export function Settings({ route, navigation }) {
   const [password, setPassword] = useState("");
   const [newPassword2, setNewPassword2] = useState("");
   const [newPassword1, setNewPassword1] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  // const [displayName, setDisplayName] = useState("");
 
   const [email, setEmail] = useState("");
   const [passModalVisible, setPassModalVisible] = useState(false);
-  const [changeDisplayNameModuleVisible, setChangeDisplayNameModuleVisble] =
-    useState(false);
+  // const [changeDisplayNameModuleVisible, setChangeDisplayNameModuleVisble] =
+  //   useState(false);
   const [deleteAccountModuleVisible, setDeleteAccountModuleVisible] =
     useState(false);
-    const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [selectedAlarm, setSelectedAlarm] = useState("alarm.wav");
   const [alarmModalVisible, setAlarmModalVisible] = useState(false);
   const [checkedIndex, setCheckedIndex] = useState(0);
   const [demoSound, setDemoSound] = useState("");
+  const [featuredChecked, setFeaturedChecked] = useState(false);
 
 
   const user = auth().currentUser;
 
   var Sound = require("react-native-sound");
 
-  useEffect(() => {
-    if (loading === true) {
-      checkLocalStorageForAlarmName();
-      setLoading(false);
-    }
-  });
+  useFocusEffect(
+    useCallback(
+      () => {
+        if (loading === true) {
+          checkLocalStorageForAlarmName();
+          checkLocalStorageForFeatured();
+          setLoading(false);
+        }
+      }));
 
   async function checkLocalStorageForAlarmName() {
     try {
@@ -63,6 +68,35 @@ export function Settings({ route, navigation }) {
       console.error(e);
     }
   }
+
+  async function updateFeaturedLocalStorage(value) {
+    try {
+      await AsyncStorage.setItem("modern_coffee_featured", String(value))
+    }
+    catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function checkLocalStorageForFeatured() {
+    try {
+      await AsyncStorage.getItem("modern_coffee_featured").then((value) => {
+
+
+        if (value !== null) {
+          if (value === "true") {
+            setFeaturedChecked(true);
+          }
+          if (value === "false") {
+            setFeaturedChecked(false);
+          }
+        }
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
 
   const changePasswordModule = (
     <View>
@@ -96,21 +130,21 @@ export function Settings({ route, navigation }) {
     </View>
   );
 
-  const changeDisplayNameModule = (
-    <View>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter new display name"
-        value={displayName}
-        onChangeText={setDisplayName}
-      />
-      <TouchableOpacity onPress={() => changeDisplayName()}>
-        <Text style={[styles.modalButtonText, { color: "#fd7908" }]}>
-          Submit Change
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
+  // const changeDisplayNameModule = (
+  //   <View>
+  //     <TextInput
+  //       style={styles.input}
+  //       placeholder="Enter new display name"
+  //       value={displayName}
+  //       onChangeText={setDisplayName}
+  //     />
+  //     <TouchableOpacity onPress={() => changeDisplayName()}>
+  //       <Text style={[styles.modalButtonText, { color: "#fd7908" }]}>
+  //         Submit Change
+  //       </Text>
+  //     </TouchableOpacity>
+  //   </View>
+  // );
 
   const deleteAccountModule = (
     <View>
@@ -138,12 +172,12 @@ export function Settings({ route, navigation }) {
   );
 
   async function signOut() {
-    try{
+    try {
       await auth().signOut();
-    await GoogleSignin.signOut();
+      await GoogleSignin.signOut();
     }
-    finally{
-    navigation.navigate("Home");
+    finally {
+      navigation.navigate("Home");
     }
   }
 
@@ -162,46 +196,46 @@ export function Settings({ route, navigation }) {
     newPassword1 != newPassword2
       ? alert("The passwords don't match")
       : auth()
-          .currentUser.reauthenticateWithCredential(credential)
-          .then(() => {
-            auth()
-              .currentUser.updatePassword(newPassword1)
-              .then(() => {
-                alert("Password updated!");
-                setNewPassword1("");
-                setNewPassword2("");
-                setPassword("");
-                navigation.navigate("Home");
-              })
-              .catch((error) => {
-                const errorCode = error.code;
-                console.log(errorCode);
-              });
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            console.log(errorCode);
-            if (errorCode == "auth/wrong-password") {
-              alert("Sorry, that's not the right password");
-            }
-          });
+        .currentUser.reauthenticateWithCredential(credential)
+        .then(() => {
+          auth()
+            .currentUser.updatePassword(newPassword1)
+            .then(() => {
+              alert("Password updated!");
+              setNewPassword1("");
+              setNewPassword2("");
+              setPassword("");
+              navigation.navigate("Home");
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              console.log(errorCode);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          console.log(errorCode);
+          if (errorCode == "auth/wrong-password") {
+            alert("Sorry, that's not the right password");
+          }
+        });
   }
 
-  function changeDisplayName() {
-    auth()
-      .currentUser.updateProfile({
-        displayName: displayName,
-      })
-      .then(() => {
-        alert("Display name updated!");
-        setDisplayName("");
-        setChangeDisplayNameModuleVisble(false);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        console.log(errorCode);
-      });
-  }
+  // function changeDisplayName() {
+  //   auth()
+  //     .currentUser.updateProfile({
+  //       displayName: displayName,
+  //     })
+  //     .then(() => {
+  //       alert("Display name updated!");
+  //       setDisplayName("");
+  //       setChangeDisplayNameModuleVisble(false);
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       console.log(errorCode);
+  //     });
+  // }
 
   function deleteAlert() {
     if (email != user.email) {
@@ -272,7 +306,6 @@ export function Settings({ route, navigation }) {
         console.log(error);
       } else {
         demoAlarm.play(() => {
-          // Release when it's done so we're not using up resources
           demoAlarm.release();
         });
         setTimeout(() => {
@@ -284,7 +317,7 @@ export function Settings({ route, navigation }) {
 
   const radioMenu = (
     <RadioGroup
-      style={{ flexDirection: "column", marginTop: 10, alignItems:"center" }}
+      style={{ flexDirection: "column", marginTop: 10, alignItems: "center" }}
       checkedId={checkedIndex}
       textStyle={{ marginLeft: 5 }}
       icon={{
@@ -309,18 +342,19 @@ export function Settings({ route, navigation }) {
   );
 
   async function saveAlarmSound() {
-    let obj = alarmObjects.find((o) => o.url === demoSound);
+    if (demoSound != "") {
+      let obj = alarmObjects.find((o) => o.url === demoSound);
 
-    try {
+      try {
 
-      await AsyncStorage.setItem("modern_coffee_alarm_name", demoSound);
-    } catch (e) {
-      // saving error
-    } finally {
-      setSelectedAlarm(demoSound);
-      setCheckedIndex(obj.indexValue);
+        await AsyncStorage.setItem("modern_coffee_alarm_name", demoSound);
+      } catch (e) {
+      } finally {
+        setSelectedAlarm(demoSound);
+        setCheckedIndex(obj.indexValue);
 
-      console.log(demoSound);
+        console.log(demoSound);
+      }
     }
   }
 
@@ -355,7 +389,7 @@ export function Settings({ route, navigation }) {
               <Text style={styles.modalButtonText}>Done</Text>
             </TouchableOpacity>
 
-            
+
           </View>
         </View>
       </View>
@@ -364,80 +398,89 @@ export function Settings({ route, navigation }) {
 
   return (
     <>
-    <ScrollView keyboardShouldPersistTaps="handled">
+      <ScrollView keyboardShouldPersistTaps="handled">
 
-     <ImageBackground
-            resizeMode="cover"
-            style={styles.imageBackground}
-            source={settingsBanner}
-          >
-            <Text style={styles.mainTitleText}>Settings</Text>
-          </ImageBackground>
-     <View style={{paddingLeft:10}}>
-      <Text style={styles.modalButtonText}>Signed in as:</Text>
-
-      <Text>{user && user.email}</Text>
-      <TouchableOpacity onPress={() => signOut()}>
-        <Text style={[styles.modalButtonText, { color: "#fd7908" }]}>
-          Sign out
-        </Text>
-      </TouchableOpacity>
-      <Text>{"\n"}</Text>
-      <Text style={{ fontFamily: "Raleway-Medium" }}>Customize</Text>
-      <TouchableOpacity
-        style={styles.settingsTouchable}
-        onPress={() => navigation.navigate("Edit Brew Methods")}
-      >
-        <Text style={styles.modalButtonText}>Customize Brew Methods</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.settingsTouchable}
-        onPress={() => navigation.navigate("Edit Recipe Template")}
-      >
-        <Text style={styles.modalButtonText}>Customize Recipe Template</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={ styles.settingsTouchable}
-        onPress={() => setAlarmModalVisible(!alarmModalVisible)}
-      >
-        <Text style={styles.modalButtonText}>Change Alarm Sound</Text>
-      </TouchableOpacity>
-
-
-      <Text>{"\n"}</Text>
-      <Text style={{ fontFamily: "Raleway-Medium" }}>Account</Text>
-
-      {user.providerData[0].providerId === "password" && (
-        <TouchableOpacity
-          style={styles.settingsTouchable}
-          onPress={() => setPassModalVisible(!passModalVisible)}
+        <ImageBackground
+          resizeMode="cover"
+          style={styles.imageBackground}
+          source={settingsBanner}
         >
-          <Text style={styles.modalButtonText}>Change Password</Text>
-        </TouchableOpacity>
-      )}
-      {passModalVisible && changePasswordModule}
+          <Text style={styles.mainTitleText}>Settings</Text>
+        </ImageBackground>
+        <View style={{ paddingLeft: 10 }}>
+         
 
-      <TouchableOpacity
-        style={styles.settingsTouchable}
-        onPress={() =>
-          setDeleteAccountModuleVisible(!deleteAccountModuleVisible)
-        }
-      >
-        <Text style={styles.modalButtonText}>Delete Account</Text>
-      </TouchableOpacity>
-      {deleteAccountModuleVisible && deleteAccountModule}
-      <Text>{"\n"}</Text>
-      <Text>{"\n"}</Text>
+          <Text style={styles.menuHeading}>{user && user.email}</Text>
+          <TouchableOpacity onPress={() => signOut()}>
+            <Text style={styles.menuTouchable}>
+              Sign out
+            </Text>
+          </TouchableOpacity>
+          <Text>{"\n"}</Text>
+          <Text style={styles.menuHeading}>Customize</Text>
+          <TouchableOpacity
+            style={styles.settingsTouchable}
+            onPress={() => navigation.navigate("Edit Brew Methods")}
+          >
+            <Text style={styles.menuTouchable}>Customize Brew Methods</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.settingsTouchable}
+            onPress={() => navigation.navigate("Edit Recipe Template")}
+          >
+            <Text style={styles.menuTouchable}>Customize Recipe Template</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.settingsTouchable}
+            onPress={() => setAlarmModalVisible(!alarmModalVisible)}
+          >
+            <Text style={styles.menuTouchable}>Change Alarm Sound</Text>
+          </TouchableOpacity>
+          <CheckBox
+            icon={{
+              normal: require("../assets/images/radioOff.png"),
+              checked: require("../assets/images/radioOn.png"),
+            }}
+            iconStyle={{ height: 30, width: 30, tintColor: "#fd7908", marginRight: 10}}
+            textStyle={styles.menuTouchable}
+            text="Show Featured Recipes" checked={featuredChecked}
+            onChecked={(value) => { [setFeaturedChecked(value), updateFeaturedLocalStorage(value)] }} />
 
-      <Text style={styles.modalButtonText}>About</Text>
-      <Text style={{ fontFamily: "Raleway-Medium" }}>
-        Modern Coffee ver. 0.90.122523.2{"\n"}
-        July 2023{"\n"}© 2023 by Robot Lions{"\n"}
-        Contact and feedback: info@robotlions.com
-      </Text>
-      {alarmSelectModal}
-      </View>
-    </ScrollView>
+
+          <Text>{"\n"}</Text>
+          <Text style={styles.menuHeading}>Account</Text>
+
+          {user.providerData[0].providerId === "password" && (
+            <TouchableOpacity
+              style={styles.settingsTouchable}
+              onPress={() => setPassModalVisible(!passModalVisible)}
+            >
+              <Text style={styles.menuTouchable}>Change Password</Text>
+            </TouchableOpacity>
+          )}
+          {passModalVisible && changePasswordModule}
+
+          <TouchableOpacity
+            style={styles.settingsTouchable}
+            onPress={() =>
+              setDeleteAccountModuleVisible(!deleteAccountModuleVisible)
+            }
+          >
+            <Text style={styles.menuTouchable}>Delete Account</Text>
+          </TouchableOpacity>
+          {deleteAccountModuleVisible && deleteAccountModule}
+          <Text>{"\n"}</Text>
+          <Text>{"\n"}</Text>
+
+          <Text style={styles.menuHeading}>About</Text>
+          <Text style={{ fontFamily: "Raleway-Medium" }}>
+            Modern Coffee ver. 0.90.122523.2{"\n"}
+            July 2023{"\n"}© 2023 by Robot Lions{"\n"}
+            Contact and feedback: info@robotlions.com
+          </Text>
+          {alarmSelectModal}
+        </View>
+      </ScrollView>
     </>
   );
 }

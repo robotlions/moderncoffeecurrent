@@ -208,9 +208,5 @@ export const alarmObjects = [
   },
 ];
 
-export const testRecipeObject = [
-  {methodName:"Pourover"},
-  {methodName :"French Press"},
-]
 
 

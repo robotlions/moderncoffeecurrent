@@ -1,12 +1,15 @@
 import { Text, TouchableOpacity, ScrollView, View, ActivityIndicator, Image, ImageBackground } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { styles } from "./Styles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { methodObjects } from "../Data/Models";
 import favoriteIcon from "../assets/images/icons/favoriteIconWhite200x200.png";
 import appBanner from "../assets/images/banners/appBanner600x400.png";
+import { useFocusEffect } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import featuredIcon from "../assets/images/icons/featuredIconWhite200x200.png"
 
 
 
@@ -14,6 +17,8 @@ import appBanner from "../assets/images/banners/appBanner600x400.png";
 export function HomeScreen({ route, navigation }) {
   const [methodList, setMethodList] = useState(methodObjects);
   const [listLoaded, setListLoaded] = useState(false);
+  const [storageChecked, setStorageChecked] = useState(false);
+  const [featuredVisible, setFeaturedVisible] = useState(true);
 
   const user = auth().currentUser;
 
@@ -32,7 +37,29 @@ export function HomeScreen({ route, navigation }) {
 
 
   
-       
+       useFocusEffect(
+        useCallback(()=>{
+            checkLocalStorageForFeatured();
+            setStorageChecked(true);
+          
+        })
+       )
+
+       async function checkLocalStorageForFeatured(){
+        try{
+          await AsyncStorage.getItem("modern_coffee_featured").then((value)=>{
+            if(value==="true"){
+              setFeaturedVisible(true)
+            }
+            if(value==="false"){
+              setFeaturedVisible(false)
+            }
+          })
+        }
+        catch (e){
+          console.log(e)
+        }
+       }
 
   
 
@@ -46,6 +73,18 @@ export function HomeScreen({ route, navigation }) {
 
     </TouchableOpacity>
   );
+
+  const featuredRecipesDisplay = (
+    <TouchableOpacity
+      style={[styles.categoryTouchable, {     backgroundColor: "#9f3201"}]}
+      onPress={() => navigation.navigate("Featured Recipes")}
+    >
+      <Text style={styles.categoryText}>Featured Recipes</Text>
+      <Image style={styles.methodIcon} source={featuredIcon} />
+
+    </TouchableOpacity>
+  );
+
 
   const MethodDisplay = () => {
     if(listLoaded===false){
@@ -92,6 +131,7 @@ export function HomeScreen({ route, navigation }) {
           </ImageBackground>
         
         {favoritesDisplay}
+        {featuredVisible && featuredRecipesDisplay}
         <MethodDisplay />
         <TouchableOpacity
           style={styles.addItemTouchable}

@@ -9,6 +9,7 @@ import auth from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
 import { methodObjects, variableObjects } from "../Data/Models";
 import { defaultRecipeObjects } from "../Data/DefaultRecipes";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 GoogleSignin.configure({
@@ -24,7 +25,8 @@ async function onGoogleButtonPress() {
     .signInWithCredential(googleCredential)
     .then((googleCredential) => {
       if (googleCredential.additionalUserInfo.isNewUser) {
-        createNewUserDatabaseEntry();
+        createNewUserDatabaseEntry(),
+        createLocalStorageItems();
       }
       else{
         updateDatabaseLogin()
@@ -99,6 +101,14 @@ function createNewUserDatabaseEntry() {
     
 }
 
+async function createLocalStorageItems(){
+  try {
+    await AsyncStorage.setItem("modern_coffee_featured", "true");
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 function emailSentAlert() {
   Alert.alert(
     `modern coffee`,
@@ -139,7 +149,8 @@ export const LoginModal = (props, navigation) => {
         .createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
           if (userCredential.additionalUserInfo.isNewUser) {
-            createNewUserDatabaseEntry();
+            createNewUserDatabaseEntry(),
+            createLocalStorageItems();
           }
           // auth().currentUser.sendEmailVerification();
           // emailSentAlert();

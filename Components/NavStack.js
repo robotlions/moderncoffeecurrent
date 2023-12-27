@@ -11,6 +11,7 @@ import { Favorites } from "./Favorites";
 import { RecipeTemplate } from "./RecipeTemplate";
 import { EditSingleRecipeTemplate } from "./EditSingleRecipeTemplate";
 import { StandaloneTimer } from "./StandaloneTimer";
+import { FeaturedRecipes } from "./FeaturedRecipes";
 import { Image } from "react-native";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { useLayoutEffect } from "react";
@@ -54,6 +55,8 @@ export function NavStack({navigation, route}) {
       <Stack.Screen name="Edit Brew Methods" component={BrewMethods} />
       <Stack.Screen name="Edit Recipe Template" component={RecipeTemplate} />
       <Stack.Screen name="Favorites" component={Favorites} />
+      <Stack.Screen name="Featured Recipes" component={FeaturedRecipes} />
+
       <Stack.Screen
         name="Display Recipe"
         component={DisplayRecipe}

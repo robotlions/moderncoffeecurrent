@@ -172,6 +172,22 @@ export const styles = StyleSheet.create({
     paddingLeft:10,
     paddingRight:10,
   },
+
+  menuHeading: {
+    fontFamily: "Raleway-Medium",
+    fontSize: 20,
+    color: "black",
+    fontWeight: "bold",
+  },
+
+  menuTouchable:{
+  
+      fontFamily: "Raleway-Bold",
+      color: "#fd7908",
+      fontWeight: "bold",
+      fontSize: 20,
+    },
+    
   methodBannerText: {
     fontFamily: "Corben-Bold",
     fontSize: scale*18,
