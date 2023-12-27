@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { methodObjects } from "../Data/Models";
-import favoriteIcon from "../assets/images/icons/favoriteIconWhite200x200.png";
+import favoriteIcon from "../assets/images/icons/favoritesStarIconWhite200x200.png";
 import appBanner from "../assets/images/banners/appBanner600x400.png";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";

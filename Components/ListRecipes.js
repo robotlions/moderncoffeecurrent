@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useCallback, useState } from "react";
 import { styles } from "./Styles";
-import favoriteIcon from "../assets/images/favoriteIcon.png";
+import favoriteIcon from "../assets/images/icons/favoriteStarIconOrange200x200.png";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";

@@ -102,6 +102,8 @@ export const styles = StyleSheet.create({
     fontFamily: "Raleway-Medium",
     color: "white",
     paddingLeft: 5,
+    marginRight: 40,
+    paddingBottom: 10,
   },
   entryMethod: {
     fontFamily: "Raleway-Black",
@@ -109,11 +111,11 @@ export const styles = StyleSheet.create({
     color: "white",
   },
   favorite: {
-    height: 15,
-    width: 20,
+    height: 25,
+    width: 25,
     position: "absolute",
     right: 10,
-    bottom: 5,
+    bottom: 10,
   },
 
   imageBackground:{

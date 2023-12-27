@@ -54,6 +54,7 @@ const NewMethodInput = (props) => {
   return (
     <KeyboardAvoidingView>
       <TextInput
+      maxLength={20}
         style={[styles.input, { width: "100%", textAlign: "center" }]}
         placeholder="Input new brewing method"
         value={thisState}
