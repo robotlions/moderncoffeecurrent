@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
     minHeight: winHeight * 0.07,
     justifyContent: "center",
     marginTop: 20,
-    width:"100%",
+    width: "100%",
   },
 
   buttonStandard: {
@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Corben-Bold",
     fontSize: scale * 8,
     paddingLeft: 10,
-    paddingRight:10,
+    paddingRight: 10,
     color: "white",
     textShadowColor: "#39230E",
     textShadowOffset: { width: 1, height: 1 },
@@ -118,17 +118,17 @@ export const styles = StyleSheet.create({
     bottom: 10,
   },
 
-  imageBackground:{
-    maxHeight:winHeight*.25,
-    minHeight:winHeight*.20,
+  imageBackground: {
+    maxHeight: winHeight * 0.25,
+    minHeight: winHeight * 0.2,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
   },
 
-  imageBackgroundHome:{
-    maxHeight:winHeight*.35,
-    minHeight:winHeight*.30,
+  imageBackgroundHome: {
+    maxHeight: winHeight * 0.35,
+    minHeight: winHeight * 0.3,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
@@ -163,16 +163,16 @@ export const styles = StyleSheet.create({
 
   mainTitleText: {
     fontFamily: "Corben-Bold",
-    fontSize: scale*18,
-    lineHeight: scale*25,
+    fontSize: scale * 18,
+    lineHeight: scale * 25,
     textAlign: "center",
     color: "#fd7908",
     textShadowColor: "white",
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 1,
-    paddingTop: winHeight*.05,
-    paddingLeft:10,
-    paddingRight:10,
+    paddingTop: winHeight * 0.05,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
 
   menuHeading: {
@@ -182,33 +182,32 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  menuTouchable:{
-  
-      fontFamily: "Raleway-Bold",
-      color: "#fd7908",
-      fontWeight: "bold",
-      fontSize: 20,
-    },
-    
+  menuTouchable: {
+    fontFamily: "Raleway-Bold",
+    color: "#fd7908",
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+
   methodBannerText: {
     fontFamily: "Corben-Bold",
-    fontSize: scale*18,
-    lineHeight: scale*25,
+    fontSize: scale * 18,
+    lineHeight: scale * 25,
     textAlign: "center",
     color: "#fd7908",
     textShadowColor: "white",
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 1,
-    paddingLeft:"5%",
+    paddingLeft: "5%",
     paddingRight: "5%",
-  
+    paddingTop: 10,
   },
-  methodIcon:{
-    position:"absolute",
+  methodIcon: {
+    position: "absolute",
     bottom: 10,
     right: 10,
-    width: winHeight*.05,
-    height: winHeight*.05,
+    width: winHeight * 0.05,
+    height: winHeight * 0.05,
   },
   modalButton: {
     height: 50,
@@ -241,21 +240,21 @@ export const styles = StyleSheet.create({
     opacity: 0.8,
   },
 
-  netWarningText:{
+  netWarningText: {
     fontWeight: "bold",
     fontSize: 15,
     backgroundColor: "gray",
     color: "white",
     paddingLeft: 7,
     borderRadius: 5,
-    alignSelf:"flex-start",
+    alignSelf: "flex-start",
     height: 30,
-    verticalAlign:"middle"
+    verticalAlign: "middle",
   },
 
-  netWarningWindow:{
-   marginLeft: 10,
-   marginTop: 5,
+  netWarningWindow: {
+    marginLeft: 10,
+    marginTop: 5,
   },
 
   picker: {

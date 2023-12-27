@@ -13,7 +13,7 @@ import {
   import database from "@react-native-firebase/database";
   import auth from "@react-native-firebase/auth";
   import { useFocusEffect } from "@react-navigation/native";
-  import favoritesBanner from "../assets/images/banners/favoritesBanner600x400.png";
+  import featuredRecipesBanner from "../assets/images/banners/featuredRecipesBanner600x400.png";
   
   
   export function FeaturedRecipes({ route, navigation }) {
@@ -107,9 +107,9 @@ import {
       <ImageBackground
               resizeMode="cover"
               style={styles.imageBackground}
-              source={favoritesBanner}
+              source={featuredRecipesBanner}
             >
-              <Text style={styles.mainTitleText}>Featured Recipes</Text>
+              <Text style={styles.methodBannerText}>Featured Recipes</Text>
             </ImageBackground>
             {displayData}</ScrollView></>
       );

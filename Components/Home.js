@@ -69,7 +69,7 @@ export function HomeScreen({ route, navigation }) {
       onPress={() => navigation.navigate("Favorites")}
     >
       <Text style={styles.categoryText}>Favorites</Text>
-      <Image style={styles.methodIcon} source={favoriteIcon} />
+      {/* <Image style={styles.methodIcon} source={favoriteIcon} /> */}
 
     </TouchableOpacity>
   );
@@ -80,7 +80,7 @@ export function HomeScreen({ route, navigation }) {
       onPress={() => navigation.navigate("Featured Recipes")}
     >
       <Text style={styles.categoryText}>Featured Recipes</Text>
-      <Image style={styles.methodIcon} source={featuredIcon} />
+      {/* <Image style={styles.methodIcon} source={featuredIcon} /> */}
 
     </TouchableOpacity>
   );

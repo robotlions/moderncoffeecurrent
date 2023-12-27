@@ -109,7 +109,7 @@ export function Favorites({ route, navigation }) {
             style={styles.imageBackground}
             source={favoritesBanner}
           >
-            <Text style={styles.mainTitleText}>Favorites</Text>
+            <Text style={styles.methodBannerText}>Favorites</Text>
           </ImageBackground>
           {displayData}</ScrollView></>
     );
