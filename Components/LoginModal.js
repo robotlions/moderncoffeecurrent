@@ -7,7 +7,8 @@ import {
 } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
-import { methodObjects, variableObjects, defaultRecipeObjects, testRecipeObject } from "../Data/Models";
+import { methodObjects, variableObjects } from "../Data/Models";
+import { defaultRecipeObjects } from "../Data/DefaultRecipes";
 
 
 GoogleSignin.configure({
@@ -95,6 +96,7 @@ function createNewUserDatabaseEntry() {
     .ref(`/users/${auth().currentUser.uid}/recipes/${item.method}`)
       .push(item);
     })
+    
 }
 
 function emailSentAlert() {
