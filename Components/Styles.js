@@ -141,13 +141,17 @@ export const styles = StyleSheet.create({
     fontSize: 20,
   },
   input: {
-    borderColor: "gray",
-    borderWidth: 0.5,
     width: "90%",
     padding: 5,
     paddingTop: 10,
     backgroundColor: "white",
     marginBottom: 5,
+    elevation: 3,
+    fontFamily: "Raleway-Medium",
+    borderRadius: 5,
+    
+
+   
   },
 
   inputLogin: {
@@ -262,13 +266,14 @@ export const styles = StyleSheet.create({
   },
 
   recipeVariableTouchable: {
+    width: "90%",
     elevation: 2,
     backgroundColor: "white",
     marginBottom: 10,
     minHeight: winHeight * 0.06,
     justifyContent: "center",
-    alignItems: "center",
     paddingBottom: winHeight * 0.01,
+    borderRadius: 5,
   },
 
   recipeModalText: {

@@ -53,6 +53,7 @@ function InputWindow(props) {
       multiline={true}
       numberOfLines={lineCheck}
       textAlignVertical="top"
+      placeholderTextColor="#f47920"
     />
   );
 }

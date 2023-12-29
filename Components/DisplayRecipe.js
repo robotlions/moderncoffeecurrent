@@ -7,12 +7,15 @@ import {
   View,
   KeyboardAvoidingView,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
 import database from "@react-native-firebase/database";
 import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
+import appBanner from "../assets/images/banners/appBanner600x400.png";
+
 
 export function DisplayRecipe({ route, navigation }) {
   const loadedID = route.params.loadedID;
@@ -123,10 +126,10 @@ export function DisplayRecipe({ route, navigation }) {
     )
     .map(([key, value], index) =>
       editing == true && activeEdit == key ? (
-        <KeyboardAvoidingView key={index}>
+        <KeyboardAvoidingView style={{width:"100%", alignItems:"center"}} key={index}>
           <TextInput
             autoFocus={true}
-            style={[styles.input, { width: "100%", paddingLeft: 10 }]}
+            style={[styles.input, {width:"90%"}]}
             value={editValue}
             onChangeText={setEditValue}
             placeholder={key}
@@ -152,7 +155,7 @@ export function DisplayRecipe({ route, navigation }) {
           style={styles.recipeVariableTouchable}
           key={index}
         >
-          <Text style={{ fontFamily: "Raleway-Bold", paddingLeft: 10 }}>
+          <Text style={{ fontFamily: "Raleway-Bold", paddingLeft: 10, color:"#f47920" }}>
             {key}
           </Text>
           <Text style={{ paddingLeft: 10, fontFamily: "Raleway-Medium" }}>
@@ -199,10 +202,19 @@ export function DisplayRecipe({ route, navigation }) {
   } else {
     return (
       <ScrollView keyboardShouldPersistTaps="handled">
-        <Text style={[styles.entryHeadline, { textAlign: "center" }]}>
+        <ImageBackground
+            resizeMode="cover"
+            style={styles.imageBackground}
+            source={appBanner}
+          >
+            <Text style={[styles.methodBannerText, {fontSize:30}]}>{loadedRecipe["Recipe Name"].variableValue}</Text>
+          </ImageBackground>
+        {/* <Text style={[styles.entryHeadline, { textAlign: "center", marginBottom:20, marginTop:20 }]}>
           {route.params.loadedRecipe["Recipe Name"].variableValue}
-        </Text>
+        </Text> */}
+        <View style={{alignItems: "center"}}>
         {editDisplay}
+        </View>
         <View
           style={{
             flex: 1,
