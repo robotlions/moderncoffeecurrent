@@ -9,7 +9,8 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-  TextInput
+  TextInput,
+  Button
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TabNav } from "./Components/NavStack";
@@ -38,6 +39,7 @@ export default function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const passwordRef = useRef();
+  const [refreshed, setRefreshed] = useState(true);
 
 
   useEffect(() => {
@@ -60,9 +62,7 @@ export default function App() {
   }
 useEffect(()=>{
   if (user) {
-    // if(auth().currentUser.emailVerified===true){
-    //   setIsEmailVerified(true)
-    // }
+   
     database()
       .ref(`/users/${auth().currentUser.uid}/`)
       .on("value", (snapshot) => {
@@ -73,6 +73,8 @@ useEffect(()=>{
       });
   }
 },[user])
+
+
 
   useEffect(() => {
     async function prepare() {
@@ -107,6 +109,8 @@ useEffect(()=>{
 
     prepare();
   }, []);
+
+  
 
   
 
@@ -145,16 +149,21 @@ useEffect(()=>{
     );
   } 
 
-  // if(user && isEmailVerified===false){
-  //   return(
-  //     <View
-  //       style={{ flex: 1, justifyContent: "center" }}
-  //       onLayout={onLayoutRootView}
-  //     >
-  //       <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
-  //     </View>
-  //   )
-  // }
+  if(user && auth().currentUser.emailVerified===false){
+    return(
+      <View
+        style={{ flex: 1, justifyContent: "center" }}
+        onLayout={onLayoutRootView}
+      >
+        <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
+        <Text style={{fontFamily: "Raleway-Medium", textAlign: "center"}}>Please verify your email then sign in again.</Text>
+        <TouchableOpacity><Text style={[styles.menuTouchable, {textAlign:"center"}]} onPress={()=>auth().signOut()}>Sign In</Text></TouchableOpacity>
+      
+
+        <TouchableOpacity onPress={()=>auth().currentUser.sendEmailVerification()}><Text style={[styles.menuTouchable, {textAlign: "center", color:"gray", marginTop:20}]}>Resend verification email</Text></TouchableOpacity>
+      </View>
+    )
+  }
   else {
     return (
       <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>

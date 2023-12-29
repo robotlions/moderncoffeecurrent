@@ -152,8 +152,8 @@ export const LoginModal = (props, navigation) => {
             createNewUserDatabaseEntry(),
             createLocalStorageItems();
           }
-          // auth().currentUser.sendEmailVerification();
-          // emailSentAlert();
+          auth().currentUser.sendEmailVerification();
+          emailSentAlert();
           // alert(
           //   "Thanks for joining Modern Coffee! Please check your inbox for a verification email."
           // );
