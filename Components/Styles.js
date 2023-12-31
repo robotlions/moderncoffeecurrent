@@ -154,6 +154,18 @@ export const styles = StyleSheet.create({
    
   },
 
+  inputEdit: {
+    padding: 5,
+    backgroundColor: "white",
+    marginBottom: 5,
+    elevation: 3,
+    fontFamily: "Raleway-Medium",
+    borderRadius: 5,
+    
+
+   
+  },
+
   inputLogin: {
     borderColor: "gray",
     borderWidth: 1,

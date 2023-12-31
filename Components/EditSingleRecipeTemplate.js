@@ -116,10 +116,10 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
       <Text style={{ textAlign: "center", marginBottom: 20 }}>
         <TouchableOpacity
           style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}
-          onPress={() => navigation.goBack()}
+          onPress={() => [reset(),navigation.goBack()]}
         >
           <Text style={[styles.modalButtonText, { fontSize: 20 }]}>
-            Back to edit
+            Save Edits
           </Text>
         </TouchableOpacity>
       </Text>

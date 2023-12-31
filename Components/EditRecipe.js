@@ -71,7 +71,8 @@ function EditInputWindow(props) {
   );
   return (
     <TextInput
-      style={styles.input}
+    multiline={true}
+      style={styles.inputEdit}
       placeholder={props.itemKey}
       value={varState}
       onChangeText={setVarState}
@@ -98,8 +99,8 @@ export function EditRecipe({ route, navigation }) {
 
   useFocusEffect(
     useCallback(() => {
-      let loading = true;
-      if (loading === true) {
+      let gettingData = true;
+      if (gettingData === true) {
         dataObject = route.params.loadedRecipe;
         database()
           .ref(`/users/${user.uid}/methods/`)
@@ -130,9 +131,7 @@ export function EditRecipe({ route, navigation }) {
             console.error(error);
           });
       }
-      return () => {
-        loading = false;
-      };
+     
     }, [])
   );
 
@@ -151,9 +150,9 @@ export function EditRecipe({ route, navigation }) {
     .map(([key, value], index) => (
       <View
         key={index}
-        style={{ width: "100%", alignItems: "center", marginBottom: 5 }}
+        style={{ width: "100%", marginBottom: 5 }}
       >
-        <Text style={{ fontFamily: "Raleway-Bold", textAlign: "left" }}>
+        <Text style={{color:"#f47920", paddingBottom: 3, fontFamily: "Raleway-Bold", textAlign: "left" }}>
           {key}
         </Text>
         <EditInputWindow
@@ -224,6 +223,7 @@ export function EditRecipe({ route, navigation }) {
       {pickerMethodList}
     </Picker>
   );
+  
 
   return (
     <ScrollView
@@ -231,7 +231,9 @@ export function EditRecipe({ route, navigation }) {
       contentContainerStyle={{ alignItems: "center" }}
     >
       {pickerDisplay}
+      <View style={{alignItems:"center", width:"90%"}}>
       {editDisplay}
+      </View>
       <Text style={{ fontFamily: "Raleway-Bold" }}>Add New Variable</Text>
       <NewVariableInput
         pushNewVariable={pushNewVariable}

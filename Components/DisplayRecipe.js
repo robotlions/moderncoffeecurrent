@@ -158,7 +158,7 @@ export function DisplayRecipe({ route, navigation }) {
           <Text style={{ fontFamily: "Raleway-Bold", paddingLeft: 10, color:"#f47920" }}>
             {key}
           </Text>
-          <Text style={{ paddingLeft: 10, fontFamily: "Raleway-Medium" }}>
+          <Text style={{ paddingLeft: 10, paddingRight: 10,fontFamily: "Raleway-Medium" }}>
             {value.variableValue}
           </Text>
         </TouchableOpacity>
