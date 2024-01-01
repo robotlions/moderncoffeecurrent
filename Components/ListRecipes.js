@@ -22,7 +22,6 @@ export function ListRecipes({ route, navigation }) {
 
   const user = auth().currentUser;
 
-
   function selectRecipe(item) {
     navigation.navigate("Display Recipe", {
       loadedMethod: item[1].method,
@@ -59,15 +58,12 @@ export function ListRecipes({ route, navigation }) {
         .catch((error) => {
           console.error(error);
         });
-    }
-    catch (e){
-      console.warn(e)
-    }
-    finally {
+    } catch (e) {
+      console.warn(e);
+    } finally {
       setScreenLoaded(true);
     }
   }
-  
 
   const DisplayData = (props) => {
     if (route.params.filter != "Recent" && route.params.filter != "Favorites") {
@@ -208,8 +204,8 @@ export function ListRecipes({ route, navigation }) {
         });
     } finally {
       Alert.alert(
-      `${item[1]["Recipe Name"].variableValue}`,
-        fav===false ? "Removed from favorites." : "Added to favorites.",
+        `${item[1]["Recipe Name"].variableValue}`,
+        fav === false ? "Removed from favorites." : "Added to favorites.",
         [{ text: "Ok", style: "cancel" }],
         { cancelable: true }
       );
@@ -255,8 +251,7 @@ export function ListRecipes({ route, navigation }) {
     return (
       <>
         <ScrollView>
-
-       <ImageBackground
+          <ImageBackground
             resizeMode="cover"
             style={styles.imageBackground}
             source={route.params.bannerUrl}

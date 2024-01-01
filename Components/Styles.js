@@ -75,6 +75,8 @@ export const styles = StyleSheet.create({
   deleteButtonEditSingleRecipe: {
     color: "red",
     fontFamily: "Raleway-Medium",
+    position: "absolute",
+    right: 5,
    
   },
   displayName: {
@@ -350,6 +352,21 @@ export const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingBottom: 10,
     justifyContent: "space-between"
+  },
+
+  varibleEntrySingleRecipe:{
+    marginBottom: 10, 
+    backgroundColor: "white", 
+    width:"90%",
+    flex:1,
+    flexDirection:"row",
+    justifyContent:"space-between",
+    borderRadius: 10,
+    elevation: 2,
+    paddingLeft: 10,
+    paddingBottom: 10,
+    paddingRight: 10,
+    paddingTom: 5,
   },
   variableText: {
     fontFamily: "Raleway-Medium",

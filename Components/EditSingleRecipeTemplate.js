@@ -14,7 +14,6 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import DraggableFlatList from "react-native-draggable-flatlist";
 
-
 export function EditSingleRecipeTemplate({ route, navigation }) {
   const user = auth().currentUser;
 
@@ -89,13 +88,14 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
   }
 
   const flatlistHeader = (
-    <View>
+    <>
       <Text
         style={{
           fontFamily: "Raleway-Bold",
-          fontSize: 18,
-          paddingLeft: 10,
+          fontSize: 22,
           marginBottom: 10,
+          textAlign: "center",
+          color: "#f47920",
         }}
       >
         {route.params.loadedRecipe["Recipe Name"].variableValue}
@@ -103,68 +103,66 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
       <Text
         style={[
           styles.modalButtonText,
-          { textAlign: "center", marginBottom: 5 },
+          { textAlign: "center", marginBottom: 20, color: "black" },
         ]}
       >
         Drag to reorder
       </Text>
-    </View>
+    </>
   );
 
   const flatlistFooter = (
-    <View>
+    <>
       <Text style={{ textAlign: "center", marginBottom: 20 }}>
         <TouchableOpacity
           style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}
-          onPress={() => [reset(),navigation.goBack()]}
+          onPress={() => [reset(), navigation.goBack()]}
         >
           <Text style={[styles.modalButtonText, { fontSize: 20 }]}>
             Save Edits
           </Text>
         </TouchableOpacity>
       </Text>
-    </View>
+    </>
   );
 
   const renderItem = ({ item, drag, isActive }) => {
     return (
-      <TouchableOpacity
-        style={{
-          minHeight: 50,
-          marginBottom: 5,
-          
-          
-        }}
-        onLongPress={drag}
-        disabled={isActive}
-      >
-            <View>
+      <View style={{ alignItems: "center" }}>
+        <TouchableOpacity
+          style={styles.varibleEntrySingleRecipe}
+          onLongPress={drag}
+          disabled={isActive}
+        >
+          <View>
             <Text
               style={{
-                fontFamily:"Raleway-Bold",
+                fontFamily: "Raleway-Bold",
                 fontSize: 16,
                 color: "#f47920",
               }}
             >
-              {item.id}</Text><Text style={{fontFamily:"Raleway-Medium", paddingRight:100}}>{item.label}
-            </Text></View>
-            {item.id != "Recipe Name" && item.id != "Description" && (
-              <TouchableOpacity
-                style={styles.buttonStyle}
-                onPress={() =>
-                  deleteAlert(
-                    `/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`
-                  )
-                }
-              >
-                <Text style={styles.deleteButtonEditSingleRecipe}>Delete</Text>
-              </TouchableOpacity>
-            )}
-      </TouchableOpacity>
+              {item.id}
+            </Text>
+            <Text style={{ fontFamily: "Raleway-Medium", paddingRight: 100 }}>
+              {item.label}
+            </Text>
+          </View>
+          {item.id != "Recipe Name" && item.id != "Description" && (
+            <TouchableOpacity
+              onPress={() =>
+                deleteAlert(
+                  `/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`
+                )
+              }
+            >
+              <Text style={styles.deleteButtonEditSingleRecipe}>Delete</Text>
+            </TouchableOpacity>
+          )}
+        </TouchableOpacity>
+      </View>
     );
   };
-
-  
 
   function deleteAlert(endpoint) {
     Alert.alert(
@@ -203,15 +201,17 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
   }
 
   return (
-    <DraggableFlatList
-      data={data}
-      onDragEnd={({ data }) => {
-        setData(data), setIndices(data);
-      }}
-      keyExtractor={(item) => item.key}
-      renderItem={renderItem}
-      ListHeaderComponent={flatlistHeader}
-      ListFooterComponent={flatlistFooter}
-    />
+    <>
+      <DraggableFlatList
+        data={data}
+        onDragEnd={({ data }) => {
+          setData(data), setIndices(data);
+        }}
+        keyExtractor={(item) => item.key}
+        renderItem={renderItem}
+        ListHeaderComponent={flatlistHeader}
+        ListFooterComponent={flatlistFooter}
+      />
+    </>
   );
 }
