@@ -58,33 +58,7 @@ const NewVariableInput = (props) => {
   );
 };
 
-function EditInputWindow(props) {
-  useEffect(() => {
-    props.dataObject[props.itemKey] = {
-      variableValue: varState,
-      order: props.itemValue.order,
-    };
-  });
 
-  const [varState, setVarState] = useState(
-    String(props.itemValue.variableValue)
-  );
-  return (
-    <TextInput
-    multiline={true}
-      style={styles.inputEdit}
-      placeholder={props.itemKey}
-      value={varState}
-      onChangeText={setVarState}
-      onEndEditing={() =>
-        (props.dataObject[props.itemKey] = {
-          variableValue: varState,
-          order: props.itemValue.order,
-        })
-      }
-    />
-  );
-}
 
 export function EditRecipe({ route, navigation }) {
   let dataObject = {};
@@ -131,11 +105,39 @@ export function EditRecipe({ route, navigation }) {
             console.error(error);
           });
       }
-     
+     return () =>{gettingData=false}
     }, [])
   );
 
   const user = auth().currentUser;
+
+  function EditInputWindow(props) {
+    useEffect(() => {
+      props.dataObject[props.itemKey] = {
+        variableValue: varState,
+        order: props.itemValue.order,
+      };
+    });
+  
+    const [varState, setVarState] = useState(
+      String(props.itemValue.variableValue)
+    );
+    return (
+      <TextInput
+      multiline={true}
+        style={styles.inputEdit}
+        placeholder={props.itemKey}
+        value={varState}
+        onChangeText={setVarState}
+        onEndEditing={() =>
+          (props.dataObject[props.itemKey] = {
+            variableValue: varState,
+            order: props.itemValue.order,
+          })
+        }
+      />
+    );
+  }
 
   const editDisplay = Object.entries(loadedRecipe)
     .sort(([akey, avalue], [bkey, bvalue]) => avalue.order - bvalue.order)
