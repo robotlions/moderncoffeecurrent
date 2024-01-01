@@ -270,9 +270,9 @@ export const styles = StyleSheet.create({
     color: "white",
     paddingLeft: 7,
     borderRadius: 5,
-    alignSelf: "flex-start",
     height: 30,
     verticalAlign: "middle",
+    marginTop: 50,
   },
 
   netWarningWindow: {

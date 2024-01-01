@@ -3,22 +3,17 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import * as React from "react";
 import {
   Text,
-  ImageBackground,
   View,
   Image,
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-  TextInput,
-  Button
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TabNav } from "./Components/NavStack";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import vintageCoffee from "./assets/images/vintageCoffee11.jpg";
-import carafeBanner from "./assets/images/banners/dripBanner400x300.png";
-import appBanner from "./assets/images/banners/appBanner600x400.png";
+
 import { styles } from "./Components/Styles";
 import { LoginModal } from "./Components/LoginModal";
 import splashImage from "./assets/images/splash.png";
@@ -35,12 +30,6 @@ export default function App() {
   const [user, setUser] = useState();
   const [networkConnected, setNetworkConnected] = useState(true);
   const [databaseEntryIsPresent, setDatabaseEntryIsPresent] = useState(false);
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const passwordRef = useRef();
-  const [refreshed, setRefreshed] = useState(true);
-
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
@@ -60,21 +49,18 @@ export default function App() {
     setUser(user);
     if (initializing) setInitializing(false);
   }
-useEffect(()=>{
-  if (user) {
-   
-    database()
-      .ref(`/users/${auth().currentUser.uid}/`)
-      .on("value", (snapshot) => {
-        if (snapshot.exists()) {
-          console.log("updating from app screen")
-          setDatabaseEntryIsPresent(true);
-        }
-      });
-  }
-},[user])
-
-
+  useEffect(() => {
+    if (user) {
+      database()
+        .ref(`/users/${auth().currentUser.uid}/`)
+        .on("value", (snapshot) => {
+          if (snapshot.exists()) {
+            console.log("updating from app screen");
+            setDatabaseEntryIsPresent(true);
+          }
+        });
+    }
+  }, [user]);
 
   useEffect(() => {
     async function prepare() {
@@ -110,13 +96,8 @@ useEffect(()=>{
     prepare();
   }, []);
 
-  
-
-  
-
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      //  setTimeout(()=>SplashScreen.hideAsync(), 3000);
       await SplashScreen.hideAsync();
     }
   }, [appIsReady]);
@@ -147,24 +128,42 @@ useEffect(()=>{
         <ActivityIndicator />
       </View>
     );
-  } 
+  }
 
-  if(user && auth().currentUser.emailVerified===false){
-    return(
+  if (user && auth().currentUser.emailVerified === false) {
+    return (
       <View
         style={{ flex: 1, justifyContent: "center" }}
         onLayout={onLayoutRootView}
       >
         <Image style={{ height: 400, width: 400 }} source={splashImage}></Image>
-        <Text style={{fontFamily: "Raleway-Medium", textAlign: "center"}}>Please verify your email then sign in again.</Text>
-        <TouchableOpacity><Text style={[styles.menuTouchable, {textAlign:"center"}]} onPress={()=>auth().signOut()}>Sign In</Text></TouchableOpacity>
-      
+        <Text style={{ fontFamily: "Raleway-Medium", textAlign: "center" }}>
+          Please verify your email then sign in again.
+        </Text>
+        <TouchableOpacity>
+          <Text
+            style={[styles.menuTouchable, { textAlign: "center" }]}
+            onPress={() => auth().signOut()}
+          >
+            Sign In
+          </Text>
+        </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=>auth().currentUser.sendEmailVerification()}><Text style={[styles.menuTouchable, {textAlign: "center", color:"gray", marginTop:20}]}>Resend verification email</Text></TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => auth().currentUser.sendEmailVerification()}
+        >
+          <Text
+            style={[
+              styles.menuTouchable,
+              { textAlign: "center", color: "gray", marginTop: 20 },
+            ]}
+          >
+            Resend verification email
+          </Text>
+        </TouchableOpacity>
       </View>
-    )
-  }
-  else {
+    );
+  } else {
     return (
       <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>
         <NavigationContainer>
