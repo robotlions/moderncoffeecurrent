@@ -72,6 +72,11 @@ export const styles = StyleSheet.create({
     color: "red",
     fontFamily: "Raleway-Medium",
   },
+  deleteButtonEditSingleRecipe: {
+    color: "red",
+    fontFamily: "Raleway-Medium",
+   
+  },
   displayName: {
     position: "absolute",
     marginTop: 10,
@@ -333,19 +338,18 @@ export const styles = StyleSheet.create({
   },
 
   variableEntry: {
-    flex: 1,
-    minHeight: winHeight * 0.05,
     flexDirection: "row",
     marginBottom: 10,
     alignItems: "center",
-    justifyContent: "space-between",
     paddingLeft: 10,
-    paddingRight: 10,
-    borderColor: "gray",
-    borderWidth: 1,
+   
+    // borderColor: "gray",
+    // borderWidth: 1,
     borderRadius: 10,
-    marginLeft: 5,
-    marginRight: 5,
+    elevation: 2,
+    backgroundColor: "white",
+    paddingBottom: 10,
+    justifyContent: "space-between"
   },
   variableText: {
     fontFamily: "Raleway-Medium",

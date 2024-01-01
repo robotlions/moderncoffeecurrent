@@ -132,21 +132,22 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
         style={{
           minHeight: 50,
           marginBottom: 5,
+          
+          
         }}
         onLongPress={drag}
         disabled={isActive}
       >
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <View style={styles.variableEntry}>
+            <View>
             <Text
               style={{
-                maxWidth: "80%",
-                fontFamily: "Raleway-Medium",
+                fontFamily:"Raleway-Bold",
                 fontSize: 16,
+                color: "#f47920",
               }}
             >
-              {item.id} - {item.label}
-            </Text>
+              {item.id}</Text><Text style={{fontFamily:"Raleway-Medium", paddingRight:100}}>{item.label}
+            </Text></View>
             {item.id != "Recipe Name" && item.id != "Description" && (
               <TouchableOpacity
                 style={styles.buttonStyle}
@@ -156,11 +157,9 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
                   )
                 }
               >
-                <Text style={styles.deleteButton}>Delete</Text>
+                <Text style={styles.deleteButtonEditSingleRecipe}>Delete</Text>
               </TouchableOpacity>
             )}
-          </View>
-        </View>
       </TouchableOpacity>
     );
   };
