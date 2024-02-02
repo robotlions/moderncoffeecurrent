@@ -474,8 +474,8 @@ export function Settings({ route, navigation }) {
 
           <Text style={styles.menuHeading}>About</Text>
           <Text style={{ fontFamily: "Raleway-Medium" }}>
-            Modern Coffee ver. 0.90.122523.2{"\n"}
-            July 2023{"\n"}© 2023 by Robot Lions{"\n"}
+            Modern Coffee ver. 0.90.010124.1{"\n"}
+            January 2024{"\n"}© 2024 by Robot Lions{"\n"}
             Contact and feedback: info@robotlions.com
           </Text>
           {alarmSelectModal}
