@@ -6,22 +6,31 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "icon": "assets/images/modernCoffeeLogo.png",
+    "icon": "assets/images/ic_launcher_round.png",
     "splash": {
       "image": "assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "notification": {
+      "icon": "assets/images/ic_notification.png",
+      "color": "#fff"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.robotlions.moderncoffee",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "5"
+      "buildNumber": "28"
     },
     "android": {
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "package": "com.robotlions.moderncoffee",
+      "permissions": [ "ACCESS_NETWORK_STATE", "ACCESS_WIFI_STATE" ]
     },
-    "plugins": ["@react-native-google-signin/google-signin"],
+    "plugins": [
+      "@react-native-google-signin/google-signin",
+      "expo-font"
+    ],
     "extra": {
       "eas": {
         "projectId": "f2b30b22-baf3-4b00-adf2-8acfd85d04f0"

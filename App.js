@@ -22,6 +22,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import NetInfo from "@react-native-community/netinfo";
 import database from "@react-native-firebase/database";
 
+
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {

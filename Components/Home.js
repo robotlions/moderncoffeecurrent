@@ -10,8 +10,10 @@ import appBanner from "../assets/images/banners/appBanner600x400.png";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import featuredIcon from "../assets/images/icons/featuredIconWhite200x200.png"
+import {PermissionsAndroid} from 'react-native';
+ 
 
-
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 
 export function HomeScreen({ route, navigation }) {
