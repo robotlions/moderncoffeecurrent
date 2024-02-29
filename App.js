@@ -21,9 +21,14 @@ import auth from "@react-native-firebase/auth";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import NetInfo from "@react-native-community/netinfo";
 import database from "@react-native-firebase/database";
+import { initialize } from 'react-native-clarity';
+
 
 
 SplashScreen.preventAutoHideAsync();
+
+
+initialize("l95ggsqlol");
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
