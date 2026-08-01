@@ -11,16 +11,13 @@ import {
 import { useCallback, useState } from "react";
 import { styles } from "./Styles";
 import favoriteIcon from "../assets/images/icons/favoriteStarIconOrange200x200.png";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
+import { getRecipes, removeRecipe, updateRecipe } from "../Data/Storage";
 
 export function ListRecipes({ route, navigation }) {
   const [loadedData, setLoadedData] = useState([]);
   const [updated, setUpdated] = useState(false);
   const [screenLoaded, setScreenLoaded] = useState(false);
-
-  const user = auth().currentUser;
 
   function selectRecipe(item) {
     navigation.navigate("Display Recipe", {
@@ -45,19 +42,12 @@ export function ListRecipes({ route, navigation }) {
 
   async function fetchAndLoadData() {
     try {
-      await database()
-        .ref(`/users/${user.uid}/recipes/${route.params.filter}/`)
-        .once("value")
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            setLoadedData(snapshot.val());
-          } else {
-            console.log("No data available");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      const recipes = await getRecipes(route.params.filter);
+      if (Object.keys(recipes).length > 0) {
+        setLoadedData(recipes);
+      } else {
+        console.log("No data available");
+      }
     } catch (e) {
       console.warn(e);
     } finally {
@@ -197,11 +187,9 @@ export function ListRecipes({ route, navigation }) {
   async function addRemoveStar(item) {
     let fav = item[1].favorite == true ? false : true;
     try {
-      await database()
-        .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
-        .update({
-          favorite: fav,
-        });
+      await updateRecipe(item[1].method, item[0], {
+        favorite: fav,
+      });
     } finally {
       Alert.alert(
         `${item[1]["Recipe Name"].variableValue}`,
@@ -235,10 +223,7 @@ export function ListRecipes({ route, navigation }) {
   }
 
   function deleteSelected(item) {
-    database()
-      .ref(`/users/${user.uid}/recipes/${item[1].method}/${item[0]}/`)
-      .remove()
-      .then(() => setUpdated(!updated));
+    removeRecipe(item[1].method, item[0]).then(() => setUpdated(!updated));
   }
 
   if (screenLoaded === false) {

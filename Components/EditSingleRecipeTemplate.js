@@ -8,15 +8,16 @@ import {
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 
 import DraggableFlatList from "react-native-draggable-flatlist";
+import {
+  getRecipe,
+  removeRecipeVariable,
+  updateRecipe,
+} from "../Data/Storage";
 
 export function EditSingleRecipeTemplate({ route, navigation }) {
-  const user = auth().currentUser;
-
   const loadedID = route.params.loadedID;
   const [loadedRecipe, setLoadedRecipe] = useState({
     ...route.params.loadedRecipe,
@@ -28,20 +29,13 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
     useCallback(() => {
       let loading = true;
       if (loading === true) {
-        database()
-          .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              setLoadedRecipe(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
-          })
-
-          .catch((error) => {
-            console.error(error);
-          });
+        getRecipe(method, loadedID).then((recipe) => {
+          if (recipe) {
+            setLoadedRecipe(recipe);
+          } else {
+            console.log("No data available");
+          }
+        });
       }
       return () => {
         loading = false;
@@ -71,20 +65,13 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
   }, [loadedRecipe]);
 
   function reset() {
-    database()
-      .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
-      .once("value")
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setLoadedRecipe(snapshot.val());
-        } else {
-          console.log("No data available");
-        }
-      })
-
-      .catch((error) => {
-        console.error(error);
-      });
+    getRecipe(method, loadedID).then((recipe) => {
+      if (recipe) {
+        setLoadedRecipe(recipe);
+      } else {
+        console.log("No data available");
+      }
+    });
   }
 
   const flatlistHeader = (
@@ -151,9 +138,7 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
           {item.id != "Recipe Name" && item.id != "Description" && (
             <TouchableOpacity
               onPress={() =>
-                deleteAlert(
-                  `/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}`
-                )
+                deleteAlert(item.id)
               }
             >
               <Text style={styles.deleteButtonEditSingleRecipe}>Delete</Text>
@@ -164,14 +149,14 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
     );
   };
 
-  function deleteAlert(endpoint) {
+  function deleteAlert(variableName) {
     Alert.alert(
       `Delete-O-Matic`,
       `Are you sure? This will permanently delete this variable from this recipe.`,
       [
         {
           text: `Delete`,
-          onPress: () => deleteSelected(endpoint),
+          onPress: () => deleteSelected(variableName),
           style: "cancel",
         },
         {
@@ -185,18 +170,16 @@ export function EditSingleRecipeTemplate({ route, navigation }) {
     );
   }
 
-  function deleteSelected(endpoint) {
-    database().ref(endpoint).remove();
+  function deleteSelected(variableName) {
+    removeRecipeVariable(method, loadedID, variableName);
     reset();
-    // .then(() => props.navigation.goBack());
   }
 
   function setIndices(data) {
     data.forEach((item, index) => {
-      database()
-        .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/${item.id}/`)
-        .update({ order: index });
-      // console.log(item.id)
+      updateRecipe(method, loadedID, {
+        [item.id]: { order: index },
+      });
     });
   }
 

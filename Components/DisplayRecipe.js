@@ -11,16 +11,13 @@ import {
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 import appBanner from "../assets/images/banners/appBanner600x400.png";
-
+import { getRecipe, removeRecipe, updateRecipe } from "../Data/Storage";
 
 export function DisplayRecipe({ route, navigation }) {
   const loadedID = route.params.loadedID;
   const [loadedRecipe, setLoadedRecipe] = useState({});
-  const [loadedMethods, setLoadedMethods] = useState("");
   const [loadedMethod, setLoadedMethod] = useState(route.params.loadedMethod);
   const [editing, setEditing] = useState(false);
   const [activeEdit, setActiveEdit] = useState(null);
@@ -42,33 +39,12 @@ export function DisplayRecipe({ route, navigation }) {
 
   async function fetchAndLoadData() {
     try {
-      await database()
-        .ref(`/users/${user.uid}/methods/`)
-        .once("value")
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            setLoadedMethods(snapshot.val());
-          } else {
-            console.log("No data available");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-
-      await database()
-        .ref(`/users/${user.uid}/recipes/${loadedMethod}/${loadedID}/`)
-        .once("value")
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            setLoadedRecipe(snapshot.val());
-          } else {
-            console.log("No data available");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      const recipe = await getRecipe(loadedMethod, loadedID);
+      if (recipe) {
+        setLoadedRecipe(recipe);
+      } else {
+        console.log("No data available");
+      }
     } catch (e) {
       console.warn(e);
     } finally {
@@ -80,21 +56,19 @@ export function DisplayRecipe({ route, navigation }) {
     loadedRecipe.favorite == true
       ? (loadedRecipe.favorite = false)
       : (loadedRecipe.favorite = true);
-    database()
-        .ref(`/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`)
-        .update({
-          favorite: loadedRecipe.favorite,
-        })
-        
-      Alert.alert(
-        `${loadedRecipe["Recipe Name"].variableValue}`,
-        loadedRecipe.favorite===false ? "Removed from favorites." : "Added to favorites.",
-          [{ text: "Ok", style: "cancel" }],
-          { cancelable: true }
-        ),
-        setUpdated(!updated);
-    }
-  
+    updateRecipe(loadedRecipe.method, loadedID, {
+      favorite: loadedRecipe.favorite,
+    });
+
+    Alert.alert(
+      `${loadedRecipe["Recipe Name"].variableValue}`,
+      loadedRecipe.favorite===false ? "Removed from favorites." : "Added to favorites.",
+        [{ text: "Ok", style: "cancel" }],
+        { cancelable: true }
+      ),
+      setUpdated(!updated);
+  }
+
 
   function selectVariable(key, value) {
     setEditing(true);
@@ -103,17 +77,13 @@ export function DisplayRecipe({ route, navigation }) {
   }
 
   function unSelect(key, value) {
-    database()
-      .ref(
-        `/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/${key}/`
-      )
-      .update({ variableValue: editValue });
+    updateRecipe(loadedRecipe.method, loadedID, {
+      [key]: { variableValue: editValue, order: value.order },
+    });
     setEditing(false);
     setActiveEdit(null);
     setEditValue("");
   }
-
-  const user = auth().currentUser;
 
   const editDisplay = Object.entries(loadedRecipe)
     .sort(([akey, avalue], [bkey, bvalue]) => avalue.order - bvalue.order)
@@ -165,14 +135,14 @@ export function DisplayRecipe({ route, navigation }) {
       )
     );
 
-  function deleteAlert(endpoint) {
+  function deleteAlert() {
     Alert.alert(
       `Delete-O-Matic`,
       `Are you sure? This will permanently delete "${loadedRecipe["Recipe Name"].variableValue}".`,
       [
         {
           text: `Delete`,
-          onPress: () => deleteSelected(endpoint),
+          onPress: () => deleteSelected(),
           style: "cancel",
         },
         {
@@ -186,11 +156,9 @@ export function DisplayRecipe({ route, navigation }) {
     );
   }
 
-  function deleteSelected(endpoint) {
-    database()
-      .ref(endpoint)
-      .remove();
-      navigation.goBack();
+  function deleteSelected() {
+    removeRecipe(loadedRecipe.method, loadedID);
+    navigation.goBack();
   }
 
   if (screenLoaded === false) {
@@ -209,9 +177,6 @@ export function DisplayRecipe({ route, navigation }) {
           >
             <Text style={[styles.methodBannerText, {fontSize:30}]}>{loadedRecipe["Recipe Name"].variableValue}</Text>
           </ImageBackground>
-        {/* <Text style={[styles.entryHeadline, { textAlign: "center", marginBottom:20, marginTop:20 }]}>
-          {route.params.loadedRecipe["Recipe Name"].variableValue}
-        </Text> */}
         <View style={{alignItems: "center"}}>
         {editDisplay}
         </View>
@@ -235,11 +200,7 @@ export function DisplayRecipe({ route, navigation }) {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() =>
-              deleteAlert(
-                `/users/${user.uid}/recipes/${loadedRecipe.method}/${loadedID}/`
-              )
-            }
+            onPress={() => deleteAlert()}
           >
             <Text style={[styles.modalButtonText, { textAlign: "center" }]}>
               Delete Recipe

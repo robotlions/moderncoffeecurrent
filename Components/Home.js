@@ -2,8 +2,6 @@ import { Text, TouchableOpacity, ScrollView, View, ActivityIndicator, Image, Ima
 import { StatusBar } from "expo-status-bar";
 import { styles } from "./Styles";
 import { useState, useEffect, useCallback } from "react";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import { methodObjects } from "../Data/Models";
 import favoriteIcon from "../assets/images/icons/favoritesStarIconWhite200x200.png";
 import appBanner from "../assets/images/banners/appBanner600x400.png";
@@ -11,6 +9,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import featuredIcon from "../assets/images/icons/featuredIconWhite200x200.png"
 import {PermissionsAndroid} from 'react-native';
+import { getMethods } from "../Data/Storage";
  
 
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
@@ -22,30 +21,16 @@ export function HomeScreen({ route, navigation }) {
   const [storageChecked, setStorageChecked] = useState(false);
   const [featuredVisible, setFeaturedVisible] = useState(true);
 
-  const user = auth().currentUser;
-
-    useEffect(()=>{
-        if(user){
-        database()
-          .ref(`/users/${auth().currentUser.uid}/methods/`)
-          .on("value", (snapshot) => {
-             console.log("updating from home screen")
-                setMethodList(snapshot.val());
-                setListLoaded(true);
-              })
-        }
-      return () =>{setListLoaded(false),setMethodList(methodObjects),console.log("list unloaded")}
-      },[user])
-
-
-  
-       useFocusEffect(
-        useCallback(()=>{
-            checkLocalStorageForFeatured();
-            setStorageChecked(true);
-          
-        })
-       )
+    useFocusEffect(
+      useCallback(() => {
+        getMethods().then((methods) => {
+          setMethodList(methods);
+          setListLoaded(true);
+        });
+        checkLocalStorageForFeatured();
+        setStorageChecked(true);
+      }, [])
+    );
 
        async function checkLocalStorageForFeatured(){
         try{
@@ -62,8 +47,6 @@ export function HomeScreen({ route, navigation }) {
           console.log(e)
         }
        }
-
-  
 
   const favoritesDisplay = (
     <TouchableOpacity

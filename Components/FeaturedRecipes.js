@@ -10,17 +10,14 @@ import {
   import { useCallback, useState } from "react";
   import { styles } from "./Styles";
   import favoriteIcon from "../assets/images/favoriteIcon.png";
-  import database from "@react-native-firebase/database";
-  import auth from "@react-native-firebase/auth";
   import { useFocusEffect } from "@react-navigation/native";
   import featuredRecipesBanner from "../assets/images/banners/featuredRecipesBanner600x400.png";
+  import { getAllRecipes } from "../Data/Storage";
   
   
   export function FeaturedRecipes({ route, navigation }) {
     const [loadedData, setLoadedData] = useState([]);
     const [screenLoaded, setScreenLoaded] = useState(false);
-  
-    const user = auth().currentUser;
   
     function selectRecipe(item, key, value) {
       navigation.navigate("Display Recipe", {
@@ -42,23 +39,12 @@ import {
   
     async function fetchAndLoadData() {
       try {
-        await database()
-          .ref(`/users/${user.uid}/recipes/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              let favArray = [];
-              snapshot.forEach((item) => {
-                favArray.push(item.val());
-              });
-              setLoadedData(favArray);
-            } else {
-              console.log("No data available");
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        const allRecipes = await getAllRecipes();
+        let favArray = [];
+        Object.values(allRecipes).forEach((item) => {
+          favArray.push(item);
+        });
+        setLoadedData(favArray);
       } catch (e) {
         console.warn(e);
       } finally {

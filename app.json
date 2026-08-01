@@ -7,29 +7,29 @@
       "**/*"
     ],
     "icon": "assets/images/ic_launcher_round.png",
-    "splash": {
-      "image": "assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "notification": {
-      "icon": "assets/images/ic_notification.png",
-      "color": "#fff"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.robotlions.moderncoffee",
-      "googleServicesFile": "./GoogleService-Info.plist",
       "buildNumber": "28"
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
       "package": "com.robotlions.moderncoffee",
-      "permissions": [ "ACCESS_NETWORK_STATE", "ACCESS_WIFI_STATE" ]
+      "permissions": [
+        "ACCESS_NETWORK_STATE",
+        "ACCESS_WIFI_STATE"
+      ]
     },
     "plugins": [
-      "@react-native-google-signin/google-signin",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "assets/images/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff"
+        }
+      ],
+      "expo-status-bar"
     ],
     "extra": {
       "eas": {

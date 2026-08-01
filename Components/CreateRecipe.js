@@ -11,14 +11,17 @@ import {
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import { Picker } from "@react-native-picker/picker";
 import { useFocusEffect } from "@react-navigation/native";
 import { variableObjects } from "../Data/Models";
 import NetInfo from "@react-native-community/netinfo";
 import createBanner from "../assets/images/banners/createBanner600x400.png";
-
+import {
+  addRecipe,
+  getMethods,
+  getRecipes,
+  getVariables,
+} from "../Data/Storage";
 
 function InputWindow(props) {
   useFocusEffect(
@@ -59,7 +62,6 @@ function InputWindow(props) {
 }
 
 export function CreateRecipe({ route, navigation }) {
-  const user = auth().currentUser;
   const [method, setMethod] = useState("");
   const [loadedMethods, setLoadedMethods] = useState({});
   const [order, setOrder] = useState(0);
@@ -89,41 +91,20 @@ export function CreateRecipe({ route, navigation }) {
     let varArray = [];
 
     try {
-      await database()
-        .ref(`/users/${user.uid}/methods/`)
-        .once("value", (snapshot) => {
-          if (snapshot.exists()) {
-            setLoadedMethods(snapshot.val());
-          } else {
-            setLoadedMethods({});
-          }
+      const methods = await getMethods();
+      setLoadedMethods(methods);
+
+      let variables = await getVariables();
+      if (Object.keys(variables).length === 0) {
+        variableObjects.forEach((item) => {
+          addVariable(item);
         });
-      await database()
-        .ref(`/users/${user.uid}/variables/`)
-        .once("value")
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            snapshot.forEach((baby) => {
-              varArray.push(baby.val());
-            });
-            setVariableList(varArray);
-          } else {
-            variableObjects.forEach((item) => {
-              database().ref(`/users/${user.uid}/variables/`).push(item);
-            });
-            setTimeout(() => {
-              database()
-                .ref(`/users/${user.uid}/variables/`)
-                .once("value")
-                .then((snapshot) => {
-                  snapshot.forEach((baby) => {
-                    varArray.push(baby.val());
-                  });
-                  setVariableList(varArray);
-                });
-            }, 1000);
-          }
-        });
+        variables = await getVariables();
+      }
+      Object.values(variables).forEach((item) => {
+        varArray.push(item);
+      });
+      setVariableList(varArray);
     } catch (e) {
       console.warn(e);
     } finally {
@@ -131,16 +112,13 @@ export function CreateRecipe({ route, navigation }) {
     }
   }
 
-  //this useEffect listens for a change to {method}, then reads the database node of that method
-  //then sets a variable in state: Order, which is 1 higher than the number of entries in that
-  //node
+  //this useEffect listens for a change to {method}, then counts the recipes
+  //stored for that method and sets a variable in state: Order, which is 1
+  //higher than the number of recipes in that method
   useEffect(() => {
-    database()
-      .ref(`/users/${user.uid}/recipes/${method}`)
-      .once("value")
-      .then((snapshot) => {
-        setOrder(snapshot.numChildren() + 1);
-      });
+    getRecipes(method).then((recipes) => {
+      setOrder(Object.keys(recipes).length + 1);
+    });
   }, [method]);
 
   useFocusEffect(
@@ -245,10 +223,7 @@ export function CreateRecipe({ route, navigation }) {
     dataObject.method = method;
     dataObject.order = order;
     setEditing(false);
-    database()
-      .ref(`/users/${user.uid}/recipes/${method}`)
-      .push()
-      .set(dataObject);
+    addRecipe(method, dataObject);
 
     Alert.alert(
       "modern coffee",

@@ -7,21 +7,23 @@ import {
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
+import {
+  getMethods,
+  getRecipe,
+  updateRecipe,
+} from "../Data/Storage";
 
 const NewVariableInput = (props) => {
-  database()
-    .ref(props.endpoint)
-    .once("value")
-    .then((snapshot) => {
-      setOrderCount(snapshot.numChildren() + 1);
-    });
-
   const [thisState, setThisState] = useState("");
   const [orderCount, setOrderCount] = useState(0);
+
+  useEffect(() => {
+    getRecipe(props.method, props.loadedID).then((recipe) => {
+      setOrderCount(Object.keys(recipe || {}).length + 1);
+    });
+  }, []);
 
   return (
     <>
@@ -35,13 +37,9 @@ const NewVariableInput = (props) => {
         <TouchableOpacity
           style={{ paddingBottom: 10, paddingTop: 10 }}
           onPress={() => {
-            props.pushNewVariable(
-              { variableValue: "", order: orderCount },
-              `${props.endpoint}/${thisState}/`,
-              props.navigation
-            ),
-              setThisState(""),
-              props.setLoading(true);
+            props.addVariableToRecipe(thisState, orderCount),
+              setThisState("");
+            props.setLoading(!props.loading);
           }}
         >
           <Text
@@ -76,40 +74,20 @@ export function EditRecipe({ route, navigation }) {
       let gettingData = true;
       if (gettingData === true) {
         dataObject = route.params.loadedRecipe;
-        database()
-          .ref(`/users/${user.uid}/methods/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              setLoadedMethods(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
-          })
-
-          .catch((error) => {
-            console.error(error);
-          });
-        database()
-          .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
-          .once("value")
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              setLoadedRecipe(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
-          })
-
-          .catch((error) => {
-            console.error(error);
-          });
+        getMethods().then((methods) => {
+          setLoadedMethods(methods);
+        });
+        getRecipe(method, loadedID).then((recipe) => {
+          if (recipe) {
+            setLoadedRecipe(recipe);
+          } else {
+            console.log("No data available");
+          }
+        });
       }
      return () =>{gettingData=false}
     }, [])
   );
-
-  const user = auth().currentUser;
 
   function EditInputWindow(props) {
     useEffect(() => {
@@ -167,34 +145,28 @@ export function EditRecipe({ route, navigation }) {
     ));
 
   function updateEntry() {
-    database()
-      .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
-      .update(dataObject),
-      alert("Updated!");
+    updateRecipe(method, loadedID, dataObject);
+    alert("Updated!");
     navigation.goBack();
     reset();
   }
 
-  function pushNewVariable(dataObject, endpoint, navigation) {
-    database().ref(endpoint).set(dataObject), alert("Added!");
+  function addVariableToRecipe(variableName, orderCount) {
+    updateRecipe(method, loadedID, {
+      [variableName]: { variableValue: "", order: orderCount },
+    });
+    alert("Added!");
     reset();
   }
 
   function reset() {
-    database()
-      .ref(`/users/${user.uid}/recipes/${method}/${loadedID}/`)
-      .once("value")
-      .then((snapshot) => {
-        if (snapshot.exists()) {
-          setLoadedRecipe(snapshot.val());
-        } else {
-          console.log("No data available");
-        }
-      })
-
-      .catch((error) => {
-        console.error(error);
-      });
+    getRecipe(method, loadedID).then((recipe) => {
+      if (recipe) {
+        setLoadedRecipe(recipe);
+      } else {
+        console.log("No data available");
+      }
+    });
   }
 
   const pickerMethodList = Object.values(loadedMethods)
@@ -238,11 +210,12 @@ export function EditRecipe({ route, navigation }) {
       </View>
       <Text style={{ fontFamily: "Raleway-Bold" }}>Add New Variable</Text>
       <NewVariableInput
-        pushNewVariable={pushNewVariable}
-        endpoint={`/users/${user.uid}/recipes/${method}/${loadedID}`}
-        user={user}
+        addVariableToRecipe={addVariableToRecipe}
+        method={method}
+        loadedID={loadedID}
         navigation={navigation}
         setLoading={setLoading}
+        loading={loading}
       />
 
       <TouchableOpacity

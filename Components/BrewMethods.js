@@ -9,52 +9,54 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { styles } from "./Styles";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import DraggableFlatList from "react-native-draggable-flatlist";
-import CheckBox from "@react-native-community/checkbox";
+import CheckBox from "expo-checkbox";
+import {
+  addMethod,
+  getMethods,
+  removeAllRecipes,
+  removeMethod,
+  updateMethod,
+} from "../Data/Storage";
+
+const colorPalette = {
+  1: "#A67C83",
+  2: "#7A5546",
+  3: "#5B3118",
+  4: "#734729",
+  5: "#AB3625",
+  6: "#935230",
+  7: "#9E6D5C",
+  8: "#C99074",
+  9: "#B68576",
+  10: "#B98D8B",
+  11: "#D1A59E",
+};
+
+function doRandom(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
 const NewMethodInput = (props) => {
   const [thisState, setThisState] = useState("");
   const [orderCount, setOrderCount] = useState(0);
-  const [bgColor, setBGColor] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [bgColor, setBGColor] = useState("#A67C83");
 
-  database()
-    .ref(props.endpoint)
-    .once("value")
-    .then((snapshot) => {
-      setOrderCount(snapshot.numChildren() + 1);
+  useEffect(() => {
+    getMethods().then((methods) => {
+      setOrderCount(Object.keys(methods).length + 1);
     });
+  }, []);
 
-  const colorPalette = {
-    1: "#A67C83",
-    2: "#7A5546",
-    3: "#5B3118",
-    4: "#734729",
-    5: "#AB3625",
-    6: "#935230",
-    7: "#9E6D5C",
-    8: "#C99074",
-    9: "#B68576",
-    10: "#B98D8B",
-    11: "#D1A59E",
-  };
-
-  function doRandom(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
-
-  if (loading === true) {
+  useEffect(() => {
     let colorPick = doRandom(1, 11);
     setBGColor(colorPalette[colorPick]);
-    setLoading(false);
-  }
+  }, []);
 
   return (
     <KeyboardAvoidingView>
       <TextInput
-      maxLength={20}
+        maxLength={20}
         style={[styles.input, { width: "100%", textAlign: "center" }]}
         placeholder="Input new brewing method"
         value={thisState}
@@ -63,7 +65,7 @@ const NewMethodInput = (props) => {
       {thisState != "" ? (
         <TouchableOpacity
           onPress={() => {
-            pushNewVariable(
+            pushNewMethod(
               {
                 methodName: thisState,
                 order: orderCount,
@@ -73,7 +75,6 @@ const NewMethodInput = (props) => {
                 iconUrl: require("../assets/images/icons/featuredIconWhite200x200.png"),
                 bannerUrl: require("../assets/images/banners/dripBanner400x300.png"),
               },
-              props.endpoint,
               props.navigation
             ),
               setThisState(""),
@@ -96,18 +97,17 @@ const NewMethodInput = (props) => {
   );
 };
 
-function pushNewVariable(dataObject, endpoint, navigation) {
-  database().ref(endpoint).push(dataObject),
-    Alert.alert(
-      "modern coffee",
-      `Brew method "${dataObject.methodName}" added.`,
-      [{ text: "ok", style: "cancel" }],
-      { cancelable: true }
-    );
+function pushNewMethod(dataObject, navigation) {
+  addMethod(dataObject);
+  Alert.alert(
+    "modern coffee",
+    `Brew method "${dataObject.methodName}" added.`,
+    [{ text: "ok", style: "cancel" }],
+    { cancelable: true }
+  );
 }
 
 export function BrewMethods({ route, navigation }) {
-  const user = auth().currentUser;
   const [loadedMethods, setLoadedMethods] = useState({});
   const [loading, setLoading] = useState(true);
   const [editInput, setEditInput] = useState("");
@@ -135,21 +135,8 @@ export function BrewMethods({ route, navigation }) {
 
   async function fetchAndLoadData() {
     try {
-      database()
-        .ref(`/users/${user.uid}/methods/`)
-        .once("value")
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            setLoadedMethods(snapshot.val());
-          } else {
-            setLoadedMethods({});
-            console.log("No data available");
-          }
-        })
-
-        .catch((error) => {
-          console.error(error);
-        });
+      const methods = await getMethods();
+      setLoadedMethods(methods);
     } catch (e) {
       console.warn(e);
     } finally {
@@ -168,14 +155,14 @@ export function BrewMethods({ route, navigation }) {
     setLoading(true);
   }
 
-  function deleteAlert(endpoint) {
+  function deleteAlert(id, methodName) {
     Alert.alert(
       `Delete-O-Matic`,
       `Are you sure? This will permanently remove this method and all of its receipes.`,
       [
         {
           text: `Delete`,
-          onPress: () => deleteSelected(endpoint),
+          onPress: () => deleteSelected(id, methodName),
           style: "cancel",
         },
         {
@@ -189,26 +176,24 @@ export function BrewMethods({ route, navigation }) {
     );
   }
 
-  function deleteSelected(endpoint) {
-    database()
-      .ref(`/users/${user.uid}/methods/`)
-      .once("value", (snapshot) => {
-        if (snapshot.exists()) {
-          if (Object.keys(snapshot.val()).length <= 1) {
-            Alert.alert(
-              "modern coffee",
-              "The app can't function without brew methods. Resetting!",
-              [{ text: "Okay. I tried.", style: "cancel" }],
-              { cancelable: true }
-            );
-            database().ref(endpoint).remove();
-            navigation.navigate("HomeScreen");
-          } else {
-            database().ref(endpoint).remove();
-          }
-        }
-        reset();
-      });
+  function deleteSelected(id, methodName) {
+    getMethods().then((methods) => {
+      if (Object.keys(methods).length <= 1) {
+        Alert.alert(
+          "modern coffee",
+          "The app can't function without brew methods. Resetting!",
+          [{ text: "Okay. I tried.", style: "cancel" }],
+          { cancelable: true }
+        );
+        removeMethod(id);
+        removeAllRecipes(methodName);
+        navigation.navigate("HomeScreen");
+      } else {
+        removeMethod(id);
+        removeAllRecipes(methodName);
+      }
+      reset();
+    });
   }
 
   function editMethodName(methodName) {
@@ -217,10 +202,8 @@ export function BrewMethods({ route, navigation }) {
     setActiveEdit(methodName);
   }
 
-  function updateMethodName(endpoint) {
-    database()
-      .ref(`/users/${user.uid}/methods/${endpoint}`)
-      .update({ methodName: editInput });
+  function updateMethodName(id) {
+    updateMethod(id, { methodName: editInput });
     setEditing(false);
     setEditInput("");
     setActiveEdit(null);
@@ -229,16 +212,12 @@ export function BrewMethods({ route, navigation }) {
 
   function setIndices(data) {
     data.forEach((item, index) => {
-      database()
-        .ref(`/users/${user.uid}/methods/${item.id}/`)
-        .update({ order: index });
+      updateMethod(item.id, { order: index });
     });
   }
 
   function updateVisible(item, newValue) {
-    database()
-      .ref(`/users/${user.uid}/methods/${item.id}/`)
-      .update({ visible: newValue });
+    updateMethod(item.id, { visible: newValue });
   }
 
   const renderItem = ({ item, drag, isActive }) => {
@@ -297,9 +276,7 @@ export function BrewMethods({ route, navigation }) {
             )}
             <TouchableOpacity
               style={styles.buttonStyle}
-              onPress={() =>
-                deleteAlert(`/users/${user.uid}/methods/${item.id}`)
-              }
+              onPress={() => deleteAlert(item.id, item.label)}
             >
               <Text style={styles.buttonTextStyle}>Delete</Text>
             </TouchableOpacity>
@@ -310,50 +287,19 @@ export function BrewMethods({ route, navigation }) {
       <TouchableOpacity onLongPress={drag} disabled={isActive}>
         <View style={styles.variableEntry}>
           <Text style={styles.variableText}>{item.label}</Text>
-          {/* <View style={{ flexDirection: "row" }}>
-            <Text
-              style={[
-                styles.buttonTextStyle,
-                { color: "#fd7907", verticalAlign: "middle", marginRight: 5 },
-              ]}
-            >
-              Show method?
-            </Text> */}
             <CheckBox
               disabled={false}
-              tintColors={{ true: "#fd7908" }}
+              color={"#fd7908"}
               value={toggleCheckBox}
               onValueChange={(newValue) => {
                 setToggleCheckBox(newValue);
                 updateVisible(item, newValue);
               }}
             />
-          {/* </View> */}
         </View>
       </TouchableOpacity>
     );
   };
-
-  // const renderItem = ({ item, drag, isActive }) => {
-  //   const [toggleCheckBox, setToggleCheckBox] = useState(true);
-
-  //   return (
-  //     <TouchableOpacity onLongPress={drag} disabled={isActive}>
-  //       <View style={styles.variableEntry}>
-  //         <Text style={styles.variableText}>{item.label}</Text>
-
-  //         <CheckBox
-  //           disabled={false}
-  //           value={toggleCheckBox}
-  //           onValueChange={(newValue) => {
-  //             setToggleCheckBox(newValue);
-  //             updateVisible(item, newValue);
-  //           }}
-  //         />
-  //       </View>
-  //     </TouchableOpacity>
-  //   );
-  // };
 
   if (screenLoaded === false) {
     return (
@@ -386,8 +332,6 @@ export function BrewMethods({ route, navigation }) {
         )}
         ListFooterComponent={() => (
           <NewMethodInput
-            endpoint={`/users/${user.uid}/methods/`}
-            user={user}
             navigation={navigation}
             setLoading={setLoading}
           />

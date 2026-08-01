@@ -9,24 +9,26 @@ import {
 } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { styles } from "./Styles";
-import database from "@react-native-firebase/database";
-import auth from "@react-native-firebase/auth";
 import { useFocusEffect } from "@react-navigation/native";
 
 import DraggableFlatList from "react-native-draggable-flatlist";
-import CheckBox from "@react-native-community/checkbox";
-
+import CheckBox from "expo-checkbox";
+import {
+  addVariable,
+  getVariables,
+  removeVariable,
+  updateVariable,
+} from "../Data/Storage";
 
 const NewVariableInput = (props) => {
-  database()
-    .ref(props.endpoint)
-    .once("value")
-    .then((snapshot) => {
-      setOrderCount(snapshot.numChildren() + 1);
-    });
-
   const [thisState, setThisState] = useState("");
   const [orderCount, setOrderCount] = useState(0);
+
+  useEffect(() => {
+    getVariables().then((variables) => {
+      setOrderCount(Object.keys(variables).length + 1);
+    });
+  }, []);
 
   return (
     <KeyboardAvoidingView>
@@ -56,7 +58,6 @@ const NewVariableInput = (props) => {
                 userAdded: true,
                 visible: true,
               },
-              props.endpoint,
               props.navigation
             ),
               setThisState("");
@@ -80,7 +81,6 @@ const NewVariableInput = (props) => {
 };
 
 export function RecipeTemplate({ route, navigation }) {
-  const user = auth().currentUser;
   const [loadedVariables, setLoadedVariables] = useState({});
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -117,14 +117,8 @@ export function RecipeTemplate({ route, navigation }) {
 
   async function fetchAndLoadData() {
     try {
-      await database()
-        .ref(`/users/${user.uid}/variables/`)
-        .once("value")
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            setLoadedVariables(snapshot.val());
-          }
-        });
+      const variables = await getVariables();
+      setLoadedVariables(variables);
     } catch (e) {
       console.warn(e);
     } finally {
@@ -133,9 +127,7 @@ export function RecipeTemplate({ route, navigation }) {
   }
 
   function updateVisible(item, newValue) {
-    database()
-      .ref(`/users/${user.uid}/variables/${item.id}/`)
-      .update({ visible: newValue });
+    updateVariable(item.id, { visible: newValue });
   }
 
   const renderItem = ({ item, drag, isActive }) => {
@@ -151,7 +143,7 @@ export function RecipeTemplate({ route, navigation }) {
               <TouchableOpacity
                 style={styles.buttonStyle}
                 onPress={() =>
-                  deleteAlert(`/users/${user.uid}/variables/${item.id}`)
+                  deleteAlert(item.id)
                 }
               >
                 <Text style={styles.deleteButton}>Delete</Text>
@@ -159,7 +151,7 @@ export function RecipeTemplate({ route, navigation }) {
               :
               <CheckBox
               disabled={false}
-              tintColors={{ true: "#fd7908" }}
+              color={"#fd7908"}
               value={toggleCheckBox}
               onValueChange={(newValue) => {
                 setToggleCheckBox(newValue);
@@ -175,20 +167,18 @@ export function RecipeTemplate({ route, navigation }) {
 
   function setIndices(data) {
     data.forEach((item, index) => {
-      database()
-        .ref(`/users/${user.uid}/variables/${item.id}/`)
-        .update({ order: index });
+      updateVariable(item.id, { order: index });
     });
   }
 
-  function deleteAlert(endpoint) {
+  function deleteAlert(id) {
     Alert.alert(
       `Delete-O-Matic`,
       `Are you sure?`,
       [
         {
           text: `Delete`,
-          onPress: () => deleteSelected(endpoint),
+          onPress: () => deleteSelected(id),
           style: "cancel",
         },
         {
@@ -202,13 +192,13 @@ export function RecipeTemplate({ route, navigation }) {
     );
   }
 
-  function deleteSelected(endpoint) {
-    database().ref(endpoint).remove();
+  function deleteSelected(id) {
+    removeVariable(id);
     setLoading(!loading);
   }
 
-  function pushNewVariable(dataObject, endpoint, navigation) {
-    database().ref(endpoint).push(dataObject);
+  function pushNewVariable(dataObject, navigation) {
+    addVariable(dataObject);
     alert("Added!");
     setLoading(!loading);
   }
@@ -245,8 +235,6 @@ export function RecipeTemplate({ route, navigation }) {
         ListFooterComponent={() => (
           <NewVariableInput
             pushNewVariable={pushNewVariable}
-            endpoint={`/users/${user.uid}/variables/`}
-            user={user}
             navigation={navigation}
             setLoading={setLoading}
             loading={loading}
