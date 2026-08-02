@@ -41,10 +41,15 @@ export const styles = StyleSheet.create({
   },
   categoryTouchable: {
     marginTop: 20,
-    height: winHeight * 0.22,
-    width: winHeight * 0.22,
+    height: winHeight * 0.19,
+    width: winHeight * 0.19,
     justifyContent: "center",
     borderRadius: 20,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
 
   categoryText: {
@@ -89,16 +94,21 @@ export const styles = StyleSheet.create({
   },
   entry: {
     width: "100%",
-    elevation: 1,
+    elevation: 3,
     backgroundColor: "white",
     minHeight: winHeight * 0.1,
     marginBottom: 8,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
 
   entryHeadline: {
     fontSize: scale * 8,
     fontFamily: "Corben-Bold",
-    paddingLeft: 5,
+    paddingLeft: 15,
     color: "#fd7908",
     textShadowColor: "#39230E",
     textShadowOffset: { width: 1, height: 1 },
@@ -108,13 +118,13 @@ export const styles = StyleSheet.create({
   entryDesc: {
     fontFamily: "Raleway-Medium",
     color: "white",
-    paddingLeft: 5,
+    paddingLeft: 15,
     marginRight: 40,
     paddingBottom: 10,
   },
   entryMethod: {
     fontFamily: "Raleway-Black",
-    paddingLeft: 5,
+    paddingLeft: 15,
     color: "white",
   },
   favorite: {
@@ -206,9 +216,8 @@ export const styles = StyleSheet.create({
   },
 
   menuTouchable: {
-    fontFamily: "Raleway-Bold",
+    fontFamily: "Raleway-Medium",
     color: "#fd7908",
-    fontWeight: "bold",
     fontSize: 20,
   },
 
@@ -344,14 +353,18 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
     alignItems: "center",
     paddingLeft: 10,
-   
+    paddingRight: 15,
     // borderColor: "gray",
     // borderWidth: 1,
     borderRadius: 10,
     elevation: 2,
     backgroundColor: "white",
     paddingBottom: 10,
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
 
   varibleEntrySingleRecipe:{

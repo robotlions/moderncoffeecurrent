@@ -243,13 +243,29 @@ export function ListRecipes({ route, navigation }) {
           >
             <Text style={styles.methodBannerText}>{route.params.filter}</Text>
           </ImageBackground>
-          <DisplayData />
+          <View style={{ paddingLeft: 12, paddingRight: 12 }}>
+            <DisplayData />
+          </View>
         </ScrollView>
         {route.params.filter != "Favorites" &&
           route.params.filter != "Recent" && (
             <TouchableOpacity
               onPress={() => navigation.navigate("Create Recipe", methodCheck)}
-              style={styles.addItemTouchable}
+              style={[
+                styles.addItemTouchable,
+                {
+                  borderRadius: 8,
+                  elevation: 3,
+                  shadowColor: "#000",
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.15,
+                  shadowRadius: 4,
+                  marginBottom: 20,
+                  marginLeft: 20,
+                  marginRight: 20,
+                  width: "auto",
+                },
+              ]}
             >
               <Text style={[styles.categoryText, { color: "white" }]}>
                 Create {route.params.filter} Recipe

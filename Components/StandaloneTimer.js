@@ -13,8 +13,9 @@ import stopicon from "../assets/images/stopicon.png";
 import playicon from "../assets/images/playicon.png";
 import pauseicon from "../assets/images/pauseicon.png";
 import { useKeepAwake } from "expo-keep-awake";
+import { useAudioPlayer, createAudioPlayer } from "expo-audio";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { alarmObjects } from "../Data/Models";
+import { alarmObjects, alarmSoundSources } from "../Data/Models";
 import { CheckBox, RadioButton, RadioGroup } from "react-native-radio-check";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -35,12 +36,7 @@ export function StandaloneTimer({ route, navigation }) {
   const [checkedIndex, setCheckedIndex] = useState(0);
   const [demoSound, setDemoSound] = useState("");
 
-  var Sound = require("react-native-sound");
-  var alarmSound = new Sound(selectedAlarm);
-
-  useEffect(() => {
-    alarmSound = new Sound(selectedAlarm);
-  }, [selectedAlarm]);
+  var alarmSound = useAudioPlayer(alarmSoundSources[selectedAlarm]);
 
   useFocusEffect(
     useCallback(() => {
@@ -54,11 +50,13 @@ export function StandaloneTimer({ route, navigation }) {
   async function checkLocalStorageForAlarmName() {
     try {
       await AsyncStorage.getItem("modern_coffee_alarm_name").then((value) => {
-        let obj = alarmObjects.find((o) => o.url === value);
-
         if (value !== null) {
+          let obj = alarmObjects.find((o) => o.url === value);
+
           setSelectedAlarm(value);
-          setCheckedIndex(obj.indexValue);
+          if (obj) {
+            setCheckedIndex(obj.indexValue);
+          }
         }
       });
     } catch (e) {
@@ -68,19 +66,12 @@ export function StandaloneTimer({ route, navigation }) {
 
   function playDemoSound(value) {
     setDemoSound(value);
-    const demoAlarm = new Sound(value, undefined, (error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        demoAlarm.play(() => {
-          // Release when it's done so we're not using up resources
-          demoAlarm.release();
-        });
-        setTimeout(() => {
-          demoAlarm.stop();
-        }, 2000);
-      }
-    });
+    const demoAlarm = createAudioPlayer(alarmSoundSources[value]);
+    demoAlarm.play();
+    setTimeout(() => {
+      demoAlarm.pause();
+      demoAlarm.remove();
+    }, 2000);
   }
 
   const radioMenu = (
@@ -165,14 +156,8 @@ export function StandaloneTimer({ route, navigation }) {
   );
 
   function playSound() {
-    alarmSound.setNumberOfLoops(3);
-    alarmSound.play((success) => {
-      if (success) {
-        console.log("successfully finished playing");
-      } else {
-        console.log("playback failed due to audio decoding errors");
-      }
-    });
+    alarmSound.loop = true;
+    alarmSound.play();
   }
 
   function timerDoneAlert() {
@@ -182,7 +167,10 @@ export function StandaloneTimer({ route, navigation }) {
       [
         {
           text: `Stop`,
-          onPress: () => alarmSound.stop(),
+          onPress: () => {
+            alarmSound.pause();
+            alarmSound.seekTo(0);
+          },
           style: "cancel",
         },
       ],

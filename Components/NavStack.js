@@ -25,7 +25,7 @@ export function NavStack({navigation, route}) {
     if (routeName === "Create Recipe"){
       navigation.setOptions({tabBarStyle: {display: 'none'}});
     }else {
-      navigation.setOptions({tabBarStyle: {display: 'flex'}});
+      navigation.setOptions({tabBarStyle: {backgroundColor: 'white', paddingTop: 8, display: 'flex'}});
     }
 }, [navigation, route]);
   return (
@@ -72,7 +72,7 @@ export function TabNav() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: "white", paddingTop: 4 },
+        tabBarStyle: { backgroundColor: "white", paddingTop: 8 },
         tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: "rgb(253, 121, 8)",
         tabBarInactiveTintColor: "rgba(253, 121, 8,.4)",

@@ -214,6 +214,7 @@ export function RecipeTemplate({ route, navigation }) {
     return (
       <DraggableFlatList
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingLeft: 20, paddingRight: 20 }}
         data={data}
         onDragEnd={({ data }) => {
           setData(data), setIndices(data);

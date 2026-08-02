@@ -11,8 +11,9 @@ import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { styles } from "./Styles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { alarmObjects } from "../Data/Models";
+import { alarmObjects, alarmSoundSources } from "../Data/Models";
 import { CheckBox, RadioButton, RadioGroup } from "react-native-radio-check";
+import { createAudioPlayer } from "expo-audio";
 import settingsBanner from "../assets/images/banners/settingsBanner600x400.png";
 import { resetAllData } from "../Data/Storage";
 
@@ -23,8 +24,6 @@ export function Settings({ route, navigation }) {
   const [checkedIndex, setCheckedIndex] = useState(0);
   const [demoSound, setDemoSound] = useState("");
   const [featuredChecked, setFeaturedChecked] = useState(false);
-
-  var Sound = require("react-native-sound");
 
   useFocusEffect(
     useCallback(() => {
@@ -39,11 +38,13 @@ export function Settings({ route, navigation }) {
   async function checkLocalStorageForAlarmName() {
     try {
       await AsyncStorage.getItem("modern_coffee_alarm_name").then((value) => {
-        let obj = alarmObjects.find((o) => o.url === value);
-
         if (value !== null) {
+          let obj = alarmObjects.find((o) => o.url === value);
+
           setSelectedAlarm(value);
-          setCheckedIndex(obj.indexValue);
+          if (obj) {
+            setCheckedIndex(obj.indexValue);
+          }
         }
       });
     } catch (e) {
@@ -102,18 +103,12 @@ export function Settings({ route, navigation }) {
 
   function playDemoSound(value) {
     setDemoSound(value);
-    const demoAlarm = new Sound(value, undefined, (error) => {
-      if (error) {
-        console.log(error);
-      } else {
-        demoAlarm.play(() => {
-          demoAlarm.release();
-        });
-        setTimeout(() => {
-          demoAlarm.stop();
-        }, 2000);
-      }
-    });
+    const demoAlarm = createAudioPlayer(alarmSoundSources[value]);
+    demoAlarm.play();
+    setTimeout(() => {
+      demoAlarm.pause();
+      demoAlarm.remove();
+    }, 2000);
   }
 
   const radioMenu = (
@@ -204,7 +199,7 @@ export function Settings({ route, navigation }) {
         >
           <Text style={styles.mainTitleText}>Settings</Text>
         </ImageBackground>
-        <View style={{ paddingLeft: 10 }}>
+        <View style={{ paddingLeft: 20, paddingRight: 20 }}>
           <Text style={styles.menuHeading}>Customize</Text>
           <TouchableOpacity
             style={styles.settingsTouchable}

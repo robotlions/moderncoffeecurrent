@@ -180,6 +180,15 @@ export const methodObjects = [
   },
 ];
 
+export const alarmSoundSources = {
+  "alarm.wav": require("../assets/sounds/alarm.wav"),
+  "digitalclockalarmbuzzer.wav": require("../assets/sounds/alarm.wav"),
+  "warningalarmbuzzer.wav": require("../assets/sounds/warningalarmbuzzer.wav"),
+  "alarmdigitalclockbeep.wav": require("../assets/sounds/alarmdigitalclockbeep.wav"),
+  "classicwinneralarm.wav": require("../assets/sounds/classicwinneralarm.wav"),
+  "morningclockalarm.wav": require("../assets/sounds/morningclockalarm.wav"),
+};
+
 export const alarmObjects = [
   {
     alarmName: "Digital Clock Alarm Buzzer",

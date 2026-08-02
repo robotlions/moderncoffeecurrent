@@ -4,8 +4,9 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  LogBox,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { TabNav } from "./Components/NavStack";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -20,6 +21,9 @@ import { initializeLocalData } from "./Data/Storage";
 
 SplashScreen.preventAutoHideAsync();
 
+LogBox.ignoreLogs([
+  "InteractionManager has been deprecated and will be removed in a future release",
+]);
 
 initialize("l95ggsqlol");
 
@@ -84,8 +88,8 @@ export default function App() {
   }
 
   return (
-    <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1 }}>
-      <NavigationContainer>
+    <GestureHandlerRootView onLayout={onLayoutRootView} style={{ flex: 1, backgroundColor: "white" }}>
+      <NavigationContainer theme={{ ...DefaultTheme, colors: { ...DefaultTheme.colors, background: "white", card: "white" } }}>
         {networkConnected === false && (
           <TouchableOpacity
             style={styles.netWarningWindow}

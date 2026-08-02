@@ -102,10 +102,8 @@ export function HomeScreen({ route, navigation }) {
 
   return (
       
-      <ScrollView>
+      <ScrollView style={{backgroundColor: "white"}}>
       <StatusBar translucent={true} backgroundColor="transparent" />
-      
-      <View style={{flexDirection: "row", flexWrap:"wrap", justifyContent:"space-around"}}>
       
       <ImageBackground
             resizeMode="cover"
@@ -114,12 +112,24 @@ export function HomeScreen({ route, navigation }) {
           >
             <Text style={styles.mainTitleText}>modern coffee</Text>
           </ImageBackground>
+      
+      <View style={{flexDirection: "row", flexWrap:"wrap", justifyContent:"space-around", paddingLeft: 20, paddingRight: 20, paddingBottom: 30}}>
         
         {favoritesDisplay}
         {featuredVisible && featuredRecipesDisplay}
         <MethodDisplay />
         <TouchableOpacity
-          style={styles.addItemTouchable}
+          style={[
+            styles.addItemTouchable,
+            {
+              borderRadius: 8,
+              elevation: 3,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.15,
+              shadowRadius: 4,
+            },
+          ]}
           onPress={() => navigation.navigate("Create Recipe")}
         >
           <Text style={[styles.categoryText, {color: "white" }]}>

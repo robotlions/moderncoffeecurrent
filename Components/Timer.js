@@ -13,6 +13,7 @@ import stopicon from "../assets/images/stopicon.png";
 import playicon from "../assets/images/playicon.png";
 import pauseicon from "../assets/images/pauseicon.png";
 import { useKeepAwake } from "expo-keep-awake";
+import { useAudioPlayer } from "expo-audio";
 
 export const Timer = (props) => {
   useKeepAwake();
@@ -26,18 +27,11 @@ export const Timer = (props) => {
   const [minPlace, setMinPlace] = useState("Minutes");
   const [secPlace, setSecPlace] = useState("Seconds");
 
-  var Sound = require("react-native-sound");
-  var alarmSound = new Sound("alarm.mp3");
+  var alarmSound = useAudioPlayer(require("../assets/sounds/alarm.wav"));
 
   function playSound() {
-    alarmSound.setNumberOfLoops(3);
-    alarmSound.play((success) => {
-      if (success) {
-        console.log("successfully finished playing");
-      } else {
-        console.log("playback failed due to audio decoding errors");
-      }
-    });
+    alarmSound.loop = true;
+    alarmSound.play();
   }
 
   function timerDoneAlert() {
@@ -47,7 +41,10 @@ export const Timer = (props) => {
       [
         {
           text: `Stop`,
-          onPress: () => alarmSound.stop(),
+          onPress: () => {
+            alarmSound.pause();
+            alarmSound.seekTo(0);
+          },
           style: "cancel",
         },
       ],
