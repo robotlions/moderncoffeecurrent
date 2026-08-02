@@ -243,7 +243,7 @@ export function Settings({ route, navigation }) {
           <Text style={styles.menuHeading}>About</Text>
           <Text style={{ fontFamily: "Raleway-Medium" }}>
             Modern Coffee ver. 0.90.010124.1{"\n"}
-            January 2024{"\n"}© 2024 by Robot Lions{"\n"}
+            January 2024{"\n"}© {new Date().getFullYear()} by Robot Lions{"\n"}
             Contact and feedback: info@robotlions.com
           </Text>
           {alarmSelectModal}
