@@ -19,8 +19,11 @@ A coffee recipe app that lets you build, store, and tweak your own brewing playb
 - **Fully offline** — All of your recipes and settings are stored locally on your device, so no account and no internet connection required.
 
 <div align="center">
-  <img src="screenshots/modernCoffeeFeatureImage1.png" width="300" alt="Recipe list" />
-  <img src="screenshots/modernCoffeeFeatureImage2.png" width="300" alt="Recipe details" />
+  <img src="screenshots/home.png" width="300" alt="Home screen" />
+  <img src="screenshots/recipe-list-pourover.png" width="300" alt="Recipe list" />
+  <img src="screenshots/recipe-detail.png" width="300" alt="Recipe details" />
+  <img src="screenshots/favorites.png" width="300" alt="Favorites" />
+  <img src="screenshots/settings.png" width="300" alt="Settings" />
 </div>
 
 ## Getting Started

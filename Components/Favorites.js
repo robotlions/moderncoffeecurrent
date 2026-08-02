@@ -96,7 +96,10 @@ export function Favorites({ route, navigation }) {
           >
             <Text style={styles.methodBannerText}>Favorites</Text>
           </ImageBackground>
-          {displayData}</ScrollView></>
+          <View style={{ paddingLeft: 12, paddingRight: 12 }}>
+            {displayData}
+          </View>
+          </ScrollView></>
     );
   }
 }
