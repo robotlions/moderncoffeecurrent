@@ -2,7 +2,9 @@
 
 A coffee recipe app that lets you build, store, and tweak your own brewing playbook.
 
-<img src="screenshots/modernCoffeeTitleCard.png" width="500" alt="Modern Coffee" />
+<div align="center">
+  <img src="screenshots/modernCoffeeTitleCard.png" width="500" alt="Modern Coffee" />
+</div>
 
 ## Features
 
@@ -16,10 +18,10 @@ A coffee recipe app that lets you build, store, and tweak your own brewing playb
 - **Built-in timer** — Brew timers right in the app, with a selection of alarm sounds to choose from.
 - **Fully offline** — All of your recipes and settings are stored locally on your device, so no account and no internet connection required.
 
-<p>
+<div align="center">
   <img src="screenshots/modernCoffeeFeatureImage1.png" width="300" alt="Recipe list" />
   <img src="screenshots/modernCoffeeFeatureImage2.png" width="300" alt="Recipe details" />
-</p>
+</div>
 
 ## Getting Started
 
